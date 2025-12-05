@@ -75,9 +75,15 @@ test('can create a response for a survey', function () {
 });
 
 test('authenticated user can access admin surveys page', function () {
+    // Seed roles and permissions
+    $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
+
+    // Assign super_admin role to access all permissions
+    $user->assignRole('super_admin');
 
     $this->actingAs($user);
 

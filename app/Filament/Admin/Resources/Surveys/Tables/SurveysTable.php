@@ -2,15 +2,19 @@
 
 namespace App\Filament\Admin\Resources\Surveys\Tables;
 
+use App\Enums\SurveyMode;
 use App\Models\Survey;
 use App\Services\QrCodeService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -24,6 +28,12 @@ class SurveysTable
                     ->searchable()
                     ->sortable()
                     ->limit(50),
+
+                TextColumn::make('mode')
+                    ->badge()
+                    ->color(fn (SurveyMode $state): string => $state->getColor())
+                    ->icon(fn (SurveyMode $state): string => $state->getIcon())
+                    ->sortable(),
 
                 TextColumn::make('slug')
                     ->searchable()
@@ -45,6 +55,18 @@ class SurveysTable
                     ->label('Responses')
                     ->counts('responses')
                     ->sortable(),
+
+                TextColumn::make('views_count')
+                    ->label('Views')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('starts_count')
+                    ->label('Starts')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('starts_at')
                     ->label('Start')
@@ -69,11 +91,15 @@ class SurveysTable
                     ->label('Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
+
+                SelectFilter::make('mode')
+                    ->label('Mode')
+                    ->options(SurveyMode::class),
             ])
             ->recordActions([
                 Action::make('qr_code')
                     ->label('QR Code')
-                    ->icon('heroicon-o-qr-code')
+                    ->icon(Heroicon::OutlinedQrCode)
                     ->modalHeading(fn (Survey $record): string => "QR Code: {$record->title}")
                     ->modalContent(function (Survey $record): \Illuminate\Contracts\View\View {
                         $qrService = app(QrCodeService::class);
@@ -89,6 +115,8 @@ class SurveysTable
                     ->modalCancelActionLabel('Close'),
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make()
+                    ->requiresConfirmation(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

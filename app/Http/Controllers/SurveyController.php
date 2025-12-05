@@ -47,12 +47,23 @@ class SurveyController extends Controller
                 ->with('error', 'This survey is not currently available.');
         }
 
+        // Track survey view
+        $survey->incrementViews();
+
+        // Track survey start (first time viewing the form)
+        $sessionKey = 'survey_started_' . $survey->id;
+        if (! session()->has($sessionKey)) {
+            $survey->incrementStarts();
+            session()->put($sessionKey, now());
+        }
+
         $survey->load(['questions' => function ($query) {
             $query->orderBy('order')->with('options');
         }]);
 
         return Inertia::render('surveys/show', [
             'survey' => $survey,
+            'startedAt' => session()->get($sessionKey),
         ]);
     }
 
@@ -69,13 +80,25 @@ class SurveyController extends Controller
 
         $validated = $request->validated();
 
+        // Calculate time to complete
+        $sessionKey = 'survey_started_' . $survey->id;
+        $startedAt = session()->get($sessionKey);
+        $timeToComplete = null;
+
+        if ($startedAt) {
+            $timeToComplete = now()->diffInSeconds($startedAt);
+            session()->forget($sessionKey);
+        }
+
         // Create the response
         $response = Response::create([
             'survey_id' => $survey->id,
             'respondent_name' => $validated['respondent_name'] ?? null,
             'respondent_email' => $validated['respondent_email'] ?? null,
             'ip_address' => $request->ip(),
+            'started_at' => $startedAt,
             'submitted_at' => now(),
+            'time_to_complete' => $timeToComplete,
         ]);
 
         // Create answers for each question

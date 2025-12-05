@@ -2,63 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SurveyResponsesExport;
 use App\Models\Question;
 use App\Models\Survey;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
-use Spatie\SimpleExcel\SimpleExcelWriter;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SurveyExportController extends Controller
 {
     /**
-     * Export survey responses to Excel/CSV.
+     * Export survey responses to Excel.
      */
-    public function exportExcel(Survey $survey): StreamedResponse
+    public function exportExcel(Survey $survey): BinaryFileResponse
     {
-        $survey->load(['questions' => fn($q) => $q->orderBy('order'), 'responses.answers']);
+        $filename = "survey-{$survey->slug}-responses-".now()->format('Y-m-d').'.xlsx';
 
-        $filename = "survey-{$survey->slug}-responses-" . now()->format('Y-m-d') . '.xlsx';
-
-        return response()->streamDownload(function () use ($survey) {
-            $writer = SimpleExcelWriter::streamDownload('php://output');
-
-            // Build header row
-            $headers = ['Submitted At', 'Respondent Name', 'Respondent Email', 'IP Address'];
-            foreach ($survey->questions as $question) {
-                $headers[] = $question->question;
-            }
-            $writer->addHeader($headers);
-
-            // Add response rows
-            foreach ($survey->responses as $response) {
-                $row = [
-                    $response->submitted_at?->format('Y-m-d H:i:s') ?? '',
-                    $response->respondent_name ?? '',
-                    $response->respondent_email ?? '',
-                    $response->ip_address ?? '',
-                ];
-
-                foreach ($survey->questions as $question) {
-                    $answer = $response->answers->firstWhere('question_id', $question->id);
-                    if ($answer) {
-                        if ($answer->selected_options) {
-                            $row[] = implode(', ', $answer->selected_options);
-                        } else {
-                            $row[] = $answer->value ?? '';
-                        }
-                    } else {
-                        $row[] = '';
-                    }
-                }
-
-                $writer->addRow($row);
-            }
-
-            $writer->close();
-        }, $filename, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
+        return Excel::download(new SurveyResponsesExport($survey), $filename);
     }
 
     /**
@@ -66,18 +27,18 @@ class SurveyExportController extends Controller
      */
     public function exportPdf(Survey $survey): Response
     {
-        $survey->load(['questions' => fn($q) => $q->orderBy('order'), 'responses.answers']);
+        $survey->load(['questions' => fn ($q) => $q->orderBy('order'), 'responses.answers']);
 
         // Calculate statistics for each question
         $statistics = $this->calculateStatistics($survey);
 
-        $pdf = SnappyPdf::loadView('exports.survey-responses', [
+        $pdf = Pdf::loadView('exports.survey-responses', [
             'survey' => $survey,
             'statistics' => $statistics,
             'generatedAt' => now(),
         ]);
 
-        $filename = "survey-{$survey->slug}-report-" . now()->format('Y-m-d') . '.pdf';
+        $filename = "survey-{$survey->slug}-report-".now()->format('Y-m-d').'.pdf';
 
         return $pdf->download($filename);
     }
@@ -107,7 +68,7 @@ class SurveyExportController extends Controller
 
             switch ($question->type) {
                 case Question::TYPE_RATING:
-                    $values = $allAnswers->pluck('value')->filter()->map(fn($v) => (int) $v);
+                    $values = $allAnswers->pluck('value')->filter()->map(fn ($v) => (int) $v);
                     $questionStats['average'] = $values->count() > 0 ? round($values->avg(), 2) : 0;
                     $questionStats['distribution'] = $values->countBy()->sortKeys()->all();
                     break;
@@ -122,7 +83,7 @@ class SurveyExportController extends Controller
                     break;
 
                 case Question::TYPE_CHECKBOX:
-                    $allOptions = $allAnswers->flatMap(fn($a) => $a->selected_options ?? []);
+                    $allOptions = $allAnswers->flatMap(fn ($a) => $a->selected_options ?? []);
                     $questionStats['distribution'] = $allOptions->countBy()->sortDesc()->all();
                     break;
 
