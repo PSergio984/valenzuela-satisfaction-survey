@@ -12,6 +12,7 @@ use App\Filament\Admin\Resources\Surveys\Schemas\SurveyForm;
 use App\Filament\Admin\Resources\Surveys\Tables\SurveysTable;
 use App\Models\Survey;
 use BackedEnum;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -49,11 +50,24 @@ class SurveyResource extends Resource
 
     public static function getRecordSubNavigation(Page $page): array
     {
-        return $page->generateNavigationItems([
+        $items = $page->generateNavigationItems([
             ViewSurvey::class,
             ManageSurveyQuestions::class,
             ManageSurveyResponses::class,
         ]);
+
+        // Add badge to Submissions navigation item
+        return array_map(function (NavigationItem $item) use ($page) {
+            if ($item->getLabel() === 'Submissions') {
+                $record = $page->getRecord();
+                if ($record instanceof Survey) {
+                    $count = $record->responses()->count();
+                    $item->badge((string) $count);
+                }
+            }
+
+            return $item;
+        }, $items);
     }
 
     public static function getPages(): array

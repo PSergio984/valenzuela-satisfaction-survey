@@ -3,9 +3,8 @@
 namespace App\Services;
 
 use App\Models\Response;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\View;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -56,7 +55,7 @@ class ResponseExportService
      */
     public function transformResponses(Collection $responses): array
     {
-        return $responses->map(fn(Response $response) => $this->transformResponse($response))->toArray();
+        return $responses->map(fn (Response $response) => $this->transformResponse($response))->toArray();
     }
 
     /**
@@ -179,22 +178,16 @@ class ResponseExportService
         // Calculate some statistics
         $stats = $this->calculateStatistics($responses);
 
-        $html = View::make('exports.responses-pdf', [
+        $pdf = Pdf::loadView('exports.responses-pdf', [
             'title' => $surveyTitle,
             'headers' => $headers,
-            'rows' => array_map(fn($row) => $this->normalizeRow($row, $headers), $rows),
+            'rows' => array_map(fn ($row) => $this->normalizeRow($row, $headers), $rows),
             'stats' => $stats,
             'generatedAt' => now()->format('F j, Y \a\t g:i A'),
             'totalResponses' => $responses->count(),
-        ])->render();
+        ]);
 
-        return SnappyPdf::loadHTML($html)
-            ->setPaper('a4')
-            ->setOrientation('landscape')
-            ->setOption('margin-top', '10mm')
-            ->setOption('margin-bottom', '10mm')
-            ->setOption('margin-left', '10mm')
-            ->setOption('margin-right', '10mm')
+        return $pdf->setPaper('a4', 'landscape')
             ->download($filename);
     }
 

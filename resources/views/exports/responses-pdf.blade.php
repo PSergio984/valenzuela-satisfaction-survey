@@ -38,16 +38,16 @@
         }
 
         .meta-info {
-            display: flex;
-            justify-content: space-between;
+            width: 100%;
             margin-bottom: 20px;
-            padding: 10px 15px;
             background: #f3f4f6;
             border-radius: 4px;
         }
 
-        .meta-info .item {
+        .meta-info td {
             text-align: center;
+            padding: 10px 15px;
+            border: none;
         }
 
         .meta-info .label {
@@ -78,28 +78,26 @@
         }
 
         .stats-grid {
-            display: table;
             width: 100%;
         }
 
-        .stats-grid .stat-item {
-            display: table-cell;
+        .stats-grid td {
             padding: 8px;
             text-align: center;
             border-right: 1px solid #bfdbfe;
         }
 
-        .stats-grid .stat-item:last-child {
+        .stats-grid td:last-child {
             border-right: none;
         }
 
-        .stats-grid .stat-value {
+        .stat-value {
             font-size: 16px;
             font-weight: bold;
             color: #1e40af;
         }
 
-        .stats-grid .stat-label {
+        .stat-label {
             font-size: 9px;
             color: #6b7280;
         }
@@ -108,18 +106,18 @@
             margin-bottom: 20px;
         }
 
-        table {
+        table.data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 9px;
         }
 
-        thead {
+        table.data-table thead {
             background: #1e40af;
             color: white;
         }
 
-        th {
+        table.data-table th {
             padding: 8px 6px;
             text-align: left;
             font-weight: 600;
@@ -127,9 +125,11 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
             white-space: nowrap;
+            background: #1e40af;
+            color: white;
         }
 
-        td {
+        table.data-table td {
             padding: 6px;
             border-bottom: 1px solid #e5e7eb;
             vertical-align: top;
@@ -137,12 +137,8 @@
             max-width: 150px;
         }
 
-        tr:nth-child(even) {
+        table.data-table tr:nth-child(even) {
             background: #f9fafb;
-        }
-
-        tr:hover {
-            background: #f3f4f6;
         }
 
         .footer {
@@ -172,47 +168,51 @@
         <div class="subtitle">Survey Responses Export Report</div>
     </div>
 
-    <div class="meta-info">
-        <div class="item">
-            <div class="label">Total Responses</div>
-            <div class="value">{{ $totalResponses }}</div>
-        </div>
-        <div class="item">
-            <div class="label">Date Range</div>
-            <div class="value">
-                @if($stats['dateRange']['from'] && $stats['dateRange']['to'])
-                    {{ $stats['dateRange']['from'] }} - {{ $stats['dateRange']['to'] }}
-                @else
-                    N/A
-                @endif
-            </div>
-        </div>
-        <div class="item">
-            <div class="label">Generated</div>
-            <div class="value">{{ $generatedAt }}</div>
-        </div>
-    </div>
+    <table class="meta-info">
+        <tr>
+            <td>
+                <div class="label">Total Responses</div>
+                <div class="value">{{ $totalResponses }}</div>
+            </td>
+            <td>
+                <div class="label">Date Range</div>
+                <div class="value">
+                    @if($stats['dateRange']['from'] && $stats['dateRange']['to'])
+                        {{ $stats['dateRange']['from'] }} - {{ $stats['dateRange']['to'] }}
+                    @else
+                        N/A
+                    @endif
+                </div>
+            </td>
+            <td>
+                <div class="label">Generated</div>
+                <div class="value">{{ $generatedAt }}</div>
+            </td>
+        </tr>
+    </table>
 
     @if($stats['overallAverage'] !== null)
     <div class="stats-section">
         <h2>Rating Statistics</h2>
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-value">{{ $stats['overallAverage'] }}/5</div>
-                <div class="stat-label">Overall Average Rating</div>
-            </div>
-            @foreach(array_slice($stats['averageRatings'], 0, 4) as $question => $average)
-            <div class="stat-item">
-                <div class="stat-value">{{ $average }}/5</div>
-                <div class="stat-label" title="{{ $question }}">{{ Str::limit($question, 25) }}</div>
-            </div>
-            @endforeach
-        </div>
+        <table class="stats-grid">
+            <tr>
+                <td>
+                    <div class="stat-value">{{ $stats['overallAverage'] }}/5</div>
+                    <div class="stat-label">Overall Average Rating</div>
+                </td>
+                @foreach(array_slice($stats['averageRatings'], 0, 4) as $question => $average)
+                <td>
+                    <div class="stat-value">{{ $average }}/5</div>
+                    <div class="stat-label" title="{{ $question }}">{{ Str::limit($question, 25) }}</div>
+                </td>
+                @endforeach
+            </tr>
+        </table>
     </div>
     @endif
 
     <div class="table-container">
-        <table>
+        <table class="data-table">
             <thead>
                 <tr>
                     @foreach(array_slice($headers, 0, 8) as $header)
@@ -246,7 +246,7 @@
     </div>
 
     <div class="table-container">
-        <table>
+        <table class="data-table">
             <thead>
                 <tr>
                     <th>ID</th>

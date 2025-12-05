@@ -19,7 +19,24 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    // Regular users (without admin roles) are redirected to surveys
+    $response->assertRedirect(route('surveys.index', absolute: false));
+});
+
+test('admin users are redirected to admin panel after login', function () {
+    // Create the admin role first
+    \Spatie\Permission\Models\Role::findOrCreate('admin', 'web');
+
+    $user = User::factory()->withoutTwoFactor()->create();
+    $user->assignRole('admin');
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect('/admin');
 });
 
 test('users with two factor enabled are redirected to two factor challenge', function () {

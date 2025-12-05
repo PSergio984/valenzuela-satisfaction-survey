@@ -9,7 +9,6 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -114,7 +113,6 @@ class SurveysTable
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Close'),
                 ViewAction::make(),
-                EditAction::make(),
                 DeleteAction::make()
                     ->requiresConfirmation(),
             ])

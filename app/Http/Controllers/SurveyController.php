@@ -51,7 +51,7 @@ class SurveyController extends Controller
         $survey->incrementViews();
 
         // Track survey start (first time viewing the form)
-        $sessionKey = 'survey_started_' . $survey->id;
+        $sessionKey = 'survey_started_'.$survey->id;
         if (! session()->has($sessionKey)) {
             $survey->incrementStarts();
             session()->put($sessionKey, now());
@@ -81,12 +81,13 @@ class SurveyController extends Controller
         $validated = $request->validated();
 
         // Calculate time to complete
-        $sessionKey = 'survey_started_' . $survey->id;
+        $sessionKey = 'survey_started_'.$survey->id;
         $startedAt = session()->get($sessionKey);
         $timeToComplete = null;
 
         if ($startedAt) {
-            $timeToComplete = now()->diffInSeconds($startedAt);
+            // Use absolute value and cast to integer to ensure valid unsigned integer
+            $timeToComplete = max(0, (int) abs(now()->diffInSeconds($startedAt)));
             session()->forget($sessionKey);
         }
 

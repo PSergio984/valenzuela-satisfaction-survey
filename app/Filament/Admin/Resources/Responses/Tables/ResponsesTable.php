@@ -65,7 +65,7 @@ class ResponsesTable
                 BulkActionGroup::make([
                     BulkAction::make('exportExcel')
                         ->label('Export to Excel')
-                        ->icon('heroicon-o-document-arrow-down')
+                        ->icon('heroicon-o-table-cells')
                         ->color('success')
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records): mixed {
@@ -76,22 +76,9 @@ class ResponsesTable
                             return $exportService->exportToExcel($records, $filename);
                         }),
 
-                    BulkAction::make('exportCsv')
-                        ->label('Export to CSV')
-                        ->icon('heroicon-o-document-text')
-                        ->color('gray')
-                        ->deselectRecordsAfterCompletion()
-                        ->action(function (Collection $records): mixed {
-                            /** @var Collection<int, Response> $records */
-                            $exportService = app(ResponseExportService::class);
-                            $filename = $exportService->generateFilename('responses', 'csv');
-
-                            return $exportService->exportToCsv($records, $filename);
-                        }),
-
                     BulkAction::make('exportPdf')
                         ->label('Export to PDF')
-                        ->icon('heroicon-o-document')
+                        ->icon('heroicon-o-document-arrow-down')
                         ->color('danger')
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records): mixed {

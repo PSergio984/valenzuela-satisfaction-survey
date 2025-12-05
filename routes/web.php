@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ResponseExportController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\SurveyExportController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('admin/surveys/{survey}')->name('admin.surveys.')->group(function () {
         Route::get('/export/excel', [SurveyExportController::class, 'exportExcel'])->name('export.excel');
         Route::get('/export/pdf', [SurveyExportController::class, 'exportPdf'])->name('export.pdf');
+    });
+
+    // Admin All Responses Export Routes
+    Route::prefix('admin/responses')->name('admin.responses.')->group(function () {
+        Route::get('/export/excel', [ResponseExportController::class, 'exportExcel'])->name('export.excel');
+        Route::get('/export/pdf', [ResponseExportController::class, 'exportPdf'])->name('export.pdf');
     });
 });
 
