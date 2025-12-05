@@ -8,13 +8,13 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -36,7 +36,7 @@ class QuestionsRelationManager extends RelationManager
                             ->options(Question::TYPES)
                             ->required()
                             ->live()
-                            ->afterStateUpdated(fn($state, callable $set) => $set('options', [])),
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('options', [])),
 
                         TextInput::make('order')
                             ->numeric()
@@ -83,7 +83,7 @@ class QuestionsRelationManager extends RelationManager
                             ->addActionLabel('Add Option')
                             ->defaultItems(0),
                     ])
-                    ->visible(fn(Get $get): bool => in_array($get('type'), [
+                    ->visible(fn (Get $get): bool => in_array($get('type'), [
                         Question::TYPE_RADIO,
                         Question::TYPE_CHECKBOX,
                         Question::TYPE_SELECT,
@@ -110,7 +110,7 @@ class QuestionsRelationManager extends RelationManager
                             ->placeholder('e.g., Excellent'),
                     ])
                     ->columns(4)
-                    ->visible(fn(Get $get): bool => $get('type') === Question::TYPE_RATING),
+                    ->visible(fn (Get $get): bool => $get('type') === Question::TYPE_RATING),
             ]);
     }
 
@@ -128,7 +128,7 @@ class QuestionsRelationManager extends RelationManager
 
                 TextColumn::make('type')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => Question::TYPES[$state] ?? $state),
+                    ->formatStateUsing(fn (string $state): string => Question::TYPES[$state] ?? $state),
 
                 IconColumn::make('is_required')
                     ->label('Required')

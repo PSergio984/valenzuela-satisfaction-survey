@@ -4,9 +4,9 @@ namespace App\Filament\Admin\Resources\Responses\Pages;
 
 use App\Filament\Admin\Resources\Responses\ResponseResource;
 use App\Models\Question;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ViewResponse extends ViewRecord
@@ -56,7 +56,7 @@ class ViewResponse extends ViewRecord
                             $question = $answer->question;
                             $value = $this->formatAnswerValue($answer, $question);
 
-                            $entries[] = TextEntry::make('answer_' . $answer->id)
+                            $entries[] = TextEntry::make('answer_'.$answer->id)
                                 ->label($question->question)
                                 ->state($value)
                                 ->columnSpanFull();

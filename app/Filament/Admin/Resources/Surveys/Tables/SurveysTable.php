@@ -74,13 +74,14 @@ class SurveysTable
                 Action::make('qr_code')
                     ->label('QR Code')
                     ->icon('heroicon-o-qr-code')
-                    ->modalHeading(fn(Survey $record): string => "QR Code: {$record->title}")
+                    ->modalHeading(fn (Survey $record): string => "QR Code: {$record->title}")
                     ->modalContent(function (Survey $record): \Illuminate\Contracts\View\View {
                         $qrService = app(QrCodeService::class);
 
                         return view('filament.modals.qr-code', [
                             'survey' => $record,
                             'qrCode' => $qrService->generateSvg($record, 300),
+                            'qrCodeRaw' => $qrService->generateRawSvg($record, 300),
                             'surveyUrl' => $qrService->getSurveyUrl($record),
                         ]);
                     })

@@ -1,6 +1,8 @@
 <div class="space-y-4">
     <div class="flex justify-center p-4 bg-white rounded-lg">
-        {!! $qrCode !!}
+        <div class="w-64 h-64">
+            {!! $qrCode !!}
+        </div>
     </div>
 
     <div class="text-center space-y-2">
@@ -28,13 +30,11 @@
 
     <div class="flex justify-center gap-2 pt-2">
         <a
-            href="data:image/svg+xml;base64,{{ base64_encode($qrCode) }}"
+            href="data:image/svg+xml;base64,{{ base64_encode($qrCodeRaw) }}"
             download="{{ $survey->slug }}-qr-code.svg"
             class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-300 transition text-sm font-medium"
         >
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
+            @svg('heroicon-o-arrow-down-tray', 'w-4 h-4 mr-2')
             Download QR Code
         </a>
         <a
@@ -42,9 +42,7 @@
             target="_blank"
             class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium"
         >
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
+            @svg('heroicon-o-arrow-top-right-on-square', 'w-4 h-4 mr-2')
             Open Survey
         </a>
     </div>

@@ -19,13 +19,14 @@ class ViewSurvey extends ViewRecord
                 ->label('QR Code')
                 ->icon('heroicon-o-qr-code')
                 ->color('gray')
-                ->modalHeading(fn(): string => "QR Code: {$this->record->title}")
+                ->modalHeading(fn (): string => "QR Code: {$this->record->title}")
                 ->modalContent(function (): \Illuminate\Contracts\View\View {
                     $qrService = app(QrCodeService::class);
 
                     return view('filament.modals.qr-code', [
                         'survey' => $this->record,
                         'qrCode' => $qrService->generateSvg($this->record, 300),
+                        'qrCodeRaw' => $qrService->generateRawSvg($this->record, 300),
                         'surveyUrl' => $qrService->getSurveyUrl($this->record),
                     ]);
                 })
@@ -36,14 +37,14 @@ class ViewSurvey extends ViewRecord
                 ->label('Export Excel')
                 ->icon('heroicon-o-table-cells')
                 ->color('success')
-                ->url(fn() => route('admin.surveys.export.excel', $this->record))
+                ->url(fn () => route('admin.surveys.export.excel', $this->record))
                 ->openUrlInNewTab(),
 
             Action::make('export_pdf')
                 ->label('Export PDF')
                 ->icon('heroicon-o-document-arrow-down')
                 ->color('danger')
-                ->url(fn() => route('admin.surveys.export.pdf', $this->record))
+                ->url(fn () => route('admin.surveys.export.pdf', $this->record))
                 ->openUrlInNewTab(),
 
             EditAction::make(),

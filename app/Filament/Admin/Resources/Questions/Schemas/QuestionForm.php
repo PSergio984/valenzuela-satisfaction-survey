@@ -4,12 +4,12 @@ namespace App\Filament\Admin\Resources\Questions\Schemas;
 
 use App\Models\Question;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Get;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class QuestionForm
@@ -76,7 +76,7 @@ class QuestionForm
                             ->addActionLabel('Add Option')
                             ->defaultItems(0),
                     ])
-                    ->visible(fn(Get $get): bool => in_array($get('type'), [
+                    ->visible(fn (Get $get): bool => in_array($get('type'), [
                         Question::TYPE_RADIO,
                         Question::TYPE_CHECKBOX,
                         Question::TYPE_SELECT,
@@ -103,7 +103,7 @@ class QuestionForm
                             ->placeholder('e.g., Excellent'),
                     ])
                     ->columns(4)
-                    ->visible(fn(Get $get): bool => $get('type') === Question::TYPE_RATING),
+                    ->visible(fn (Get $get): bool => $get('type') === Question::TYPE_RATING),
             ]);
     }
 }
