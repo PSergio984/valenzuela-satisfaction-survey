@@ -1,3 +1,161 @@
+# Project Instructions: Compliant Customer Satisfaction Survey System
+
+This document provides detailed project instructions and architectural guidance for the development, maintenance, and extension of the Compliant Customer Satisfaction Survey System. It is tailored for a Laravel 12 + Inertia.js + React 19 + Tailwind CSS 4 stack, with a focus on compliance, extensibility, and robust data analysis.
+
+---
+
+## 1. System Overview
+
+The system is a cross-platform digital survey solution for capturing, managing, and analyzing customer feedback. It supports web and desktop interfaces, QR code access, secure administration, and advanced analytics/reporting.
+
+### Key Features
+
+- Dynamic survey content with support for compliance and custom questions
+- Admin interface for survey management (no code required)
+- QR code-based survey access
+- Secure, role-based authentication (Fortify)
+- Automated scoring, segmentation, and export (Excel, PDF)
+- Real-time dashboards and data visualization
+- Data privacy, consent management, and encryption
+
+---
+
+## 2. Core Technology Stack
+
+- **Backend:** Laravel 12 (PHP 8.2+)
+- **Frontend:** Inertia.js (v2), React 19, Tailwind CSS 4
+- **Authentication:** Laravel Fortify
+- **Data Export:** spatie/simple-excel, barryvdh/laravel-snappy (or dompdf/dompdf if needed)
+- **QR Code:** bacon/bacon-qr-code
+- **Testing:** PestPHP, PHPUnit
+- **Bundling/Tooling:** Vite, ESLint, Prettier, Laravel Pint
+
+---
+
+## 3. Recommended Packages & Utilities
+
+### Already Installed
+
+- **spatie/simple-excel:** Excel/CSV export
+- **bacon/bacon-qr-code:** QR code generation
+- **barryvdh/laravel-snappy:** PDF export (wkhtmltopdf)
+- **dompdf/dompdf:** (if needed for alternative PDF export)
+
+### Highly Recommended
+
+- **spatie/laravel-permission:** Advanced role/permission management
+- **spatie/laravel-activitylog:** Audit logging for compliance and traceability
+- **spatie/laravel-analytics:** Google Analytics integration for advanced reporting
+- **spatie/laravel-backup:** Automated backups for compliance and disaster recovery
+- **spatie/laravel-cookie-consent:** Consent management for survey participants
+- **laravel/sanctum:** API authentication (if mobile app or API endpoints needed)
+- **laravel/horizon:** Queue monitoring (if using jobs/notifications)
+- **filament/filament:** (Optional) For rapid admin panel development
+- **livewire/livewire:** (Optional) For interactive admin features if needed
+
+### Frontend/UX
+
+- **react-chartjs-2** or **recharts:** For dashboard data visualization
+- **@headlessui/react:** Accessible UI components
+- **@heroicons/react:** Icon set for UI consistency
+
+---
+
+## 4. Architecture & Best Practices
+
+### Survey Content
+
+- Store survey questions in the database with support for required, optional, and custom fields.
+- Use Eloquent models and relationships for survey/question/response management.
+- Provide admin UI for CRUD operations on surveys/questions (Inertia + React).
+
+### Platform Development
+
+- Use Inertia.js for seamless SPA experience.
+- Place React pages in `resources/js/pages` and components in `resources/js/components`.
+- Use Tailwind CSS for all styling; follow existing utility class conventions.
+
+### Data Collection
+
+- Generate unique QR codes for each survey instance/location.
+- Secure admin routes with Fortify and spatie/laravel-permission.
+- Implement tiered permissions (admin, staff, viewer, etc.).
+
+### Data Analysis & Reporting
+
+- Use Eloquent queries for segmentation (location, service, time, etc.).
+- Provide export options (Excel, PDF) using spatie/simple-excel and snappy/dompdf.
+- Build dashboards with React charting libraries for real-time insights.
+
+### Security & Compliance
+
+- Enforce HTTPS and secure cookies.
+- Encrypt sensitive data at rest and in transit.
+- Use spatie/laravel-activitylog for audit trails.
+- Implement consent management (spatie/laravel-cookie-consent).
+- Regularly back up data (spatie/laravel-backup).
+
+---
+
+## 5. Extensibility & Customization
+
+- All survey content, questions, and options should be database-driven and editable via the admin UI.
+- Use Laravel policies and gates for fine-grained access control.
+- Design the system to allow new question types and analytics modules with minimal code changes.
+- Use Laravel’s event system for extensibility (e.g., trigger notifications or webhooks on survey submission).
+
+---
+
+## 6. Testing & Quality
+
+- Write feature and unit tests using PestPHP and PHPUnit.
+- Use factories for test data; cover all major user flows (survey creation, response, export, admin actions).
+- Run `vendor/bin/pint --dirty` before committing to ensure code style.
+- Use ESLint and Prettier for JS/React code.
+
+---
+
+## 7. Deployment & Operations
+
+- Use Laravel Herd for local development.
+- Use environment variables for all secrets and configuration.
+- Set up automated backups and monitoring.
+- Document all environment/configuration requirements in `.env.example`.
+
+---
+
+## 8. Compliance & Data Protection
+
+- Ensure all data collection and storage complies with local privacy laws (e.g., GDPR).
+- Provide clear consent forms and privacy policy links in the survey UI.
+- Log all admin actions for auditability.
+- Regularly review and update security dependencies.
+
+---
+
+## 9. Useful Artisan Commands
+
+- `php artisan make:model Survey -m`
+- `php artisan make:controller SurveyController --resource`
+- `php artisan make:request StoreSurveyRequest`
+- `php artisan permission:create-role admin`
+- `php artisan backup:run`
+- `php artisan activitylog:clean`
+
+---
+
+## 10. Further Recommendations
+
+- Review and update dependencies regularly.
+- Consider adding API endpoints for mobile app integration.
+- Use Laravel’s scheduler for periodic tasks (e.g., report generation, data cleanup).
+- Encourage contributions to documentation and tests.
+
+---
+
+# End of Instructions
+
+For any new features or changes, always check the latest Laravel, Inertia, and React documentation, and follow the conventions and guidelines in this document and `.github/copilot-instructions.md`.
 <laravel-boost-guidelines>
 === foundation rules ===
 
@@ -8,12 +166,14 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.2.12
+- php - 8.4.11
+- filament/filament (FILAMENT) - v4
 - inertiajs/inertia-laravel (INERTIA) - v2
 - laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v12
 - laravel/prompts (PROMPTS) - v0
 - laravel/wayfinder (WAYFINDER) - v0
+- livewire/livewire (LIVEWIRE) - v3
 - laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
 - laravel/sail (SAIL) - v1
@@ -284,6 +444,89 @@ If your application uses the `<Form>` component from Inertia, you can use Wayfin
 
 <Form {...store.form()}><input name="title" /></Form>
 
+</code-snippet>
+
+
+=== livewire/core rules ===
+
+## Livewire Core
+- Use the `search-docs` tool to find exact version specific documentation for how to write Livewire & Livewire tests.
+- Use the `php artisan make:livewire [Posts\CreatePost]` artisan command to create new components
+- State should live on the server, with the UI reflecting it.
+- All Livewire requests hit the Laravel backend, they're like regular HTTP requests. Always validate form data, and run authorization checks in Livewire actions.
+
+## Livewire Best Practices
+- Livewire components require a single root element.
+- Use `wire:loading` and `wire:dirty` for delightful loading states.
+- Add `wire:key` in loops:
+
+    ```blade
+    @foreach ($items as $item)
+        <div wire:key="item-{{ $item->id }}">
+            {{ $item->name }}
+        </div>
+    @endforeach
+    ```
+
+- Prefer lifecycle hooks like `mount()`, `updatedFoo()` for initialization and reactive side effects:
+
+<code-snippet name="Lifecycle hook examples" lang="php">
+    public function mount(User $user) { $this->user = $user; }
+    public function updatedSearch() { $this->resetPage(); }
+</code-snippet>
+
+
+## Testing Livewire
+
+<code-snippet name="Example Livewire component test" lang="php">
+    Livewire::test(Counter::class)
+        ->assertSet('count', 0)
+        ->call('increment')
+        ->assertSet('count', 1)
+        ->assertSee(1)
+        ->assertStatus(200);
+</code-snippet>
+
+
+    <code-snippet name="Testing a Livewire component exists within a page" lang="php">
+        $this->get('/posts/create')
+        ->assertSeeLivewire(CreatePost::class);
+    </code-snippet>
+
+
+=== livewire/v3 rules ===
+
+## Livewire 3
+
+### Key Changes From Livewire 2
+- These things changed in Livewire 2, but may not have been updated in this application. Verify this application's setup to ensure you conform with application conventions.
+    - Use `wire:model.live` for real-time updates, `wire:model` is now deferred by default.
+    - Components now use the `App\Livewire` namespace (not `App\Http\Livewire`).
+    - Use `$this->dispatch()` to dispatch events (not `emit` or `dispatchBrowserEvent`).
+    - Use the `components.layouts.app` view as the typical layout path (not `layouts.app`).
+
+### New Directives
+- `wire:show`, `wire:transition`, `wire:cloak`, `wire:offline`, `wire:target` are available for use. Use the documentation to find usage examples.
+
+### Alpine
+- Alpine is now included with Livewire, don't manually include Alpine.js.
+- Plugins included with Alpine: persist, intersect, collapse, and focus.
+
+### Lifecycle Hooks
+- You can listen for `livewire:init` to hook into Livewire initialization, and `fail.status === 419` for the page expiring:
+
+<code-snippet name="livewire:load example" lang="js">
+document.addEventListener('livewire:init', function () {
+    Livewire.hook('request', ({ fail }) => {
+        if (fail && fail.status === 419) {
+            alert('Your session expired');
+        }
+    });
+
+    Livewire.hook('message.failed', (message, component) => {
+        console.error(message);
+    });
+});
 </code-snippet>
 
 

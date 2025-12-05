@@ -1,0 +1,14 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/Admin/**/*';
+@source '../../../../resources/views/filament/admin/**/*';
+
+/* Custom sidebar styling */
+.fi-sidebar {
+    @apply bg-gray-50 dark:bg-gray-900;
+}
+
+/* Sidebar navigation items styling */
+.fi-sidebar-nav {
+    @apply bg-transparent;
+}

@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Filament\Admin\Resources\Users\Pages;
+
+use App\Filament\Admin\Resources\Users\UserResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateUser extends CreateRecord
+{
+    protected static string $resource = UserResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterCreate(): void
+    {
+        // Mark email as verified for users created by admin
+        $this->record->markEmailAsVerified();
+    }
+}
