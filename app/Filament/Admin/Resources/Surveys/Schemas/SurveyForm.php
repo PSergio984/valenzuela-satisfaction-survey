@@ -76,10 +76,12 @@ class SurveyForm
                     ->description('Optional start and end dates for the survey')
                     ->schema([
                         DateTimePicker::make('starts_at')
-                            ->label('Start Date'),
+                            ->label('Start Date & Time')
+                            ->seconds(false),
 
                         DateTimePicker::make('ends_at')
-                            ->label('End Date')
+                            ->label('End Date & Time')
+                            ->seconds(false)
                             ->afterOrEqual('starts_at'),
                     ])
                     ->columns(2),

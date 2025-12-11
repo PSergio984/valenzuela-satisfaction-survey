@@ -55,4 +55,29 @@ class UserResource extends Resource
     {
         return auth()->user()?->hasPermissionTo('view_users') ?? false;
     }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->hasPermissionTo('create_users') ?? false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return auth()->user()?->hasPermissionTo('edit_users') ?? false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        // Prevent deleting super admins
+        if ($record->hasRole('super_admin')) {
+            return false;
+        }
+
+        return auth()->user()?->hasPermissionTo('delete_users') ?? false;
+    }
+
+    public static function canView($record): bool
+    {
+        return auth()->user()?->hasPermissionTo('view_users') ?? false;
+    }
 }

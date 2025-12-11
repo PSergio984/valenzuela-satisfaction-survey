@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Users\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -27,6 +28,7 @@ class UsersTable
                 TextColumn::make('roles.name')
                     ->label('Roles')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state)))
                     ->color(fn (string $state): string => match ($state) {
                         'super_admin' => 'danger',
                         'admin' => 'warning',
@@ -56,6 +58,9 @@ class UsersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make()
+                    ->hidden(fn ($record) => $record->hasRole('super_admin'))
+                    ->requiresConfirmation(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

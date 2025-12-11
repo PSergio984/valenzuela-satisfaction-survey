@@ -13,11 +13,12 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+// Redirect /login to Filament's login
+Route::get('/login', function () {
+    return redirect('/admin/login');
+})->name('login');
 
+Route::middleware(['auth', 'verified'])->group(function () {
     // Admin Survey Export Routes
     Route::prefix('admin/surveys/{survey}')->name('admin.surveys.')->group(function () {
         Route::get('/export/excel', [SurveyExportController::class, 'exportExcel'])->name('export.excel');
@@ -39,4 +40,4 @@ Route::prefix('surveys')->name('surveys.')->group(function () {
     Route::get('/{survey:slug}/thank-you', [SurveyController::class, 'thankYou'])->name('thank-you');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

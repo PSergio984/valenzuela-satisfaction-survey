@@ -10,6 +10,9 @@ use App\Filament\Admin\Resources\Surveys\Pages\ManageSurveyResponses;
 use App\Filament\Admin\Resources\Surveys\Pages\ViewSurvey;
 use App\Filament\Admin\Resources\Surveys\Schemas\SurveyForm;
 use App\Filament\Admin\Resources\Surveys\Tables\SurveysTable;
+use App\Filament\Admin\Resources\Surveys\Widgets\SurveyRatingsChart;
+use App\Filament\Admin\Resources\Surveys\Widgets\SurveyResponsesChart;
+use App\Filament\Admin\Resources\Surveys\Widgets\SurveyStatsOverview;
 use App\Models\Survey;
 use BackedEnum;
 use Filament\Navigation\NavigationItem;
@@ -46,6 +49,15 @@ class SurveyResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            SurveyStatsOverview::class,
+            SurveyResponsesChart::class,
+            SurveyRatingsChart::class,
+        ];
     }
 
     public static function getRecordSubNavigation(Page $page): array

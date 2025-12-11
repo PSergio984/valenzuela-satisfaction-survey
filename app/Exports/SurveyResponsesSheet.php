@@ -16,13 +16,11 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SurveyResponsesExport implements FromCollection, ShouldAutoSize, WithEvents, WithHeadings, WithStyles, WithTitle
+class SurveyResponsesSheet implements FromCollection, ShouldAutoSize, WithEvents, WithHeadings, WithStyles, WithTitle
 {
     public function __construct(
         protected Survey $survey
-    ) {
-        $this->survey->load(['questions' => fn ($q) => $q->orderBy('order'), 'responses.answers']);
-    }
+    ) {}
 
     public function collection(): Collection
     {
@@ -32,6 +30,7 @@ class SurveyResponsesExport implements FromCollection, ShouldAutoSize, WithEvent
                 $response->submitted_at?->format('Y-m-d H:i:s') ?? 'Not submitted',
                 $response->respondent_name ?? 'Anonymous',
                 $response->respondent_email ?? 'Not provided',
+                $response->ip_address ?? 'N/A',
                 $response->formatted_time_to_complete ?? 'N/A',
             ];
 
@@ -62,6 +61,7 @@ class SurveyResponsesExport implements FromCollection, ShouldAutoSize, WithEvent
             'Submitted At',
             'Respondent Name',
             'Respondent Email',
+            'IP Address',
             'Duration',
         ];
 
@@ -74,13 +74,16 @@ class SurveyResponsesExport implements FromCollection, ShouldAutoSize, WithEvent
 
     public function title(): string
     {
-        return 'Survey Responses';
+        // Sanitize the title for Excel sheet name (max 31 chars, no special chars)
+        $title = $this->survey->title;
+        $title = preg_replace('/[\/\\\?\*\[\]:]/u', '', $title); // Remove invalid chars
+        $title = mb_substr($title, 0, 31); // Max 31 characters for Excel sheet names
+
+        return $title;
     }
 
     public function styles(Worksheet $sheet): array
     {
-        $lastColumn = $this->getLastColumn();
-
         return [
             // Style the header row
             1 => [
@@ -146,48 +149,13 @@ class SurveyResponsesExport implements FromCollection, ShouldAutoSize, WithEvent
 
                 // Freeze the header row
                 $sheet->freezePane('A2');
-
-                // Add title row at the top
-                $sheet->insertNewRowBefore(1, 2);
-
-                // Merge cells for title
-                $sheet->mergeCells("A1:{$lastColumn}1");
-                $sheet->setCellValue('A1', $this->survey->title);
-                $sheet->getStyle('A1')->applyFromArray([
-                    'font' => [
-                        'bold' => true,
-                        'size' => 16,
-                        'color' => ['rgb' => '1F2937'],
-                    ],
-                    'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_CENTER,
-                        'vertical' => Alignment::VERTICAL_CENTER,
-                    ],
-                ]);
-                $sheet->getRowDimension(1)->setRowHeight(30);
-
-                // Add subtitle with export date
-                $sheet->mergeCells("A2:{$lastColumn}2");
-                $sheet->setCellValue('A2', 'Exported on '.now()->format('F d, Y \a\t g:i A').' • Total Responses: '.$this->survey->responses->count());
-                $sheet->getStyle('A2')->applyFromArray([
-                    'font' => [
-                        'italic' => true,
-                        'size' => 10,
-                        'color' => ['rgb' => '6B7280'],
-                    ],
-                    'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_CENTER,
-                        'vertical' => Alignment::VERTICAL_CENTER,
-                    ],
-                ]);
-                $sheet->getRowDimension(2)->setRowHeight(20);
             },
         ];
     }
 
     protected function getLastColumn(): string
     {
-        $columnCount = 5 + $this->survey->questions->count(); // 5 base columns + questions
+        $columnCount = 6 + $this->survey->questions->count(); // 6 base columns + questions
 
         return $this->getColumnLetter($columnCount);
     }
