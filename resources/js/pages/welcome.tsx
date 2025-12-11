@@ -1,14 +1,9 @@
 import { index as surveysIndex } from '@/actions/App/Http/Controllers/SurveyController';
-import { login, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ClipboardList, Users, BarChart3, ArrowRight } from 'lucide-react';
 
-export default function Welcome({
-    canRegister = true,
-}: {
-    canRegister?: boolean;
-}) {
+export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
 
     return (
@@ -28,30 +23,20 @@ export default function Welcome({
                         </div>
                         <nav className="flex items-center gap-4">
                             {auth.user ? (
-                                <Link
+                                <a
                                     href="/admin"
                                     className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                                 >
                                     Dashboard
                                     <ArrowRight className="h-4 w-4" />
-                                </Link>
+                                </a>
                             ) : (
-                                <>
-                                    <Link
-                                        href={login()}
-                                        className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                    >
-                                        Log in
-                                    </Link>
-                                    {canRegister && (
-                                        <Link
-                                            href={register()}
-                                            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                                        >
-                                            Register
-                                        </Link>
-                                    )}
-                                </>
+                                <a
+                                    href="/admin/login"
+                                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                                >
+                                    Log in
+                                </a>
                             )}
                         </nav>
                     </div>

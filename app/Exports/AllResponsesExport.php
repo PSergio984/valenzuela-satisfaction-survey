@@ -53,11 +53,9 @@ class AllResponsesExport implements FromCollection, ShouldAutoSize, WithEvents, 
         return $this->responses->map(function ($response) {
             $row = [
                 $response->id,
-                $response->survey->title ?? 'N/A',
                 $response->submitted_at?->format('Y-m-d H:i:s') ?? 'Not submitted',
                 $response->respondent_name ?? 'Anonymous',
                 $response->respondent_email ?? 'Not provided',
-                $response->ip_address ?? 'N/A',
                 $response->formatted_time_to_complete ?? 'N/A',
             ];
 
@@ -86,11 +84,9 @@ class AllResponsesExport implements FromCollection, ShouldAutoSize, WithEvents, 
     {
         $headers = [
             'ID',
-            'Survey',
             'Submitted At',
             'Respondent Name',
             'Respondent Email',
-            'IP Address',
             'Duration',
         ];
 
@@ -164,7 +160,7 @@ class AllResponsesExport implements FromCollection, ShouldAutoSize, WithEvents, 
 
                 // Add subtitle with export date
                 $sheet->mergeCells("A2:{$lastColumn}2");
-                $sheet->setCellValue('A2', 'Exported on ' . now()->format('F d, Y \a\t g:i A') . ' • Total Responses: ' . $this->responses->count());
+                $sheet->setCellValue('A2', 'Exported on '.now()->format('F d, Y \a\t g:i A').' • Total Responses: '.$this->responses->count());
                 $sheet->getStyle('A2')->applyFromArray([
                     'font' => [
                         'italic' => true,
@@ -212,19 +208,17 @@ class AllResponsesExport implements FromCollection, ShouldAutoSize, WithEvents, 
 
                 // Set column widths for better readability
                 $sheet->getColumnDimension('A')->setWidth(8);  // ID
-                $sheet->getColumnDimension('B')->setWidth(25); // Survey
-                $sheet->getColumnDimension('C')->setWidth(18); // Submitted At
-                $sheet->getColumnDimension('D')->setWidth(20); // Respondent Name
-                $sheet->getColumnDimension('E')->setWidth(25); // Email
-                $sheet->getColumnDimension('F')->setWidth(15); // IP
-                $sheet->getColumnDimension('G')->setWidth(12); // Duration
+                $sheet->getColumnDimension('B')->setWidth(18); // Submitted At
+                $sheet->getColumnDimension('C')->setWidth(20); // Respondent Name
+                $sheet->getColumnDimension('D')->setWidth(25); // Email
+                $sheet->getColumnDimension('E')->setWidth(12); // Duration
             },
         ];
     }
 
     protected function getLastColumn(): string
     {
-        $columnCount = 7 + count($this->allQuestions); // 7 base columns + questions
+        $columnCount = 5 + count($this->allQuestions); // 5 base columns + questions
 
         return $this->getColumnLetter($columnCount);
     }
@@ -235,7 +229,7 @@ class AllResponsesExport implements FromCollection, ShouldAutoSize, WithEvents, 
 
         while ($columnNumber > 0) {
             $columnNumber--;
-            $letter = chr(65 + ($columnNumber % 26)) . $letter;
+            $letter = chr(65 + ($columnNumber % 26)).$letter;
             $columnNumber = intdiv($columnNumber, 26);
         }
 

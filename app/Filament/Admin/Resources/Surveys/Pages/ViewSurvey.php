@@ -3,6 +3,8 @@
 namespace App\Filament\Admin\Resources\Surveys\Pages;
 
 use App\Filament\Admin\Resources\Surveys\SurveyResource;
+use App\Filament\Admin\Resources\Surveys\Widgets\SurveyRatingsChart;
+use App\Filament\Admin\Resources\Surveys\Widgets\SurveyResponsesChart;
 use App\Filament\Admin\Resources\Surveys\Widgets\SurveyStatsOverview;
 use App\Services\QrCodeService;
 use BackedEnum;
@@ -24,6 +26,8 @@ class ViewSurvey extends ViewRecord
     {
         return [
             SurveyStatsOverview::class,
+            SurveyResponsesChart::class,
+            SurveyRatingsChart::class,
         ];
     }
 
@@ -62,11 +66,13 @@ class ViewSurvey extends ViewRecord
 
                     return view('filament.modals.qr-code', [
                         'survey' => $this->record,
-                        'qrCode' => $qrService->generateSvg($this->record, 300),
-                        'qrCodeRaw' => $qrService->generateRawSvg($this->record, 300),
+                        'qrCode' => $qrService->generateSvg($this->record, 100),
+                        'qrCodeRaw' => $qrService->generateRawSvg($this->record, 100),
                         'surveyUrl' => $qrService->getSurveyUrl($this->record),
                     ]);
                 })
+                ->modalWidth('sm')
+                ->slideOver(false)
                 ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close'),
         ];

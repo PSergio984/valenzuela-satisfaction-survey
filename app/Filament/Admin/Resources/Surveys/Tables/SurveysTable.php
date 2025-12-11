@@ -105,8 +105,8 @@ class SurveysTable
 
                         return view('filament.modals.qr-code', [
                             'survey' => $record,
-                            'qrCode' => $qrService->generateSvg($record, 300),
-                            'qrCodeRaw' => $qrService->generateRawSvg($record, 300),
+                            'qrCode' => $qrService->generateSvg($record, 100),
+                            'qrCodeRaw' => $qrService->generateRawSvg($record, 100),
                             'surveyUrl' => $qrService->getSurveyUrl($record),
                         ]);
                     })
