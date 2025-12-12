@@ -52,7 +52,7 @@ class SurveyController extends Controller
         $survey->incrementViews();
 
         // Track survey start (first time viewing the form)
-        $sessionKey = 'survey_started_'.$survey->id;
+        $sessionKey = 'survey_started_' . $survey->id;
         if (! session()->has($sessionKey)) {
             $survey->incrementStarts();
             session()->put($sessionKey, now());
@@ -82,7 +82,7 @@ class SurveyController extends Controller
         $validated = $request->validated();
 
         // Calculate time to complete
-        $sessionKey = 'survey_started_'.$survey->id;
+        $sessionKey = 'survey_started_' . $survey->id;
         $startedAt = session()->get($sessionKey);
         $timeToComplete = null;
 
@@ -97,7 +97,6 @@ class SurveyController extends Controller
             'survey_id' => $survey->id,
             'respondent_name' => $validated['respondent_name'] ?? null,
             'respondent_email' => $validated['respondent_email'] ?? null,
-            'ip_address' => $request->ip(),
             'started_at' => $startedAt,
             'submitted_at' => now(),
             'time_to_complete' => $timeToComplete,

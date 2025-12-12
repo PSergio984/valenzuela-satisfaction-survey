@@ -89,7 +89,6 @@ export interface SurveyResponse {
     survey_id: number;
     respondent_name: string | null;
     respondent_email: string | null;
-    ip_address: string;
     submitted_at: string;
     answers?: Answer[];
 }
