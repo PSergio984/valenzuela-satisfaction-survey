@@ -18,7 +18,6 @@ class Response extends Model
         'respondent_name',
         'respondent_email',
         'respondent_phone',
-        'ip_address',
         'user_agent',
         'started_at',
         'submitted_at',
@@ -89,16 +88,16 @@ class Response extends Model
         }
 
         if ($seconds < 60) {
-            return $seconds.' sec';
+            return $seconds . ' sec';
         }
 
         $minutes = floor($seconds / 60);
         $remainingSeconds = $seconds % 60;
 
         if ($remainingSeconds > 0) {
-            return $minutes.' min '.$remainingSeconds.' sec';
+            return $minutes . ' min ' . $remainingSeconds . ' sec';
         }
 
-        return $minutes.' min';
+        return $minutes . ' min';
     }
 }

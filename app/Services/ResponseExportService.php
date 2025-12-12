@@ -25,7 +25,6 @@ class ResponseExportService
             'Respondent Name' => $response->respondent_name ?? 'Anonymous',
             'Respondent Email' => $response->respondent_email ?? '',
             'Respondent Phone' => $response->respondent_phone ?? '',
-            'IP Address' => $response->ip_address ?? '',
             'Submitted At' => $response->submitted_at?->format('Y-m-d H:i:s') ?? '',
             'Created At' => $response->created_at?->format('Y-m-d H:i:s') ?? '',
         ];
@@ -55,7 +54,7 @@ class ResponseExportService
      */
     public function transformResponses(Collection $responses): array
     {
-        return $responses->map(fn (Response $response) => $this->transformResponse($response))->toArray();
+        return $responses->map(fn(Response $response) => $this->transformResponse($response))->toArray();
     }
 
     /**
@@ -72,7 +71,6 @@ class ResponseExportService
             'Respondent Name',
             'Respondent Email',
             'Respondent Phone',
-            'IP Address',
             'Submitted At',
             'Created At',
         ];
@@ -181,7 +179,7 @@ class ResponseExportService
         $pdf = Pdf::loadView('exports.responses-pdf', [
             'title' => $surveyTitle,
             'headers' => $headers,
-            'rows' => array_map(fn ($row) => $this->normalizeRow($row, $headers), $rows),
+            'rows' => array_map(fn($row) => $this->normalizeRow($row, $headers), $rows),
             'stats' => $stats,
             'generatedAt' => now()->format('F j, Y \a\t g:i A'),
             'totalResponses' => $responses->count(),

@@ -73,7 +73,6 @@ describe('Excel Export', function () {
             ->toContain('Submitted At')
             ->toContain('Respondent Name')
             ->toContain('Respondent Email')
-            ->toContain('IP Address')
             ->toContain('Duration')
             ->toContain('Test Question');
     });

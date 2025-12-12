@@ -42,9 +42,7 @@ class ViewResponse extends ViewRecord
                             ->label('Phone')
                             ->default('-'),
 
-                        TextEntry::make('ip_address')
-                            ->label('IP Address')
-                            ->default('-'),
+                        // IP Address removed
                     ])
                     ->columns(2),
 
@@ -56,7 +54,7 @@ class ViewResponse extends ViewRecord
                             $question = $answer->question;
                             $value = $this->formatAnswerValue($answer, $question);
 
-                            $entries[] = TextEntry::make('answer_'.$answer->id)
+                            $entries[] = TextEntry::make('answer_' . $answer->id)
                                 ->label($question->question)
                                 ->state($value)
                                 ->columnSpanFull();

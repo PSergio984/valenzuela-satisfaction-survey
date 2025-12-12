@@ -16,7 +16,6 @@ describe('ResponseExportService', function () {
                 'respondent_name' => 'John Doe',
                 'respondent_email' => 'john@example.com',
                 'respondent_phone' => '555-1234',
-                'ip_address' => '127.0.0.1',
                 'submitted_at' => now(),
             ]);
 
@@ -26,8 +25,7 @@ describe('ResponseExportService', function () {
                 ->and($transformed)->toHaveKey('Survey', 'Test Survey')
                 ->and($transformed)->toHaveKey('Respondent Name', 'John Doe')
                 ->and($transformed)->toHaveKey('Respondent Email', 'john@example.com')
-                ->and($transformed)->toHaveKey('Respondent Phone', '555-1234')
-                ->and($transformed)->toHaveKey('IP Address', '127.0.0.1');
+                ->and($transformed)->toHaveKey('Respondent Phone', '555-1234');
         });
 
         it('handles anonymous responses', function () {

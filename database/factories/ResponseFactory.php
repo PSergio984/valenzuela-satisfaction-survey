@@ -24,7 +24,6 @@ class ResponseFactory extends Factory
             'respondent_name' => fake()->optional()->name(),
             'respondent_email' => fake()->optional()->safeEmail(),
             'respondent_phone' => fake()->optional()->phoneNumber(),
-            'ip_address' => fake()->ipv4(),
             'user_agent' => fake()->userAgent(),
             'submitted_at' => fake()->dateTimeBetween('-1 month', 'now'),
         ];
