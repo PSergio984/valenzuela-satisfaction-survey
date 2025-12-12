@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class UserResource extends Resource
@@ -53,17 +54,24 @@ class UserResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->hasPermissionTo('view_users') ?? false;
+        return Auth::user()?->hasPermissionTo('view_users') ?? false;
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->hasPermissionTo('create_users') ?? false;
+        return Auth::user()?->hasPermissionTo('create_users') ?? false;
     }
 
     public static function canEdit($record): bool
     {
-        return auth()->user()?->hasPermissionTo('edit_users') ?? false;
+        $user = Auth::user();
+
+        if (!$user) {
+            return false;
+        }
+
+        // Use the policy to check if user can edit this record
+        return $user->can('update', $record);
     }
 
     public static function canDelete($record): bool
@@ -73,11 +81,11 @@ class UserResource extends Resource
             return false;
         }
 
-        return auth()->user()?->hasPermissionTo('delete_users') ?? false;
+        return Auth::user()?->hasPermissionTo('delete_users') ?? false;
     }
 
     public static function canView($record): bool
     {
-        return auth()->user()?->hasPermissionTo('view_users') ?? false;
+        return Auth::user()?->hasPermissionTo('view_users') ?? false;
     }
 }

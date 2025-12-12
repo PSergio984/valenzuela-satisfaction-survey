@@ -35,6 +35,11 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        // Cannot edit yourself
+        if ($user->id === $model->id) {
+            return false;
+        }
+
         // Cannot edit super admin unless you are super admin
         if ($model->hasRole('super_admin') && ! $user->hasRole('super_admin')) {
             return false;

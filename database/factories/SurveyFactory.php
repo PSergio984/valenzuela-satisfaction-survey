@@ -28,7 +28,6 @@ class SurveyFactory extends Factory
             'mode' => fake()->randomElement(SurveyMode::cases()),
             'is_active' => fake()->boolean(80),
             'is_public' => fake()->boolean(50),
-            'requires_authentication' => fake()->boolean(20),
             'collect_respondent_info' => fake()->boolean(70),
             'starts_at' => fake()->optional()->dateTimeBetween('-1 week', '+1 week'),
             'ends_at' => fake()->optional()->dateTimeBetween('+1 week', '+1 month'),

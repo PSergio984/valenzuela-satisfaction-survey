@@ -76,14 +76,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'export_responses',
         ]);
 
-        $staffRole = Role::firstOrCreate(['name' => 'staff']);
-        $staffRole->givePermissionTo([
-            'view_surveys',
-            'view_questions',
-            'view_responses',
-            'export_responses',
-        ]);
-
         $this->command->info('Roles and permissions seeded successfully!');
     }
 }

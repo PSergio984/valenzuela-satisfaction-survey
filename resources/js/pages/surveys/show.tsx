@@ -272,55 +272,59 @@ export default function SurveyShow({ survey }: Props) {
                             <Card>
                                 <CardContent className="space-y-8 pt-6">
                                     {/* Optional Respondent Info */}
-                                    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
-                                        <h3 className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Optional: Your Information
-                                        </h3>
-                                        <div className="grid gap-4 sm:grid-cols-2">
-                                            <div>
-                                                <Label
-                                                    htmlFor="respondent_name"
-                                                    className="text-sm"
-                                                >
-                                                    Name
-                                                </Label>
-                                                <Input
-                                                    id="respondent_name"
-                                                    type="text"
-                                                    value={data.respondent_name}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'respondent_name',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    placeholder="Your name (optional)"
-                                                />
-                                            </div>
-                                            <div>
-                                                <Label
-                                                    htmlFor="respondent_email"
-                                                    className="text-sm"
-                                                >
-                                                    Email
-                                                </Label>
-                                                <Input
-                                                    id="respondent_email"
-                                                    type="email"
-                                                    value={
-                                                        data.respondent_email
-                                                    }
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'respondent_email',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    placeholder="Your email (optional)"
-                                                />
+                                    {survey.collect_respondent_info && (
+                                        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
+                                            <h3 className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Optional: Your Information
+                                            </h3>
+                                            <div className="grid gap-4 sm:grid-cols-2">
+                                                <div>
+                                                    <Label
+                                                        htmlFor="respondent_name"
+                                                        className="text-sm"
+                                                    >
+                                                        Name
+                                                    </Label>
+                                                    <Input
+                                                        id="respondent_name"
+                                                        type="text"
+                                                        value={
+                                                            data.respondent_name
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                'respondent_name',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        placeholder="Your name (optional)"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Label
+                                                        htmlFor="respondent_email"
+                                                        className="text-sm"
+                                                    >
+                                                        Email
+                                                    </Label>
+                                                    <Input
+                                                        id="respondent_email"
+                                                        type="email"
+                                                        value={
+                                                            data.respondent_email
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                'respondent_email',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        placeholder="Your email (optional)"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
 
                                     {/* Questions */}
                                     {survey.questions?.map((question) =>

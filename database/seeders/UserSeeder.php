@@ -45,8 +45,8 @@ class UserSeeder extends Seeder
         );
         $admin2->assignRole('admin');
 
-        // Staff users
-        $staff1 = User::firstOrCreate(
+        // Additional admin users (formerly staff)
+        $admin3 = User::firstOrCreate(
             ['email' => 'staff1@valenzuela.gov.ph'],
             [
                 'name' => 'Maria Santos',
@@ -54,9 +54,9 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $staff1->assignRole('staff');
+        $admin3->assignRole('admin');
 
-        $staff2 = User::firstOrCreate(
+        $admin4 = User::firstOrCreate(
             ['email' => 'staff2@valenzuela.gov.ph'],
             [
                 'name' => 'Juan Dela Cruz',
@@ -64,9 +64,9 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $staff2->assignRole('staff');
+        $admin4->assignRole('admin');
 
-        $staff3 = User::firstOrCreate(
+        $admin5 = User::firstOrCreate(
             ['email' => 'staff3@valenzuela.gov.ph'],
             [
                 'name' => 'Ana Reyes',
@@ -74,7 +74,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $staff3->assignRole('staff');
+        $admin5->assignRole('admin');
 
         // Demo/Test users without roles (regular users)
         User::firstOrCreate(
