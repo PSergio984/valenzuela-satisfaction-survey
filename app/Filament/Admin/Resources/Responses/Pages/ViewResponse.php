@@ -24,7 +24,8 @@ class ViewResponse extends ViewRecord
 
                         TextEntry::make('submitted_at')
                             ->label('Submitted At')
-                            ->dateTime('M d, Y H:i:s'),
+                            ->dateTime('M d, Y H:i:s')
+                            ->timezone('Asia/Manila'),
                     ])
                     ->columns(2),
 
@@ -50,13 +51,31 @@ class ViewResponse extends ViewRecord
                     ->schema(function ($record) {
                         $entries = [];
 
-                        foreach ($record->answers()->with('question.options')->get() as $answer) {
+                        // Load answers with question and options relationships
+                        $answers = $record->answers()
+                            ->with(['question', 'question.options'])
+                            ->orderBy('question_id')
+                            ->get();
+
+                        foreach ($answers as $answer) {
                             $question = $answer->question;
+
+                            if (!$question) {
+                                continue; // Skip if question was deleted
+                            }
+
                             $value = $this->formatAnswerValue($answer, $question);
 
                             $entries[] = TextEntry::make('answer_' . $answer->id)
                                 ->label($question->question)
                                 ->state($value)
+                                ->columnSpanFull();
+                        }
+
+                        if (empty($entries)) {
+                            $entries[] = TextEntry::make('no_answers')
+                                ->label('No Answers')
+                                ->state('This response has no answers recorded.')
                                 ->columnSpanFull();
                         }
 
@@ -67,14 +86,34 @@ class ViewResponse extends ViewRecord
 
     protected function formatAnswerValue($answer, Question $question): string
     {
-        if (in_array($question->type, [Question::TYPE_CHECKBOX, Question::TYPE_RADIO, Question::TYPE_SELECT])) {
-            if (! empty($answer->selected_options)) {
-                $options = $question->options->whereIn('id', $answer->selected_options);
+        // Handle rating type
+        if ($question->type === Question::TYPE_RATING) {
+            $value = $answer->value ?? '';
+            return $value ? $value . ' / 5' : '-';
+        }
 
-                return $options->pluck('label')->join(', ');
+        // For radio, checkbox, and select - check selected_options first
+        if (in_array($question->type, [Question::TYPE_CHECKBOX, Question::TYPE_RADIO, Question::TYPE_SELECT])) {
+            // If selected_options array has IDs, convert to labels
+            if (!empty($answer->selected_options) && is_array($answer->selected_options)) {
+                $options = $question->options->whereIn('id', $answer->selected_options);
+                if ($options->isNotEmpty()) {
+                    return $options->pluck('label')->join(', ');
+                }
+            }
+
+            // Fall back to value field (which might contain the option value directly)
+            if ($answer->value) {
+                // Try to find matching option by value
+                $option = $question->options->where('value', $answer->value)->first();
+                if ($option) {
+                    return $option->label;
+                }
+                return $answer->value; // Return raw value if no match
             }
         }
 
+        // For text, textarea, and other types - return the value field
         return $answer->value ?? '-';
     }
 }

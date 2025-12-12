@@ -64,6 +64,7 @@ export interface Question {
     question: string;
     type: QuestionType;
     is_required: boolean;
+    helper_text: string | null;
     order: number;
     options?: Option[];
 }

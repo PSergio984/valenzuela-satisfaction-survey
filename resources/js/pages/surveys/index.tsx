@@ -23,7 +23,11 @@ export default function SurveyIndex({ surveys }: Props) {
                 <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80">
                     <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
                         <div className="flex items-center gap-2">
-                            <ClipboardList className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            <img
+                                src="/images/logo.png"
+                                alt="Logo"
+                                className="h-8 w-8"
+                            />
                             <span className="text-lg font-semibold text-gray-900 dark:text-white">
                                 Customer Satisfaction Surveys
                             </span>

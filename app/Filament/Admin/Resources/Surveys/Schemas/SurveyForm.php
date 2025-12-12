@@ -51,7 +51,7 @@ class SurveyForm
                         Toggle::make('is_public')
                             ->label('Public')
                             ->helperText('Public surveys are listed in the directory')
-                            ->default(false),
+                            ->default(true),
                     ])
                     ->columns(2),
 

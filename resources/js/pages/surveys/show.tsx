@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type Question, type Survey } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, ClipboardList, Loader2, Star } from 'lucide-react';
+import { ArrowLeft, Loader2, Star } from 'lucide-react';
 import { FormEvent } from 'react';
 
 interface Props {
@@ -68,129 +68,158 @@ export default function SurveyShow({ survey }: Props) {
 
         return (
             <div key={question.id} className="space-y-3">
-                <div>
-                    <Label className="text-base font-medium">
-                        {question.question}
-                        {question.is_required && (
-                            <span className="ml-1 text-red-500">*</span>
-                        )}
-                    </Label>
-                    {question.helper_text && (
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            {question.helper_text}
-                        </p>
+                <Label className="text-base font-medium">
+                    {question.question}
+                    {question.is_required && (
+                        <span className="ml-1 text-red-500">*</span>
                     )}
-                </div>
+                </Label>
 
                 {question.type === 'text' && (
-                    <Input
-                        type="text"
-                        value={(data.answers[question.id] as string) || ''}
-                        onChange={(e) =>
-                            handleAnswerChange(question.id, e.target.value)
-                        }
-                        placeholder="Enter your answer"
-                        className={error ? 'border-red-500' : ''}
-                    />
+                    <>
+                        <Input
+                            type="text"
+                            value={(data.answers[question.id] as string) || ''}
+                            onChange={(e) =>
+                                handleAnswerChange(question.id, e.target.value)
+                            }
+                            placeholder="Enter your answer"
+                            className={error ? 'border-red-500' : ''}
+                        />
+                        {question.helper_text && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {question.helper_text}
+                            </p>
+                        )}
+                    </>
                 )}
 
                 {question.type === 'textarea' && (
-                    <textarea
-                        value={(data.answers[question.id] as string) || ''}
-                        onChange={(e) =>
-                            handleAnswerChange(question.id, e.target.value)
-                        }
-                        placeholder="Enter your answer"
-                        rows={4}
-                        className={`w-full rounded-md border px-3 py-2 text-sm ${
-                            error
-                                ? 'border-red-500'
-                                : 'border-gray-300 dark:border-gray-600 dark:bg-gray-800'
-                        } focus:ring-2 focus:ring-blue-500 focus:outline-none`}
-                    />
+                    <>
+                        <textarea
+                            value={(data.answers[question.id] as string) || ''}
+                            onChange={(e) =>
+                                handleAnswerChange(question.id, e.target.value)
+                            }
+                            placeholder="Enter your answer"
+                            rows={4}
+                            className={`w-full rounded-md border px-3 py-2 text-sm ${
+                                error
+                                    ? 'border-red-500'
+                                    : 'border-gray-300 dark:border-gray-600 dark:bg-gray-800'
+                            } focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+                        />
+                        {question.helper_text && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {question.helper_text}
+                            </p>
+                        )}
+                    </>
                 )}
 
                 {question.type === 'radio' && question.options && (
-                    <div className="space-y-2">
-                        {question.options.map((option) => (
-                            <label
-                                key={option.id}
-                                className="flex cursor-pointer items-center space-x-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
-                            >
-                                <input
-                                    type="radio"
-                                    name={`question-${question.id}`}
-                                    value={option.value}
-                                    checked={
-                                        data.answers[question.id] ===
-                                        option.value
-                                    }
-                                    onChange={(e) =>
-                                        handleAnswerChange(
-                                            question.id,
-                                            e.target.value,
-                                        )
-                                    }
-                                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                                <span className="text-sm text-gray-700 dark:text-gray-300">
-                                    {option.label}
-                                </span>
-                            </label>
-                        ))}
-                    </div>
-                )}
-
-                {question.type === 'checkbox' && question.options && (
-                    <div className="space-y-2">
-                        {question.options.map((option) => {
-                            const currentValues =
-                                (data.answers[question.id] as string[]) || [];
-                            return (
+                    <>
+                        <div className="space-y-2">
+                            {question.options.map((option) => (
                                 <label
                                     key={option.id}
                                     className="flex cursor-pointer items-center space-x-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                                 >
-                                    <Checkbox
-                                        checked={currentValues.includes(
-                                            option.value,
-                                        )}
-                                        onCheckedChange={(checked) =>
-                                            handleCheckboxChange(
+                                    <input
+                                        type="radio"
+                                        name={`question-${question.id}`}
+                                        value={option.value}
+                                        checked={
+                                            data.answers[question.id] ===
+                                            option.value
+                                        }
+                                        onChange={(e) =>
+                                            handleAnswerChange(
                                                 question.id,
-                                                option.value,
-                                                checked as boolean,
+                                                e.target.value,
                                             )
                                         }
+                                        className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                                     />
                                     <span className="text-sm text-gray-700 dark:text-gray-300">
                                         {option.label}
                                     </span>
                                 </label>
-                            );
-                        })}
-                    </div>
+                            ))}
+                        </div>
+                        {question.helper_text && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {question.helper_text}
+                            </p>
+                        )}
+                    </>
+                )}
+
+                {question.type === 'checkbox' && question.options && (
+                    <>
+                        <div className="space-y-2">
+                            {question.options.map((option) => {
+                                const currentValues =
+                                    (data.answers[question.id] as string[]) ||
+                                    [];
+                                return (
+                                    <label
+                                        key={option.id}
+                                        className="flex cursor-pointer items-center space-x-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                                    >
+                                        <Checkbox
+                                            checked={currentValues.includes(
+                                                option.value,
+                                            )}
+                                            onCheckedChange={(checked) =>
+                                                handleCheckboxChange(
+                                                    question.id,
+                                                    option.value,
+                                                    checked as boolean,
+                                                )
+                                            }
+                                        />
+                                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                                            {option.label}
+                                        </span>
+                                    </label>
+                                );
+                            })}
+                        </div>
+                        {question.helper_text && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {question.helper_text}
+                            </p>
+                        )}
+                    </>
                 )}
 
                 {question.type === 'select' && question.options && (
-                    <select
-                        value={(data.answers[question.id] as string) || ''}
-                        onChange={(e) =>
-                            handleAnswerChange(question.id, e.target.value)
-                        }
-                        className={`w-full rounded-md border px-3 py-2 text-sm ${
-                            error
-                                ? 'border-red-500'
-                                : 'border-gray-300 dark:border-gray-600 dark:bg-gray-800'
-                        } focus:ring-2 focus:ring-blue-500 focus:outline-none`}
-                    >
-                        <option value="">Select an option</option>
-                        {question.options.map((option) => (
-                            <option key={option.id} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
+                    <>
+                        <select
+                            value={(data.answers[question.id] as string) || ''}
+                            onChange={(e) =>
+                                handleAnswerChange(question.id, e.target.value)
+                            }
+                            className={`w-full rounded-md border px-3 py-2 text-sm ${
+                                error
+                                    ? 'border-red-500'
+                                    : 'border-gray-300 dark:border-gray-600 dark:bg-gray-800'
+                            } focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+                        >
+                            <option value="">Select an option</option>
+                            {question.options.map((option) => (
+                                <option key={option.id} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                        {question.helper_text && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {question.helper_text}
+                            </p>
+                        )}
+                    </>
                 )}
 
                 {question.type === 'rating' && (
@@ -244,7 +273,11 @@ export default function SurveyShow({ survey }: Props) {
                 <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80">
                     <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
                         <div className="flex items-center gap-2">
-                            <ClipboardList className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            <img
+                                src="/images/logo.png"
+                                alt="Logo"
+                                className="h-8 w-8"
+                            />
                             <span className="text-lg font-semibold text-gray-900 dark:text-white">
                                 Survey
                             </span>
