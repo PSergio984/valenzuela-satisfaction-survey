@@ -91,6 +91,9 @@ class QuestionForm
                             ->default(1)
                             ->required()
                             ->live(onBlur: true)
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->step(1)
                             ->rules([
                                 'required',
                                 'integer',
@@ -110,6 +113,9 @@ class QuestionForm
                             ->default(5)
                             ->required()
                             ->live(onBlur: true)
+                            ->minValue(1)
+                            ->maxValue(100)
+                            ->step(1)
                             ->rules([
                                 'required',
                                 'integer',
@@ -124,9 +130,9 @@ class QuestionForm
                             ])
                             ->afterStateUpdated(function ($state, $get, $fail) {
                                 $min = $get('settings.min');
-                                if ($min !== null && $state !== null && (int) $min > (int) $state) {
+                                if ($min !== null && $state !== null && (int) $min >= (int) $state) {
                                     throw ValidationException::withMessages([
-                                        'data.settings.max' => 'Maximum value must be greater than minimum value.',
+                                        'data.settings.max' => 'Maximum value must be greater than minimum value (not equal).',
                                     ]);
                                 }
                             }),

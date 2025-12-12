@@ -86,6 +86,18 @@ class CreateQuestion extends CreateRecord
 
                 $this->halt();
             }
+
+            // Check if min is greater than or equal to max
+            if ($min !== null && $max !== null && $min >= $max) {
+                Notification::make()
+                    ->danger()
+                    ->title('Invalid Rating Settings')
+                    ->body('Maximum value must be greater than minimum value (they cannot be equal).')
+                    ->persistent()
+                    ->send();
+
+                $this->halt();
+            }
         }
     }
 }

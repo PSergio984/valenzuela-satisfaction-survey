@@ -81,12 +81,12 @@ class EditQuestion extends EditRecord
                 $this->halt();
             }
 
-            // Check if min is greater than max
-            if ($min !== null && $max !== null && $min > $max) {
+            // Check if min is greater than or equal to max
+            if ($min !== null && $max !== null && $min >= $max) {
                 Notification::make()
                     ->danger()
                     ->title('Invalid Rating Settings')
-                    ->body('Minimum value cannot be greater than maximum value.')
+                    ->body('Maximum value must be greater than minimum value (they cannot be equal).')
                     ->persistent()
                     ->send();
 

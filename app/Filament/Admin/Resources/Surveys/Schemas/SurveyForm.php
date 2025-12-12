@@ -65,7 +65,8 @@ class SurveyForm
                         DateTimePicker::make('ends_at')
                             ->label('End Date & Time')
                             ->seconds(false)
-                            ->afterOrEqual('starts_at'),
+                            ->after('starts_at')
+                            ->helperText('End date must be after start date'),
                     ])
                     ->columns(2),
             ]);
