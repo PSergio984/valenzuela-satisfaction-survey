@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('respondent_name')->nullable();
             $table->string('respondent_email')->nullable();
             $table->string('respondent_phone')->nullable();
-            $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
             $table->timestamp('submitted_at')->nullable();
             $table->timestamps();

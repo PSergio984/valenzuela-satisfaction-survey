@@ -30,7 +30,6 @@ class SurveyResponsesSheet implements FromCollection, ShouldAutoSize, WithEvents
                 $response->submitted_at?->format('Y-m-d H:i:s') ?? 'Not submitted',
                 $response->respondent_name ?? 'Anonymous',
                 $response->respondent_email ?? 'Not provided',
-                $response->ip_address ?? 'N/A',
                 $response->formatted_time_to_complete ?? 'N/A',
             ];
 
@@ -61,7 +60,6 @@ class SurveyResponsesSheet implements FromCollection, ShouldAutoSize, WithEvents
             'Submitted At',
             'Respondent Name',
             'Respondent Email',
-            'IP Address',
             'Duration',
         ];
 
@@ -166,7 +164,7 @@ class SurveyResponsesSheet implements FromCollection, ShouldAutoSize, WithEvents
 
         while ($columnNumber > 0) {
             $columnNumber--;
-            $letter = chr(65 + ($columnNumber % 26)).$letter;
+            $letter = chr(65 + ($columnNumber % 26)) . $letter;
             $columnNumber = intdiv($columnNumber, 26);
         }
 

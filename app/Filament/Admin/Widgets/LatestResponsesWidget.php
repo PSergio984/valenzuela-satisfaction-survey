@@ -40,9 +40,7 @@ class LatestResponsesWidget extends BaseWidget
                     ->default('-')
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('ip_address')
-                    ->label('IP')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // IP column removed
 
                 TextColumn::make('submitted_at')
                     ->label('Submitted')
