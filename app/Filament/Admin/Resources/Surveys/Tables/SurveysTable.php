@@ -28,12 +28,6 @@ class SurveysTable
                     ->sortable()
                     ->limit(50),
 
-                TextColumn::make('mode')
-                    ->badge()
-                    ->color(fn (SurveyMode $state): string => $state->getColor())
-                    ->icon(fn (SurveyMode $state): string => $state->getIcon())
-                    ->sortable(),
-
                 TextColumn::make('slug')
                     ->searchable()
                     ->copyable()
@@ -90,10 +84,6 @@ class SurveysTable
                     ->label('Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
-
-                SelectFilter::make('mode')
-                    ->label('Mode')
-                    ->options(SurveyMode::class),
             ])
             ->recordActions([
                 Action::make('qr_code')

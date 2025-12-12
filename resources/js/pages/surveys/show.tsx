@@ -68,12 +68,19 @@ export default function SurveyShow({ survey }: Props) {
 
         return (
             <div key={question.id} className="space-y-3">
-                <Label className="text-base font-medium">
-                    {question.question}
-                    {question.is_required && (
-                        <span className="ml-1 text-red-500">*</span>
+                <div>
+                    <Label className="text-base font-medium">
+                        {question.question}
+                        {question.is_required && (
+                            <span className="ml-1 text-red-500">*</span>
+                        )}
+                    </Label>
+                    {question.helper_text && (
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            {question.helper_text}
+                        </p>
                     )}
-                </Label>
+                </div>
 
                 {question.type === 'text' && (
                     <Input

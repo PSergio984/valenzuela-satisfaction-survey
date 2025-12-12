@@ -29,33 +29,21 @@
                 class="text-gray-700 dark:text-gray-300">
                 {{ $surveyUrl }}
             </code>
-            <x-filament::button color="primary" size="xs"
-                x-on:click.prevent="
-                    // Try clipboard API, fallback to execCommand
-                    if (window.navigator.clipboard) {
-                        window.navigator.clipboard.writeText('{{ $surveyUrl }}')
-                            .then(() => { copied = true; showToast = true; setTimeout(() => { copied = false; showToast = false }, 2000); })
-                            .catch(() => {
-                                // fallback
-                                const el = document.createElement('textarea');
-                                el.value = '{{ $surveyUrl }}';
-                                document.body.appendChild(el);
-                                el.select();
-                                document.execCommand('copy');
-                                document.body.removeChild(el);
-                                copied = true; showToast = true; setTimeout(() => { copied = false; showToast = false }, 2000);
-                            });
-                    } else {
-                        const el = document.createElement('textarea');
-                        el.value = '{{ $surveyUrl }}';
-                        document.body.appendChild(el);
-                        el.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(el);
-                        copied = true; showToast = true; setTimeout(() => { copied = false; showToast = false }, 2000);
-                    }
-                "
-                x-text="copied ? 'Copied!' : 'Copy'" />
+            <button
+                onclick="navigator.clipboard.writeText('{{ $surveyUrl }}').then(() => {
+                    const btn = this;
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('bg-green-600');
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.classList.remove('bg-green-600');
+                    }, 2000);
+                })"
+                style="padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; border: none;"
+                class="bg-blue-600 hover:bg-blue-700 text-white">
+                Copy
+            </button>
         </div>
 
         {{-- Toast/Modal for Copied --}}

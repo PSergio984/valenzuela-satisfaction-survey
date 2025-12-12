@@ -69,7 +69,7 @@ export default function SurveyIndex({ surveys }: Props) {
                                 {surveys.map((survey) => (
                                     <Card
                                         key={survey.id}
-                                        className="group transition-all hover:shadow-lg dark:hover:shadow-gray-900/50"
+                                        className="transition-shadow hover:shadow-lg dark:hover:shadow-gray-900/50"
                                     >
                                         <CardHeader>
                                             <CardTitle className="flex items-start justify-between">
@@ -87,9 +87,9 @@ export default function SurveyIndex({ surveys }: Props) {
                                             <Link
                                                 href={`/surveys/${survey.slug}`}
                                             >
-                                                <Button className="w-full group-hover:bg-blue-600">
+                                                <Button className="w-full hover:bg-blue-600">
                                                     Take Survey
-                                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
                                                 </Button>
                                             </Link>
                                         </CardContent>
