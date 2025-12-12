@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>All Survey Responses Report</title>
+    <title>{{ $title ?? 'Survey Responses Report' }}</title>
     <style>
         * {
             margin: 0;
@@ -84,6 +84,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 9px;
+            table-layout: fixed;
         }
         .responses-table th {
             background: #e5e7eb;
@@ -94,13 +95,16 @@
             text-transform: uppercase;
             color: #374151;
             border: 1px solid #d1d5db;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .responses-table td {
             padding: 5px 4px;
             border: 1px solid #e5e7eb;
             vertical-align: top;
             word-wrap: break-word;
-            max-width: 120px;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
         .responses-table tr:nth-child(even) {
             background: #f9fafb;
@@ -159,7 +163,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>All Survey Responses Report</h1>
+        <h1>{{ $title ?? 'All Survey Responses Report' }}</h1>
         <p>Generated on {{ $generatedAt->format('F j, Y \a\t g:i A') }}</p>
     </div>
 
@@ -235,35 +239,28 @@
                             <th style="width: 30px;">#</th>
                             <th style="width: 70px;">Date</th>
                             <th style="width: 80px;">Respondent</th>
-                            @foreach($responses->first()->answers->take(5) as $answer)
-                                <th>{{ Str::limit($answer->question->question ?? 'Q', 25) }}</th>
+                            @foreach($responses->first()->answers as $answer)
+                                <th>{{ $answer->question->question ?? 'Q' }}</th>
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($responses->take(20) as $index => $response)
+                        @foreach($responses as $index => $response)
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $response->submitted_at?->format('M d, Y') ?? 'N/A' }}</td>
-                            <td>{{ Str::limit($response->respondent_name ?? 'Anonymous', 15) }}</td>
-                            @foreach($response->answers->take(5) as $answer)
+                            <td>{{ $response->respondent_name ?? 'Anonymous' }}</td>
+                            @foreach($response->answers as $answer)
                                 <td>
                                     @if($answer->selected_options)
-                                        {{ Str::limit(implode(', ', $answer->selected_options), 20) }}
+                                        {{ implode(', ', $answer->selected_options) }}
                                     @else
-                                        {{ Str::limit($answer->value ?? '', 20) }}
+                                        {{ $answer->value ?? '' }}
                                     @endif
                                 </td>
                             @endforeach
                         </tr>
                         @endforeach
-                        @if($responses->count() > 20)
-                        <tr>
-                            <td colspan="{{ 3 + min($responses->first()->answers->count(), 5) }}" style="text-align: center; color: #6b7280; font-style: italic;">
-                                ... and {{ $responses->count() - 20 }} more responses
-                            </td>
-                        </tr>
-                        @endif
                     </tbody>
                 </table>
             </div>
