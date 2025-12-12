@@ -22,28 +22,32 @@ class EditQuestion extends EditRecord
     protected function getFormActions(): array
     {
         return [
-            $this->getSaveFormAction()
-                ->disabled(function () {
-                    // Disable save button if rating type has negative values
-                    if (isset($this->data['type']) && $this->data['type'] === Question::TYPE_RATING) {
-                        $min = $this->data['settings']['min'] ?? null;
-                        $max = $this->data['settings']['max'] ?? null;
-
-                        if ($min !== null && (int) $min < 0) {
-                            return true;
-                        }
-                        if ($max !== null && (int) $max < 1) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }),
+            $this->getSaveFormAction(),
             $this->getCancelFormAction(),
         ];
     }
 
     protected function beforeSave(): void
     {
+        // Validate order field
+        $order = $this->data['order'] ?? null;
+        if ($order !== null) {
+            if (is_string($order)) {
+                $order = (int) $order;
+            }
+
+            if ($order < 0) {
+                Notification::make()
+                    ->danger()
+                    ->title('Invalid Order Value')
+                    ->body('Order cannot be negative. Please enter a value of 0 or greater.')
+                    ->persistent()
+                    ->send();
+
+                $this->halt();
+            }
+        }
+
         // Validate rating settings if type is rating
         if ($this->data['type'] === Question::TYPE_RATING) {
             $min = $this->data['settings']['min'] ?? null;
