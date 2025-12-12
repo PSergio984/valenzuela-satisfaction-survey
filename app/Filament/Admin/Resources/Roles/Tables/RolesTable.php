@@ -16,13 +16,14 @@ class RolesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Name')
                     ->searchable()
                     ->sortable()
+                    ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state)))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'super_admin' => 'danger',
                         'admin' => 'warning',
-                        'staff' => 'info',
                         default => 'gray',
                     }),
 

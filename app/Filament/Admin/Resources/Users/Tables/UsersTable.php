@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Users\Tables;
 
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -32,7 +33,6 @@ class UsersTable
                     ->color(fn (string $state): string => match ($state) {
                         'super_admin' => 'danger',
                         'admin' => 'warning',
-                        'staff' => 'info',
                         default => 'gray',
                     })
                     ->separator(', '),
@@ -57,9 +57,10 @@ class UsersTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->authorize('update'),
                 DeleteAction::make()
-                    ->hidden(fn ($record) => $record->hasRole('super_admin'))
+                    ->hidden(fn (User $record) => $record->hasRole('super_admin'))
                     ->requiresConfirmation(),
             ])
             ->toolbarActions([
