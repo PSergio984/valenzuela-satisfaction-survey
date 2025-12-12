@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\Responses\Pages;
 use App\Filament\Admin\Resources\Responses\ResponseResource;
 use App\Models\Question;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Placeholder;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -24,10 +25,14 @@ class ViewResponse extends ViewRecord
 
                         TextEntry::make('submitted_at')
                             ->label('Submitted At')
-                            ->dateTime('M d, Y H:i:s')
+                            ->dateTime('M d, Y h:i A')
                             ->timezone('Asia/Manila'),
                     ])
-                    ->columns(2),
+                    ->columns([
+                        'sm' => 1,
+                        'md' => 2,
+                    ])
+                    ->compact(),
 
                 Section::make('Respondent Information')
                     ->schema([
@@ -45,42 +50,47 @@ class ViewResponse extends ViewRecord
 
                         // IP Address removed
                     ])
-                    ->columns(2),
+                    ->columns([
+                        'sm' => 1,
+                        'md' => 2,
+                        'lg' => 3,
+                    ])
+                    ->compact(),
 
-                Section::make('Answers')
-                    ->schema(function ($record) {
-                        $entries = [];
+                // Section::make('Answers')
+                //     ->schema(function ($record) {
+                //         $entries = [];
 
-                        // Load answers with question and options relationships
-                        $answers = $record->answers()
-                            ->with(['question', 'question.options'])
-                            ->orderBy('question_id')
-                            ->get();
+                //         // Load answers with question and options relationships
+                //         $answers = $record->answers()
+                //             ->with(['question', 'question.options'])
+                //             ->orderBy('question_id')
+                //             ->get();
 
-                        foreach ($answers as $answer) {
-                            $question = $answer->question;
+                //         foreach ($answers as $answer) {
+                //             $question = $answer->question;
 
-                            if (!$question) {
-                                continue; // Skip if question was deleted
-                            }
+                //             if (!$question) {
+                //                 continue; // Skip if question was deleted
+                //             }
 
-                            $value = $this->formatAnswerValue($answer, $question);
+                //             $value = $this->formatAnswerValue($answer, $question);
 
-                            $entries[] = TextEntry::make('answer_' . $answer->id)
-                                ->label($question->question)
-                                ->state($value)
-                                ->columnSpanFull();
-                        }
+                //             $entries[] = Placeholder::make('answer_' . $answer->id)
+                //                 ->label($question->question)
+                //                 ->content($value)
+                //                 ->columnSpanFull();
+                //         }
 
-                        if (empty($entries)) {
-                            $entries[] = TextEntry::make('no_answers')
-                                ->label('No Answers')
-                                ->state('This response has no answers recorded.')
-                                ->columnSpanFull();
-                        }
+                //         if (empty($entries)) {
+                //             $entries[] = Placeholder::make('no_answers')
+                //                 ->label('No Answers')
+                //                 ->content('This response has no answers recorded.')
+                //                 ->columnSpanFull();
+                //         }
 
-                        return $entries;
-                    }),
+                //         return $entries;
+                //     }),
             ]);
     }
 
