@@ -18,5 +18,8 @@ class CreateUser extends CreateRecord
     {
         // Mark email as verified for users created by admin
         $this->record->markEmailAsVerified();
+
+        // Auto-assign admin role to new users
+        $this->record->assignRole('admin');
     }
 }

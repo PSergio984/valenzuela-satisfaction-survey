@@ -87,11 +87,13 @@ class QuestionForm
                         TextInput::make('settings.min')
                             ->label('Minimum Value')
                             ->numeric()
+                            ->minValue(0)
                             ->default(1),
 
                         TextInput::make('settings.max')
                             ->label('Maximum Value')
                             ->numeric()
+                            ->minValue(1)
                             ->default(5),
 
                         TextInput::make('settings.min_label')

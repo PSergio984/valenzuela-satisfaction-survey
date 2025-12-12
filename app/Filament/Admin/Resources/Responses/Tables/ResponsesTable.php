@@ -9,8 +9,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class ResponsesTable
@@ -35,10 +37,6 @@ class ResponsesTable
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('answers_count')
-                    ->label('Answers')
-                    ->counts('answers'),
-
                 // IP column removed
 
                 TextColumn::make('submitted_at')
@@ -56,6 +54,78 @@ class ResponsesTable
             ->filters([
                 SelectFilter::make('survey')
                     ->relationship('survey', 'title'),
+
+                Filter::make('submitted_at')
+                    ->form([
+                        \Filament\Forms\Components\DatePicker::make('from')
+                            ->label('From Date'),
+                        \Filament\Forms\Components\DatePicker::make('until')
+                            ->label('Until Date'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('submitted_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('submitted_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['from'] ?? null) {
+                            $indicators[] = 'From ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                        }
+                        if ($data['until'] ?? null) {
+                            $indicators[] = 'Until ' . \Carbon\Carbon::parse($data['until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    }),
+
+                Filter::make('today')
+                    ->label('Today')
+                    ->query(fn (Builder $query): Builder => $query->whereDate('submitted_at', today())),
+
+                Filter::make('this_week')
+                    ->label('This Week')
+                    ->query(fn (Builder $query): Builder => $query->whereBetween('submitted_at', [now()->startOfWeek(), now()->endOfWeek()])),
+
+                Filter::make('this_month')
+                    ->label('This Month')
+                    ->query(fn (Builder $query): Builder => $query->whereMonth('submitted_at', now()->month)
+                        ->whereYear('submitted_at', now()->year)),
+
+                SelectFilter::make('has_name')
+                    ->label('Has Respondent Name')
+                    ->options([
+                        'yes' => 'Yes',
+                        'no' => 'No (Anonymous)',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if ($data['value'] === 'yes') {
+                            return $query->whereNotNull('respondent_name');
+                        } elseif ($data['value'] === 'no') {
+                            return $query->whereNull('respondent_name');
+                        }
+                        return $query;
+                    }),
+
+                SelectFilter::make('has_email')
+                    ->label('Has Email')
+                    ->options([
+                        'yes' => 'Yes',
+                        'no' => 'No',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if ($data['value'] === 'yes') {
+                            return $query->whereNotNull('respondent_email');
+                        } elseif ($data['value'] === 'no') {
+                            return $query->whereNull('respondent_email');
+                        }
+                        return $query;
+                    }),
             ])
             ->recordActions([
                 ViewAction::make(),

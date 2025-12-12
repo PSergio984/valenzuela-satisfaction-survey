@@ -45,16 +45,6 @@ class UserForm
                             ->dehydrated(false),
                     ])
                     ->columns(2),
-
-                Section::make('Roles & Permissions')
-                    ->description('Assign roles to control user access')
-                    ->schema([
-                        Select::make('roles')
-                            ->relationship('roles', 'name')
-                            ->multiple()
-                            ->preload()
-                            ->searchable(),
-                    ]),
             ]);
     }
 }

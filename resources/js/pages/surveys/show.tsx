@@ -21,12 +21,14 @@ interface Props {
 interface FormData {
     respondent_name: string;
     respondent_email: string;
+    respondent_phone: string;
     answers: Record<number, string | string[]>;
 }
 
 export default function SurveyShow({ survey }: Props) {
     const { data, setData, post, processing, errors } = useForm<FormData>({
         respondent_name: '',
+        respondent_phone: '',
         respondent_email: '',
         answers: {},
     });
@@ -279,7 +281,7 @@ export default function SurveyShow({ survey }: Props) {
                                 className="h-8 w-8"
                             />
                             <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Survey
+                                Los Pollos
                             </span>
                         </div>
                         <Link
@@ -361,6 +363,29 @@ export default function SurveyShow({ survey }: Props) {
                                                         }
                                                         placeholder="Your email (optional)"
                                                     />
+                                                    <div>
+                                                        <Label
+                                                            htmlFor="respondent_phone"
+                                                            className="text-sm"
+                                                        >
+                                                            Phone Number
+                                                        </Label>
+                                                        <Input
+                                                            id="respondent_phone"
+                                                            type="tel"
+                                                            value={
+                                                                data.respondent_phone
+                                                            }
+                                                            onChange={(e) =>
+                                                                setData(
+                                                                    'respondent_phone',
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                            placeholder="Your phone number (optional)"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
