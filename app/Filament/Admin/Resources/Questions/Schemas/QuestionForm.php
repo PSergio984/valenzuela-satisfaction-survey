@@ -11,6 +11,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\ValidationException;
 
 class QuestionForm
 {
@@ -87,14 +88,48 @@ class QuestionForm
                         TextInput::make('settings.min')
                             ->label('Minimum Value')
                             ->numeric()
-                            ->minValue(0)
-                            ->default(1),
+                            ->default(1)
+                            ->required()
+                            ->live(onBlur: true)
+                            ->rules([
+                                'required',
+                                'integer',
+                                'min:0',
+                                function () {
+                                    return function (string $attribute, $value, $fail) {
+                                        if ($value < 0) {
+                                            $fail('Minimum value cannot be negative. Please enter 0 or greater.');
+                                        }
+                                    };
+                                },
+                            ]),
 
                         TextInput::make('settings.max')
                             ->label('Maximum Value')
                             ->numeric()
-                            ->minValue(1)
-                            ->default(5),
+                            ->default(5)
+                            ->required()
+                            ->live(onBlur: true)
+                            ->rules([
+                                'required',
+                                'integer',
+                                'min:1',
+                                function () {
+                                    return function (string $attribute, $value, $fail) {
+                                        if ($value < 1) {
+                                            $fail('Maximum value must be at least 1.');
+                                        }
+                                    };
+                                },
+                            ])
+                            ->afterStateUpdated(function ($state, $get, $fail) {
+                                $min = $get('settings.min');
+                                if ($min !== null && $state !== null && (int) $min > (int) $state) {
+                                    throw ValidationException::withMessages([
+                                        'data.settings.max' => 'Maximum value must be greater than minimum value.',
+                                    ]);
+                                }
+                            }),
 
                         TextInput::make('settings.min_label')
                             ->label('Min Label')
