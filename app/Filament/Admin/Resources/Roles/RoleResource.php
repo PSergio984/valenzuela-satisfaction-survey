@@ -22,6 +22,8 @@ class RoleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|UnitEnum|null $navigationGroup = 'User Management';
 
     protected static ?int $navigationSort = 2;
@@ -43,16 +45,11 @@ class RoleResource extends Resource
 
     public static function getPages(): array
     {
-        return [
-            'index' => ListRoles::route('/'),
-            'create' => CreateRole::route('/create'),
-            'view' => ViewRole::route('/{record}'),
-            'edit' => EditRole::route('/{record}/edit'),
-        ];
+        return [];
     }
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->hasPermissionTo('view_roles') ?? false;
+        return false;
     }
 }
