@@ -23,7 +23,11 @@ export default function SurveyIndex({ surveys }: Props) {
                 <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80">
                     <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
                         <div className="flex items-center gap-2">
-                            <ClipboardList className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            <img
+                                src="/images/logo.png"
+                                alt="Logo"
+                                className="h-8 w-8"
+                            />
                             <span className="text-lg font-semibold text-gray-900 dark:text-white">
                                 Customer Satisfaction Surveys
                             </span>
@@ -69,7 +73,7 @@ export default function SurveyIndex({ surveys }: Props) {
                                 {surveys.map((survey) => (
                                     <Card
                                         key={survey.id}
-                                        className="group transition-all hover:shadow-lg dark:hover:shadow-gray-900/50"
+                                        className="transition-shadow hover:shadow-lg dark:hover:shadow-gray-900/50"
                                     >
                                         <CardHeader>
                                             <CardTitle className="flex items-start justify-between">
@@ -87,9 +91,9 @@ export default function SurveyIndex({ surveys }: Props) {
                                             <Link
                                                 href={`/surveys/${survey.slug}`}
                                             >
-                                                <Button className="w-full group-hover:bg-blue-600">
+                                                <Button className="w-full hover:bg-blue-600">
                                                     Take Survey
-                                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
                                                 </Button>
                                             </Link>
                                         </CardContent>

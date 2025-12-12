@@ -29,14 +29,6 @@ class SurveyForm
                             ->rows(3)
                             ->columnSpanFull(),
 
-                        Radio::make('mode')
-                            ->label('Survey Mode')
-                            ->options(SurveyMode::class)
-                            ->default(SurveyMode::Simple)
-                            ->inline()
-                            ->required()
-                            ->columnSpanFull(),
-
                         TextInput::make('slug')
                             ->helperText('Leave empty to auto-generate from title')
                             ->unique(ignoreRecord: true)
@@ -59,14 +51,9 @@ class SurveyForm
                         Toggle::make('is_public')
                             ->label('Public')
                             ->helperText('Public surveys are listed in the directory')
-                            ->default(false),
-
-                        Toggle::make('collect_respondent_info')
-                            ->label('Collect Respondent Info')
-                            ->helperText('Ask for name and email from respondents')
                             ->default(true),
                     ])
-                    ->columns(3),
+                    ->columns(2),
 
                 Section::make('Schedule')
                     ->description('Optional start and end dates for the survey')

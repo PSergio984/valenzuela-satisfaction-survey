@@ -1,7 +1,7 @@
 import { index as surveysIndex } from '@/actions/App/Http/Controllers/SurveyController';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ClipboardList, Users, BarChart3, ArrowRight } from 'lucide-react';
+import { ArrowRight, BarChart3, ClipboardList, Users } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -14,9 +14,6 @@ export default function Welcome() {
                 <header className="w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-                                <ClipboardList className="h-6 w-6 text-white" />
-                            </div>
                             <span className="text-xl font-bold text-gray-900 dark:text-white">
                                 Valenzuela Survey
                             </span>
@@ -47,10 +44,14 @@ export default function Welcome() {
                     <div className="mx-auto max-w-4xl text-center">
                         <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">
                             City of Valenzuela
-                            <span className="block text-blue-600">Customer Satisfaction Survey</span>
+                            <span className="block text-blue-600">
+                                Customer Satisfaction Survey
+                            </span>
                         </h1>
                         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-                            Help us improve our services by sharing your feedback. Your responses are valuable and will help us serve you better.
+                            Help us improve our services by sharing your
+                            feedback. Your responses are valuable and will help
+                            us serve you better.
                         </p>
                         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                             <Link
@@ -69,27 +70,36 @@ export default function Welcome() {
                             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900">
                                 <ClipboardList className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Easy to Use</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                Easy to Use
+                            </h3>
                             <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                Simple and intuitive surveys that take just a few minutes to complete.
+                                Simple and intuitive surveys that take just a
+                                few minutes to complete.
                             </p>
                         </div>
                         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
                             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900">
                                 <Users className="h-6 w-6 text-green-600 dark:text-green-400" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Your Voice Matters</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                Your Voice Matters
+                            </h3>
                             <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                Every response helps shape better services for our community.
+                                Every response helps shape better services for
+                                our community.
                             </p>
                         </div>
                         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
                             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900">
                                 <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Data-Driven</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                Data-Driven
+                            </h3>
                             <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                Your feedback is analyzed to improve city services continuously.
+                                Your feedback is analyzed to improve city
+                                services continuously.
                             </p>
                         </div>
                     </div>
@@ -99,7 +109,8 @@ export default function Welcome() {
                 <footer className="border-t border-gray-200 bg-white py-8 dark:border-gray-700 dark:bg-gray-900">
                     <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                            © {new Date().getFullYear()} City of Valenzuela. All rights reserved.
+                            © {new Date().getFullYear()} City of Valenzuela. All
+                            rights reserved.
                         </p>
                     </div>
                 </footer>

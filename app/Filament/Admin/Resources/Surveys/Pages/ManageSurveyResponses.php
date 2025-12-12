@@ -15,6 +15,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -34,45 +35,26 @@ class ManageSurveyResponses extends ManageRelatedRecords
     {
         return $schema
             ->components([
-                Section::make('Respondent Information')
-                    ->schema([
-                        TextEntry::make('respondent_name')
-                            ->label('Name')
-                            ->placeholder('Anonymous'),
+                TextEntry::make('respondent_name')
+                    ->label('Name')
+                    ->placeholder('Anonymous'),
 
-                        TextEntry::make('respondent_email')
-                            ->label('Email')
-                            ->placeholder('Not provided'),
+                TextEntry::make('respondent_email')
+                    ->label('Email')
+                    ->placeholder('Not provided'),
 
-                        TextEntry::make('respondent_phone')
-                            ->label('Phone')
-                            ->placeholder('Not provided'),
+                TextEntry::make('respondent_phone')
+                    ->label('Phone')
+                    ->placeholder('Not provided'),
 
-                        TextEntry::make('submitted_at')
-                            ->label('Submitted')
-                            ->dateTime('M d, Y \a\t g:i A'),
+                TextEntry::make('submitted_at')
+                    ->label('Submitted')
+                    ->dateTime('M d, Y \a\t g:i A'),
 
-                        TextEntry::make('formatted_time_to_complete')
-                            ->label('Time to Complete'),
+                TextEntry::make('formatted_time_to_complete')
+                    ->label('Time to Complete'),
 
-                        // IP Address removed
-                    ])
-                    ->columns(3),
-
-                Section::make('Answers')
-                    ->schema([
-                        RepeatableEntry::make('answers')
-                            ->schema([
-                                TextEntry::make('question.question')
-                                    ->label('Question')
-                                    ->columnSpanFull(),
-
-                                TextEntry::make('answer')
-                                    ->label('Answer')
-                                    ->columnSpanFull(),
-                            ])
-                            ->columns(1),
-                    ]),
+                // IP Address removed
             ]);
     }
 
@@ -113,13 +95,77 @@ class ManageSurveyResponses extends ManageRelatedRecords
             ])
             ->defaultSort('submitted_at', 'desc')
             ->filters([
-                Filter::make('completed')
-                    ->label('Completed Only')
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('submitted_at')),
+                Filter::make('submitted_at')
+                    ->form([
+                        \Filament\Forms\Components\DatePicker::make('from')
+                            ->label('From Date'),
+                        \Filament\Forms\Components\DatePicker::make('until')
+                            ->label('Until Date'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('submitted_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('submitted_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['from'] ?? null) {
+                            $indicators[] = 'From ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                        }
+                        if ($data['until'] ?? null) {
+                            $indicators[] = 'Until ' . \Carbon\Carbon::parse($data['until'])->toFormattedDateString();
+                        }
+                        return $indicators;
+                    }),
 
-                Filter::make('incomplete')
-                    ->label('Incomplete Only')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('submitted_at')),
+                Filter::make('today')
+                    ->label('Today')
+                    ->query(fn (Builder $query): Builder => $query->whereDate('submitted_at', today())),
+
+                Filter::make('this_week')
+                    ->label('This Week')
+                    ->query(fn (Builder $query): Builder => $query->whereBetween('submitted_at', [now()->startOfWeek(), now()->endOfWeek()])),
+
+                Filter::make('this_month')
+                    ->label('This Month')
+                    ->query(fn (Builder $query): Builder => $query->whereMonth('submitted_at', now()->month)
+                        ->whereYear('submitted_at', now()->year)),
+
+                SelectFilter::make('has_name')
+                    ->label('Has Respondent Name')
+                    ->options([
+                        'yes' => 'Yes',
+                        'no' => 'No (Anonymous)',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if ($data['value'] === 'yes') {
+                            return $query->whereNotNull('respondent_name');
+                        } elseif ($data['value'] === 'no') {
+                            return $query->whereNull('respondent_name');
+                        }
+                        return $query;
+                    }),
+
+                SelectFilter::make('has_email')
+                    ->label('Has Email')
+                    ->options([
+                        'yes' => 'Yes',
+                        'no' => 'No',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if ($data['value'] === 'yes') {
+                            return $query->whereNotNull('respondent_email');
+                        } elseif ($data['value'] === 'no') {
+                            return $query->whereNull('respondent_email');
+                        }
+                        return $query;
+                    }),
             ])
             ->headerActions([
                 Action::make('export_excel')
@@ -138,7 +184,8 @@ class ManageSurveyResponses extends ManageRelatedRecords
             ])
             ->actions([
                 ViewAction::make()
-                    ->slideOver(),
+                    ->slideOver()
+                    ->modalWidth('sm'),
                 DeleteAction::make(),
             ])
             ->bulkActions([

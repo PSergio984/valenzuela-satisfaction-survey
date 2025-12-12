@@ -43,7 +43,8 @@ class ResponsesTable
 
                 TextColumn::make('submitted_at')
                     ->label('Submitted')
-                    ->dateTime('M d, Y H:i')
+                    ->dateTime('M d, Y h:i A')
+                    ->timezone('Asia/Manila')
                     ->sortable(),
 
                 TextColumn::make('created_at')
