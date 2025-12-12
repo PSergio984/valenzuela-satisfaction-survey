@@ -95,14 +95,6 @@ class ManageSurveyResponses extends ManageRelatedRecords
             ])
             ->defaultSort('submitted_at', 'desc')
             ->filters([
-                Filter::make('completed')
-                    ->label('Completed Only')
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('submitted_at')),
-
-                Filter::make('incomplete')
-                    ->label('Incomplete Only')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('submitted_at')),
-
                 Filter::make('submitted_at')
                     ->form([
                         \Filament\Forms\Components\DatePicker::make('from')
