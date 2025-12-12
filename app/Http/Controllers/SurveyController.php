@@ -20,6 +20,7 @@ class SurveyController extends Controller
     {
         $surveys = Survey::query()
             ->where('is_active', true)
+            ->where('is_public', true)
             ->where(function ($query) {
                 $query->whereNull('starts_at')
                     ->orWhere('starts_at', '<=', now());

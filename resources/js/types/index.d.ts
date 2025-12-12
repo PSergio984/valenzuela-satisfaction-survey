@@ -49,6 +49,8 @@ export interface Survey {
     description: string | null;
     slug: string;
     is_active: boolean;
+    is_public: boolean;
+    collect_respondent_info: boolean;
     starts_at: string | null;
     ends_at: string | null;
     created_at: string;

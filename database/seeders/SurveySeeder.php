@@ -28,7 +28,6 @@ class SurveySeeder extends Seeder
                     'title' => $surveyData['title'],
                     'description' => $surveyData['description'],
                     'is_active' => $surveyData['is_active'],
-                    'requires_authentication' => $surveyData['requires_authentication'] ?? false,
                     'collect_respondent_info' => $surveyData['collect_respondent_info'] ?? true,
                     'starts_at' => $surveyData['starts_at'] ?? null,
                     'ends_at' => $surveyData['ends_at'] ?? null,
@@ -186,7 +185,6 @@ class SurveySeeder extends Seeder
                 'title' => 'Employee Engagement Survey',
                 'description' => 'Help us understand how we can make the workplace better for everyone.',
                 'is_active' => true,
-                'requires_authentication' => true,
                 'collect_respondent_info' => false,
                 'thank_you_message' => 'Thank you for your honest feedback. Your responses are anonymous and will help improve our workplace.',
                 'questions' => [
@@ -316,7 +314,6 @@ class SurveySeeder extends Seeder
                 'title' => 'Training Program Evaluation',
                 'description' => 'Please provide feedback on the training session you attended.',
                 'is_active' => true,
-                'requires_authentication' => true,
                 'collect_respondent_info' => true,
                 'thank_you_message' => 'Thank you for your feedback! Your input helps us improve our training programs.',
                 'questions' => [

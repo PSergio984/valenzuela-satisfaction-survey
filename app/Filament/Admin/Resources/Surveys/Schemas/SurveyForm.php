@@ -61,16 +61,12 @@ class SurveyForm
                             ->helperText('Public surveys are listed in the directory')
                             ->default(false),
 
-                        Toggle::make('requires_authentication')
-                            ->label('Require Authentication')
-                            ->helperText('Require users to log in before responding'),
-
                         Toggle::make('collect_respondent_info')
                             ->label('Collect Respondent Info')
-                            ->helperText('Ask for name, email, and phone')
+                            ->helperText('Ask for name and email from respondents')
                             ->default(true),
                     ])
-                    ->columns(4),
+                    ->columns(3),
 
                 Section::make('Schedule')
                     ->description('Optional start and end dates for the survey')
