@@ -58,9 +58,11 @@ class UsersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->authorize('update'),
+                    ->authorize('update')
+                    ->visible(fn () => auth()->user()?->hasRole('super_admin') ?? false),
                 DeleteAction::make()
                     ->hidden(fn (User $record) => $record->hasRole('super_admin'))
+                    ->visible(fn () => auth()->user()?->hasRole('super_admin') ?? false)
                     ->requiresConfirmation(),
             ])
             ->toolbarActions([
