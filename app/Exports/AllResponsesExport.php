@@ -7,6 +7,10 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class AllResponsesExport implements WithMultipleSheets
 {
+    public function __construct(
+        protected ?int $surveyId = null
+    ) {}
+
     /**
      * @return array<int, SurveyResponsesSheet>
      */
@@ -14,11 +18,16 @@ class AllResponsesExport implements WithMultipleSheets
     {
         $sheets = [];
 
-        // Get all surveys that have responses, ordered by title
-        $surveys = Survey::whereHas('responses')
+        $query = Survey::whereHas('responses')
             ->with(['questions' => fn ($q) => $q->orderBy('order'), 'responses.answers'])
-            ->orderBy('title')
-            ->get();
+            ->orderBy('title');
+
+        // Filter by survey if provided
+        if ($this->surveyId) {
+            $query->where('id', $this->surveyId);
+        }
+
+        $surveys = $query->get();
 
         foreach ($surveys as $survey) {
             $sheets[] = new SurveyResponsesSheet($survey);

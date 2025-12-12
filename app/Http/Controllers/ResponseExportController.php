@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exports\AllResponsesExport;
 use App\Models\Response;
+use App\Models\Survey;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -12,21 +14,43 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class ResponseExportController extends Controller
 {
     /**
-     * Export all responses to Excel with formatting.
+     * Export responses to Excel (supports filter by survey).
      */
-    public function exportExcel(): BinaryFileResponse
+    public function exportExcel(Request $request): BinaryFileResponse
     {
-        $filename = 'all_responses_' . now()->format('Y-m-d_His') . '.xlsx';
+        $surveyId = $request->query('survey');
 
-        return Excel::download(new AllResponsesExport, $filename);
+        if ($surveyId) {
+            $survey = Survey::findOrFail($surveyId);
+            $filename = 'responses_'.str($survey->title)->slug().'_'.now()->format('Y-m-d_His').'.xlsx';
+        } else {
+            $filename = 'all_responses_'.now()->format('Y-m-d_His').'.xlsx';
+        }
+
+        return Excel::download(new AllResponsesExport($surveyId), $filename);
     }
 
     /**
-     * Export all responses to PDF.
+     * Export responses to PDF (supports filter by survey).
      */
-    public function exportPdf(): HttpResponse
+    public function exportPdf(Request $request): HttpResponse
     {
-        $responses = Response::with(['survey', 'answers.question'])->get();
+        $surveyId = $request->query('survey');
+
+        $query = Response::with(['survey', 'answers.question'])
+            ->whereNotNull('submitted_at');
+
+        if ($surveyId) {
+            $query->where('survey_id', $surveyId);
+            $survey = Survey::find($surveyId);
+            $title = $survey ? "Survey Responses: {$survey->title}" : 'Survey Responses Report';
+            $filename = 'responses_'.($survey ? str($survey->title)->slug() : 'survey').'_'.now()->format('Y-m-d_His').'.pdf';
+        } else {
+            $title = 'All Survey Responses Report';
+            $filename = 'all_responses_'.now()->format('Y-m-d_His').'.pdf';
+        }
+
+        $responses = $query->get();
 
         // Group responses by survey for better organization
         $responsesBySurvey = $responses->groupBy('survey_id');
@@ -39,9 +63,9 @@ class ResponseExportController extends Controller
             'totalResponses' => $responses->count(),
             'stats' => $stats,
             'generatedAt' => now(),
+            'title' => $title,
+            'filterApplied' => $surveyId ? true : false,
         ]);
-
-        $filename = 'all_responses_' . now()->format('Y-m-d_His') . '.pdf';
 
         return $pdf->setPaper('a4', 'landscape')->download($filename);
     }
