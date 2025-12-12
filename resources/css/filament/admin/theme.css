@@ -1,7 +1,7 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 
 @source '../../../../app/Filament/Admin/**/*';
-@source '../../../../resources/views/filament/admin/**/*';
+@source '../../../../resources/views/filament/**/*';
 
 /* Custom sidebar styling */
 .fi-sidebar {
@@ -11,4 +11,9 @@
 /* Sidebar navigation items styling */
 .fi-sidebar-nav {
     @apply bg-transparent;
+}
+
+/* Brand name styling - white color */
+.brand-text {
+    @apply text-white font-semibold text-base;
 }

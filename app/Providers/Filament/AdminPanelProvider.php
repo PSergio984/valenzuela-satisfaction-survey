@@ -32,8 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandLogo('/images/logo.png')
-            ->brandLogoHeight('2rem')
+            ->brandName("Los Pollos")
             ->colors([
                 'primary' => Color::Blue,
             ])

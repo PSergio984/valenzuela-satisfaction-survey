@@ -78,10 +78,6 @@ class ManageSurveyResponses extends ManageRelatedRecords
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('answers_count')
-                    ->label('Answers')
-                    ->counts('answers'),
-
                 TextColumn::make('formatted_time_to_complete')
                     ->label('Duration')
                     ->toggleable(),
@@ -89,6 +85,7 @@ class ManageSurveyResponses extends ManageRelatedRecords
                 TextColumn::make('submitted_at')
                     ->label('Submitted')
                     ->dateTime('M d, Y g:i A')
+                    ->timezone('Asia/Manila')
                     ->sortable(),
 
                 // IP column removed

@@ -28,9 +28,14 @@ export default function SurveyIndex({ surveys }: Props) {
                                 alt="Logo"
                                 className="h-8 w-8"
                             />
-                            <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Customer Satisfaction Surveys
-                            </span>
+                            <div className="flex flex-col">
+                                <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                                    Los Pollos
+                                </span>
+                                <span className="text-xs text-gray-600 dark:text-gray-400">
+                                    Customer Satisfaction Surveys
+                                </span>
+                            </div>
                         </div>
                         <Link
                             href="/"
