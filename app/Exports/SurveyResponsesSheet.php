@@ -153,7 +153,7 @@ class SurveyResponsesSheet implements FromCollection, ShouldAutoSize, WithEvents
 
     protected function getLastColumn(): string
     {
-        $columnCount = 6 + $this->survey->questions->count(); // 6 base columns + questions
+        $columnCount = 5 + $this->survey->questions->count(); // 5 base columns + questions
 
         return $this->getColumnLetter($columnCount);
     }
@@ -164,7 +164,7 @@ class SurveyResponsesSheet implements FromCollection, ShouldAutoSize, WithEvents
 
         while ($columnNumber > 0) {
             $columnNumber--;
-            $letter = chr(65 + ($columnNumber % 26)) . $letter;
+            $letter = chr(65 + ($columnNumber % 26)).$letter;
             $columnNumber = intdiv($columnNumber, 26);
         }
 
