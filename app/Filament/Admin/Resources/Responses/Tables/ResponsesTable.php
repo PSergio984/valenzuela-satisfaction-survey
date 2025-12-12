@@ -39,9 +39,7 @@ class ResponsesTable
                     ->label('Answers')
                     ->counts('answers'),
 
-                TextColumn::make('ip_address')
-                    ->label('IP')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // IP column removed
 
                 TextColumn::make('submitted_at')
                     ->label('Submitted')

@@ -171,7 +171,6 @@ class ResponseSeeder extends Seeder
 
         if ($surveys->isEmpty()) {
             $this->command->warn('No surveys found. Please run SurveySeeder first.');
-
             return;
         }
 
@@ -183,7 +182,17 @@ class ResponseSeeder extends Seeder
             $responses = $this->generateResponses($survey, $responseCount);
             $totalResponses += $responses->count();
 
-            $this->command->info("Generated {$responses->count()} responses for: {$survey->title}");
+            // Simulate analytics: views_count, starts_count
+            // views_count: random 10-30% higher than starts_count
+            $startsCount = $responses->count() + fake()->numberBetween(0, (int)($responses->count() * 0.15));
+            $viewsCount = $startsCount + fake()->numberBetween((int)($startsCount * 0.1), (int)($startsCount * 0.3));
+
+            $survey->update([
+                'starts_count' => $startsCount,
+                'views_count' => $viewsCount,
+            ]);
+
+            $this->command->info("Generated {$responses->count()} responses for: {$survey->title} (Views: {$viewsCount}, Starts: {$startsCount})");
         }
 
         $this->command->newLine();
@@ -247,20 +256,31 @@ class ResponseSeeder extends Seeder
         // Determine date range for responses
         $dateRange = $this->getDateRangeForSurvey($survey);
 
+
         for ($i = 0; $i < $count; $i++) {
             // Generate a weighted random date (more recent dates are more likely)
             $submittedAt = $this->getWeightedRandomDate($dateRange['start'], $dateRange['end']);
 
-            // Create response
+            // Simulate started_at and time_to_complete (2-8 min typical, some outliers)
+            $minSeconds = 90; // 1.5 min
+            $maxSeconds = 600; // 10 min
+            $timeToComplete = fake()->numberBetween($minSeconds, $maxSeconds);
+            // 10% chance of a long response (10-20 min)
+            if (fake()->boolean(10)) {
+                $timeToComplete = fake()->numberBetween(600, 1200);
+            }
+            $startedAt = (clone $submittedAt)->subSeconds($timeToComplete);
+
             $response = Response::create([
                 'survey_id' => $survey->id,
                 'user_id' => null,
                 'respondent_name' => $survey->collect_respondent_info ? $this->getRandomName() : null,
                 'respondent_email' => $survey->collect_respondent_info ? $this->getRandomEmail() : null,
                 'respondent_phone' => $survey->collect_respondent_info && fake()->boolean(30) ? $this->getRandomPhone() : null,
-                'ip_address' => fake()->ipv4(),
                 'user_agent' => fake()->userAgent(),
+                'started_at' => $startedAt,
                 'submitted_at' => $submittedAt,
+                'time_to_complete' => $timeToComplete,
             ]);
 
             // Create answers for each question
@@ -425,7 +445,7 @@ class ResponseSeeder extends Seeder
      */
     protected function getRandomName(): string
     {
-        return $this->firstNames[array_rand($this->firstNames)].' '.$this->lastNames[array_rand($this->lastNames)];
+        return $this->firstNames[array_rand($this->firstNames)] . ' ' . $this->lastNames[array_rand($this->lastNames)];
     }
 
     /**
@@ -441,11 +461,11 @@ class ResponseSeeder extends Seeder
             "{$firstName}.{$lastName}",
             "{$firstName}{$lastName}",
             "{$firstName}_{$lastName}",
-            $firstName.fake()->numberBetween(1, 999),
-            "{$firstName}.{$lastName}".fake()->numberBetween(1, 99),
+            $firstName . fake()->numberBetween(1, 999),
+            "{$firstName}.{$lastName}" . fake()->numberBetween(1, 99),
         ];
 
-        return $patterns[array_rand($patterns)].'@'.$domains[array_rand($domains)];
+        return $patterns[array_rand($patterns)] . '@' . $domains[array_rand($domains)];
     }
 
     /**
@@ -455,6 +475,6 @@ class ResponseSeeder extends Seeder
     {
         $prefixes = ['0917', '0918', '0919', '0920', '0921', '0927', '0928', '0929', '0930', '0935', '0936', '0945', '0955', '0956', '0977', '0978', '0995', '0996', '0997'];
 
-        return $prefixes[array_rand($prefixes)].fake()->numerify('#######');
+        return $prefixes[array_rand($prefixes)] . fake()->numerify('#######');
     }
 }

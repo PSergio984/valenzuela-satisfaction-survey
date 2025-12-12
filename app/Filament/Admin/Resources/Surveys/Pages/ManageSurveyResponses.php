@@ -55,8 +55,7 @@ class ManageSurveyResponses extends ManageRelatedRecords
                         TextEntry::make('formatted_time_to_complete')
                             ->label('Time to Complete'),
 
-                        TextEntry::make('ip_address')
-                            ->label('IP Address'),
+                        // IP Address removed
                     ])
                     ->columns(3),
 
@@ -110,33 +109,31 @@ class ManageSurveyResponses extends ManageRelatedRecords
                     ->dateTime('M d, Y g:i A')
                     ->sortable(),
 
-                TextColumn::make('ip_address')
-                    ->label('IP')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // IP column removed
             ])
             ->defaultSort('submitted_at', 'desc')
             ->filters([
                 Filter::make('completed')
                     ->label('Completed Only')
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('submitted_at')),
+                    ->query(fn(Builder $query): Builder => $query->whereNotNull('submitted_at')),
 
                 Filter::make('incomplete')
                     ->label('Incomplete Only')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('submitted_at')),
+                    ->query(fn(Builder $query): Builder => $query->whereNull('submitted_at')),
             ])
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Excel')
                     ->icon('heroicon-o-table-cells')
                     ->color('success')
-                    ->url(fn () => route('admin.surveys.export.excel', $this->getOwnerRecord()))
+                    ->url(fn() => route('admin.surveys.export.excel', $this->getOwnerRecord()))
                     ->openUrlInNewTab(),
 
                 Action::make('export_pdf')
                     ->label('Export PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('danger')
-                    ->url(fn () => route('admin.surveys.export.pdf', $this->getOwnerRecord()))
+                    ->url(fn() => route('admin.surveys.export.pdf', $this->getOwnerRecord()))
                     ->openUrlInNewTab(),
             ])
             ->actions([
