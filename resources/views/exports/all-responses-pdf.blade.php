@@ -272,8 +272,8 @@
     @endif
 
     <div class="footer">
-        <p>City of Valenzuela • Customer Satisfaction Survey System</p>
-        <p style="margin-top: 3px;">© {{ date('Y') }} All rights reserved • Confidential Report</p>
+        <p>Survey System</p>
+        <p style="margin-top: 3px;">&copy; {{ date('Y') }} All rights reserved &bull; Confidential Report</p>
     </div>
 </body>
 </html>

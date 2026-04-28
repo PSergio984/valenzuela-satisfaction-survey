@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName("Los Pollos")
+            ->brandName("Survey System")
             ->colors([
                 'primary' => Color::Blue,
             ])

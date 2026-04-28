@@ -132,10 +132,10 @@ class SurveySeeder extends Seeder
             // Survey 2: Government Services Feedback
             [
                 'title' => 'Government Services Feedback',
-                'description' => 'Rate your experience with Valenzuela City government services.',
+                'description' => 'Rate your experience with our government services.',
                 'is_active' => true,
                 'collect_respondent_info' => true,
-                'thank_you_message' => 'Salamat sa iyong feedback! Your input helps us serve you better.',
+                'thank_you_message' => 'Thank you for your feedback! Your input helps us serve you better.',
                 'questions' => [
                     [
                         'type' => Question::TYPE_RATING,
@@ -159,7 +159,7 @@ class SurveySeeder extends Seeder
                         'type' => Question::TYPE_RADIO,
                         'question' => 'Which department did you visit?',
                         'is_required' => true,
-                        'options' => ["City Administrator's Office", "City Treasurer's Office", 'Business Permits', 'Engineering Office', "Mayor's Office", 'Other'],
+                        'options' => ['Administration', 'Finance', 'Operations', 'Customer Service', 'Information Technology', 'Other'],
                     ],
                     [
                         'type' => Question::TYPE_SELECT,
@@ -228,7 +228,7 @@ class SurveySeeder extends Seeder
 
             // Survey 4: Event Feedback (Completed/Past)
             [
-                'title' => 'Community Event Feedback - Araw ng Valenzuela 2024',
+                'title' => 'Community Event Feedback - Annual Celebration 2024',
                 'description' => 'Share your experience at our recent community celebration.',
                 'is_active' => false,
                 'starts_at' => now()->subDays(45),

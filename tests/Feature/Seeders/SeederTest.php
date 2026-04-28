@@ -77,7 +77,7 @@ describe('UserSeeder', function () {
     it('creates admin users', function () {
         $this->seed(UserSeeder::class);
 
-        $admin = User::where('email', 'admin@valenzuela.gov.ph')->first();
+        $admin = User::where('email', 'admin@example.com')->first();
 
         expect($admin)->not->toBeNull();
         expect($admin->hasRole('admin'))->toBeTrue();
@@ -86,7 +86,7 @@ describe('UserSeeder', function () {
     it('creates staff users', function () {
         $this->seed(UserSeeder::class);
 
-        $staff = User::where('email', 'staff1@valenzuela.gov.ph')->first();
+        $staff = User::where('email', 'admin1@example.com')->first();
 
         expect($staff)->not->toBeNull();
         expect($staff->hasRole('staff'))->toBeTrue();
