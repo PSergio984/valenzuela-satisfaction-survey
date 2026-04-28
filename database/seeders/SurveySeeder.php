@@ -135,7 +135,7 @@ class SurveySeeder extends Seeder
                 'description' => 'Rate your experience with our government services.',
                 'is_active' => true,
                 'collect_respondent_info' => true,
-                'thank_you_message' => 'Salamat sa iyong feedback! Your input helps us serve you better.',
+                'thank_you_message' => 'Thank you for your feedback! Your input helps us serve you better.',
                 'questions' => [
                     [
                         'type' => Question::TYPE_RATING,
@@ -159,7 +159,7 @@ class SurveySeeder extends Seeder
                         'type' => Question::TYPE_RADIO,
                         'question' => 'Which department did you visit?',
                         'is_required' => true,
-                        'options' => ["City Administrator's Office", "City Treasurer's Office", 'Business Permits', 'Engineering Office', "Mayor's Office", 'Other'],
+                        'options' => ['Administration', 'Finance', 'Operations', 'Customer Service', 'Information Technology', 'Other'],
                     ],
                     [
                         'type' => Question::TYPE_SELECT,
