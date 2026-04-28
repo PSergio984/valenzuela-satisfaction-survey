@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
 
         // Admin users
         $admin1 = User::firstOrCreate(
-            ['email' => 'admin@valenzuela.gov.ph'],
+            ['email' => 'admin@example.com'],
             [
                 'name' => 'System Administrator',
                 'password' => Hash::make('Pwd@12345'),
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
         $admin1->assignRole('admin');
 
         $admin2 = User::firstOrCreate(
-            ['email' => 'survey.admin@valenzuela.gov.ph'],
+            ['email' => 'survey.admin@example.com'],
             [
                 'name' => 'Survey Administrator',
                 'password' => Hash::make('Pwd@12345'),
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
 
         // Additional admin users (formerly staff)
         $admin3 = User::firstOrCreate(
-            ['email' => 'staff1@valenzuela.gov.ph'],
+            ['email' => 'admin1@example.com'],
             [
                 'name' => 'Maria Santos',
                 'password' => Hash::make('Pwd@12345'),
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
         $admin3->assignRole('admin');
 
         $admin4 = User::firstOrCreate(
-            ['email' => 'staff2@valenzuela.gov.ph'],
+            ['email' => 'admin2@example.com'],
             [
                 'name' => 'Juan Dela Cruz',
                 'password' => Hash::make('Pwd@12345'),
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
         $admin4->assignRole('admin');
 
         $admin5 = User::firstOrCreate(
-            ['email' => 'staff3@valenzuela.gov.ph'],
+            ['email' => 'admin3@example.com'],
             [
                 'name' => 'Ana Reyes',
                 'password' => Hash::make('Pwd@12345'),
@@ -100,11 +100,11 @@ class UserSeeder extends Seeder
             ['Role', 'Email', 'Password'],
             [
                 ['Super Admin', 'superadmin@gmail.com', 'Pwd@12345'],
-                ['Admin', 'admin@valenzuela.gov.ph', 'Pwd@12345'],
-                ['Admin', 'survey.admin@valenzuela.gov.ph', 'Pwd@12345'],
-                ['Staff', 'staff1@valenzuela.gov.ph', 'Pwd@12345'],
-                ['Staff', 'staff2@valenzuela.gov.ph', 'Pwd@12345'],
-                ['Staff', 'staff3@valenzuela.gov.ph', 'Pwd@12345'],
+                ['Admin', 'admin@example.com', 'Pwd@12345'],
+                ['Admin', 'survey.admin@example.com', 'Pwd@12345'],
+                ['Admin', 'admin1@example.com', 'Pwd@12345'],
+                ['Admin', 'admin2@example.com', 'Pwd@12345'],
+                ['Admin', 'admin3@example.com', 'Pwd@12345'],
                 ['(none)', 'demo@example.com', 'Pwd@12345'],
                 ['(none)', 'test@example.com', 'Pwd@12345'],
             ]

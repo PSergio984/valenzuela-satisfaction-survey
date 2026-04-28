@@ -15,7 +15,7 @@ export default function Welcome() {
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                         <div className="flex items-center gap-3">
                             <span className="text-xl font-bold text-gray-900 dark:text-white">
-                                Valenzuela Survey
+                                Survey System
                             </span>
                         </div>
                         <nav className="flex items-center gap-4">
@@ -42,12 +42,12 @@ export default function Welcome() {
                 {/* Hero Section */}
                 <main className="flex flex-1 flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
                     <div className="mx-auto max-w-4xl text-center">
-                        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">
-                            City of Valenzuela
-                            <span className="block text-blue-600">
-                                Customer Satisfaction Survey
-                            </span>
-                        </h1>
+                            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">
+                                Feedback & Survey
+                                <span className="block text-blue-600">
+                                    Management System
+                                </span>
+                            </h1>
                         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
                             Help us improve our services by sharing your
                             feedback. Your responses are valuable and will help
@@ -109,7 +109,7 @@ export default function Welcome() {
                 <footer className="border-t border-gray-200 bg-white py-8 dark:border-gray-700 dark:bg-gray-900">
                     <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                            © {new Date().getFullYear()} City of Valenzuela. All
+                            © {new Date().getFullYear()} Survey System. All
                             rights reserved.
                         </p>
                     </div>
