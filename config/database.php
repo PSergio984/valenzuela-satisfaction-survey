@@ -84,10 +84,9 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            // DATABASE_URL is provided by Render's native PostgreSQL service.
-            // Laravel parses it automatically; individual DB_* vars act as
-            // local-dev fallbacks when DATABASE_URL is not set.
-            'url' => env('DATABASE_URL'),
+            // Prefer the application's standard DB_URL setting, while still
+            // supporting DATABASE_URL for platforms like Render.
+            'url' => env('DB_URL', env('DATABASE_URL')),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'laravel'),
@@ -99,7 +98,7 @@ return [
             'search_path' => 'public',
             // Render requires SSL for external connections; 'require' is safe
             // for production and still works locally (Postgres ignores it).
-            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslmode' => env('DB_SSLMODE', 'require'),
         ],
 
         'sqlsrv' => [
