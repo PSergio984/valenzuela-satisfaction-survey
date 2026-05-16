@@ -8,6 +8,8 @@ use App\Models\Question;
 use App\Models\Response;
 use App\Models\Survey;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -16,8 +18,10 @@ class SurveyController extends Controller
     /**
      * Display a list of active surveys.
      */
-    public function index(): InertiaResponse
+    public function index(Request $request): InertiaResponse
     {
+        $search = $request->input('search');
+
         $surveys = Survey::query()
             ->where('is_active', true)
             ->where('is_public', true)
@@ -29,11 +33,21 @@ class SurveyController extends Controller
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>=', now());
             })
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
             ->orderBy('created_at', 'desc')
-            ->get(['id', 'title', 'description', 'slug']);
+            ->paginate(12)
+            ->withQueryString();
 
         return Inertia::render('surveys/index', [
             'surveys' => $surveys,
+            'filters' => [
+                'search' => $search,
+            ],
         ]);
     }
 
@@ -52,7 +66,7 @@ class SurveyController extends Controller
         $survey->incrementViews();
 
         // Track survey start (first time viewing the form)
-        $sessionKey = 'survey_started_' . $survey->id;
+        $sessionKey = 'survey_started_'.$survey->id;
         if (! session()->has($sessionKey)) {
             $survey->incrementStarts();
             session()->put($sessionKey, now());
@@ -71,8 +85,12 @@ class SurveyController extends Controller
     /**
      * Store a new survey response.
      */
-    public function store(StoreSurveyResponseRequest $request, Survey $survey): RedirectResponse
+    public function store(StoreSurveyResponseRequest $request, $survey): RedirectResponse
     {
+        if (is_string($survey)) {
+            $survey = Survey::where('slug', $survey)->firstOrFail();
+        }
+
         // Check if survey is still open
         if (! $survey->isOpen()) {
             return redirect()->route('surveys.index')
@@ -82,13 +100,15 @@ class SurveyController extends Controller
         $validated = $request->validated();
 
         // Calculate time to complete
-        $sessionKey = 'survey_started_' . $survey->id;
-        $startedAt = session()->get($sessionKey);
+        $startedAt = Carbon::parse($validated['started_at']);
         $timeToComplete = null;
 
         if ($startedAt) {
             // Use absolute value and cast to integer to ensure valid unsigned integer
             $timeToComplete = max(0, (int) abs(now()->diffInSeconds($startedAt)));
+
+            // Clean up session if it exists (legacy support)
+            $sessionKey = 'survey_started_'.$survey->id;
             session()->forget($sessionKey);
         }
 
