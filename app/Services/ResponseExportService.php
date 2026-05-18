@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exports\SurveyResponsesExport;
 use App\Models\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Collection;
@@ -54,7 +55,7 @@ class ResponseExportService
      */
     public function transformResponses(Collection $responses): array
     {
-        return $responses->map(fn(Response $response) => $this->transformResponse($response))->toArray();
+        return $responses->map(fn (Response $response) => $this->transformResponse($response))->toArray();
     }
 
     /**
@@ -179,7 +180,7 @@ class ResponseExportService
         $pdf = Pdf::loadView('exports.responses-pdf', [
             'title' => $surveyTitle,
             'headers' => $headers,
-            'rows' => array_map(fn($row) => $this->normalizeRow($row, $headers), $rows),
+            'rows' => array_map(fn ($row) => $this->normalizeRow($row, $headers), $rows),
             'stats' => $stats,
             'generatedAt' => now()->format('F j, Y \a\t g:i A'),
             'totalResponses' => $responses->count(),
@@ -240,5 +241,14 @@ class ResponseExportService
         $timestamp = now()->format('Y-m-d_His');
 
         return "{$prefix}_{$timestamp}.{$extension}";
+    }
+
+    /**
+     * Queue an Excel export for the given survey and responses.
+     */
+    public function queueExcelExport(int $surveyId, int $userId, string $filename, ?array $responseIds = null): void
+    {
+        (new SurveyResponsesExport($surveyId, $userId, $filename, $responseIds))
+            ->store('exports/'.$filename, 'private');
     }
 }

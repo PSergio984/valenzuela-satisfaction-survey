@@ -2,7 +2,7 @@
 
 ## Current Phase
 - **Phase 1: Maintenance, QOL, and Performance**
-- **Status:** Planning complete.
+- **Status:** Execution complete.
 
 ## Decisions (from CONTEXT.md)
 - D-01: Implement standard Laravel pagination and search in public list.
@@ -10,8 +10,13 @@
 - D-03: Implement 5-minute cache for expensive metrics.
 - D-04: Use Filament advanced filters for admin tables.
 - D-05: Frontend-initiated `started_at` capture for duration tracking.
+- D-06: Use `private` disk for exports and notify via Filament Notifications.
 
 ## Pending Work
-- [ ] Implement Task 1 (Backend & Admin)
-- [ ] Implement Task 2 (Queued Exports)
-- [ ] Implement Task 3 (Frontend UX & Bug fix)
+- [x] Task 0: Test Scaffolding
+- [x] Task 1: Backend Performance & Admin Filters
+- [x] Task 2: Queued Excel Exports
+- [x] Task 3: Duration Tracking Bug Fix
+- [x] Task 4: Public Survey List Improvements
+- [x] Task 5: Survey Taking UI Overhaul
+- [x] Task 6: Generate Validation Artifact

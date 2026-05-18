@@ -6,6 +6,7 @@ use App\Models\Question;
 use App\Models\Response;
 use App\Models\Survey;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
 test('can create a survey', function () {
     $user = User::factory()->create();
@@ -76,7 +77,7 @@ test('can create a response for a survey', function () {
 
 test('authenticated user can access admin surveys page', function () {
     // Seed roles and permissions
-    $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    $this->seed(RolesAndPermissionsSeeder::class);
 
     $user = User::factory()->create([
         'email_verified_at' => now(),
@@ -105,7 +106,7 @@ test('surveys index page can be accessed', function () {
     $response = $this->get('/surveys');
 
     $response->assertSuccessful();
-    $response->assertInertia(fn($page) => $page->component('surveys/index'));
+    $response->assertInertia(fn ($page) => $page->component('surveys/index'));
 });
 
 test('surveys index shows active surveys', function () {
@@ -120,12 +121,12 @@ test('surveys index shows active surveys', function () {
 
     $response->assertSuccessful();
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('surveys/index')
             ->has('surveys', 1)
             ->has(
                 'surveys.0',
-                fn($survey) => $survey
+                fn ($survey) => $survey
                     ->where('id', $activeSurvey->id)
                     ->where('title', $activeSurvey->title)
                     ->etc()
@@ -143,11 +144,11 @@ test('survey show page can be accessed for active survey', function () {
 
     $response->assertSuccessful();
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('surveys/show')
             ->has(
                 'survey',
-                fn($s) => $s
+                fn ($s) => $s
                     ->where('id', $survey->id)
                     ->where('title', $survey->title)
                     ->etc()
@@ -223,11 +224,11 @@ test('thank you page can be accessed after submission', function () {
 
     $response->assertSuccessful();
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('surveys/thank-you')
             ->has(
                 'survey',
-                fn($s) => $s
+                fn ($s) => $s
                     ->where('id', $survey->id)
                     ->where('title', $survey->title)
                     ->etc()

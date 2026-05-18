@@ -5,10 +5,11 @@
 
 **Requirements:** [PERF-01, PERF-02, PERF-03, QOL-01, BUG-01, UX-01, UX-02]
 
-**Plans:** 1 plan
+**Plans:** 2 plans
 
 ### Plans
-- [ ] 01-01-PLAN.md — Maintenance, QOL, and Performance (located at docs/planning/1-PLAN.md)
+- [ ] 01-01-PLAN.md — Backend, Admin, and Performance (located at docs/planning/1-01-PLAN.md)
+- [ ] 01-02-PLAN.md — Frontend, UX, and Bug Fixes (located at docs/planning/1-02-PLAN.md)
 
 ### Requirements Detail
 - **PERF-01**: Implement N+1 optimizations for Survey metrics (use withCount, withAvg, and Caching).

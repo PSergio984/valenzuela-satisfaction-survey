@@ -66,7 +66,7 @@ class UserResource extends Resource
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 

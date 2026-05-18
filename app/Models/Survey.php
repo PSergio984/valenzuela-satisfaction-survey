@@ -3,15 +3,17 @@
 namespace App\Models;
 
 use App\Enums\SurveyMode;
+use Database\Factories\SurveyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
 
 class Survey extends Model
 {
-    /** @use HasFactory<\Database\Factories\SurveyFactory> */
+    /** @use HasFactory<SurveyFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -70,6 +72,11 @@ class Survey extends Model
         return $this->hasMany(Response::class);
     }
 
+    public function answers(): HasManyThrough
+    {
+        return $this->hasManyThrough(Answer::class, Response::class);
+    }
+
     public function isOpen(): bool
     {
         if (! $this->is_active) {
@@ -94,13 +101,15 @@ class Survey extends Model
      */
     public function getCompletionRateAttribute(): float
     {
-        if ($this->starts_count === 0 || $this->starts_count === null) {
-            return 0;
-        }
+        return cache()->remember("survey.{$this->id}.completion_rate", 300, function () {
+            if ($this->starts_count === 0 || $this->starts_count === null) {
+                return 0.0;
+            }
 
-        $completedCount = $this->responses()->whereNotNull('submitted_at')->count();
+            $completedCount = $this->responses()->whereNotNull('submitted_at')->count();
 
-        return round(($completedCount / $this->starts_count) * 100, 1);
+            return (float) round(($completedCount / $this->starts_count) * 100, 1);
+        });
     }
 
     /**
@@ -108,11 +117,13 @@ class Survey extends Model
      */
     public function getAverageCompletionTimeAttribute(): ?int
     {
-        $avgTime = $this->responses()
-            ->whereNotNull('time_to_complete')
-            ->avg('time_to_complete');
+        return cache()->remember("survey.{$this->id}.avg_completion_time", 300, function () {
+            $avgTime = $this->responses()
+                ->whereNotNull('time_to_complete')
+                ->avg('time_to_complete');
 
-        return $avgTime ? (int) round($avgTime) : null;
+            return $avgTime ? (int) round($avgTime) : null;
+        });
     }
 
     /**

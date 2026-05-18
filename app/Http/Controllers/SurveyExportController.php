@@ -6,20 +6,51 @@ use App\Exports\SurveyResponsesExport;
 use App\Models\Question;
 use App\Models\Survey;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Notifications\Notification;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SurveyExportController extends Controller
 {
     /**
-     * Export survey responses to Excel.
+     * Export survey responses to Excel (Queued).
      */
-    public function exportExcel(Survey $survey): BinaryFileResponse
+    public function exportExcel(Survey $survey): RedirectResponse
     {
-        $filename = "survey-{$survey->slug}-responses-".now()->format('Y-m-d').'.xlsx';
+        $filename = "exports/survey-{$survey->slug}-responses-".now()->format('Y-m-d-His').'.xlsx';
+        $userId = auth()->id();
 
-        return Excel::download(new SurveyResponsesExport($survey), $filename);
+        Excel::queue(
+            new SurveyResponsesExport($survey->id, $userId, $filename),
+            $filename,
+            'private'
+        );
+
+        Notification::make()
+            ->title('Export Queued')
+            ->body('Your export is being processed and will be available in your notifications when ready.')
+            ->info()
+            ->send();
+
+        return back();
+    }
+
+    /**
+     * Download an export from the private disk.
+     */
+    public function downloadExport(Request $request): StreamedResponse
+    {
+        $path = $request->query('path');
+
+        if (! $path || ! Storage::disk('private')->exists($path)) {
+            abort(404, 'Export file not found.');
+        }
+
+        return Storage::disk('private')->download($path);
     }
 
     /**

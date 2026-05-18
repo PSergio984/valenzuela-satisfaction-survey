@@ -4,14 +4,14 @@ namespace App\Filament\Admin\Resources\Surveys\Pages;
 
 use App\Filament\Admin\Resources\Surveys\SurveyResource;
 use BackedEnum;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -94,9 +94,9 @@ class ManageSurveyResponses extends ManageRelatedRecords
             ->filters([
                 Filter::make('submitted_at')
                     ->form([
-                        \Filament\Forms\Components\DatePicker::make('from')
+                        DatePicker::make('from')
                             ->label('From Date'),
-                        \Filament\Forms\Components\DatePicker::make('until')
+                        DatePicker::make('until')
                             ->label('Until Date'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
@@ -113,11 +113,12 @@ class ManageSurveyResponses extends ManageRelatedRecords
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from'] ?? null) {
-                            $indicators[] = 'From ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                            $indicators[] = 'From '.Carbon::parse($data['from'])->toFormattedDateString();
                         }
                         if ($data['until'] ?? null) {
-                            $indicators[] = 'Until ' . \Carbon\Carbon::parse($data['until'])->toFormattedDateString();
+                            $indicators[] = 'Until '.Carbon::parse($data['until'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
 
@@ -146,6 +147,7 @@ class ManageSurveyResponses extends ManageRelatedRecords
                         } elseif ($data['value'] === 'no') {
                             return $query->whereNull('respondent_name');
                         }
+
                         return $query;
                     }),
 
@@ -161,6 +163,7 @@ class ManageSurveyResponses extends ManageRelatedRecords
                         } elseif ($data['value'] === 'no') {
                             return $query->whereNull('respondent_email');
                         }
+
                         return $query;
                     }),
             ])
@@ -169,14 +172,14 @@ class ManageSurveyResponses extends ManageRelatedRecords
                     ->label('Export Excel')
                     ->icon('heroicon-o-table-cells')
                     ->color('success')
-                    ->url(fn() => route('admin.surveys.export.excel', $this->getOwnerRecord()))
+                    ->url(fn () => route('admin.surveys.export.excel', $this->getOwnerRecord()))
                     ->openUrlInNewTab(),
 
                 Action::make('export_pdf')
                     ->label('Export PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('danger')
-                    ->url(fn() => route('admin.surveys.export.pdf', $this->getOwnerRecord()))
+                    ->url(fn () => route('admin.surveys.export.pdf', $this->getOwnerRecord()))
                     ->openUrlInNewTab(),
             ])
             ->actions([

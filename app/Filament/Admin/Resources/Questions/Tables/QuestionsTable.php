@@ -33,7 +33,7 @@ class QuestionsTable
 
                 TextColumn::make('type')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => Question::TYPES[$state] ?? $state),
+                    ->formatStateUsing(fn (string $state): string => Question::TYPES[$state] ?? $state),
 
                 IconColumn::make('is_required')
                     ->label('Required')

@@ -1,117 +1,134 @@
 import { index as surveysIndex } from '@/actions/App/Http/Controllers/SurveyController';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight, BarChart3, ClipboardList, Users } from 'lucide-react';
+import { ArrowRight, BarChart3, ClipboardCheck, ShieldCheck, Zap } from 'lucide-react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
 
     return (
         <>
-            <Head title="Welcome" />
-            <div className="flex min-h-screen flex-col bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-                {/* Header */}
-                <header className="w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center gap-3">
-                            <span className="text-xl font-bold text-gray-900 dark:text-white">
-                                Survey System
+            <Head title="Insights & Feedback" />
+            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-white dark:bg-slate-950 dark:text-slate-100">
+                {/* Navigation */}
+                <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/70 backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/70">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+                        <div className="flex items-center gap-2.5">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
+                                <ClipboardCheck className="h-5 w-5 text-white" />
+                            </div>
+                            <span className="font-heading text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                                Valenzuela<span className="text-primary">Insights</span>
                             </span>
                         </div>
-                        <nav className="flex items-center gap-4">
+                        <nav className="flex items-center gap-6">
                             {auth.user ? (
-                                <a
+                                <Link
                                     href="/admin"
-                                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                                    className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/10"
                                 >
-                                    Dashboard
-                                    <ArrowRight className="h-4 w-4" />
-                                </a>
+                                    Admin Console
+                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                                </Link>
                             ) : (
-                                <a
+                                <Link
                                     href="/admin/login"
-                                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                                    className="text-sm font-semibold text-slate-600 transition-colors hover:text-primary dark:text-slate-400 dark:hover:text-white"
                                 >
-                                    Log in
-                                </a>
+                                    Sign In
+                                </Link>
                             )}
                         </nav>
                     </div>
                 </header>
 
-                {/* Hero Section */}
-                <main className="flex flex-1 flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
-                    <div className="mx-auto max-w-4xl text-center">
-                        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">
-                            Feedback & Survey
-                            <span className="block text-blue-600">
-                                Management System
-                            </span>
-                        </h1>
-                        <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-                            Help us improve our services by sharing your
-                            feedback. Your responses are valuable and will help
-                            us serve you better.
-                        </p>
-                        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                            <Link
-                                href={surveysIndex.url()}
-                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-lg font-medium text-white shadow-lg transition hover:bg-blue-700 hover:shadow-xl"
-                            >
-                                View Surveys
-                                <ArrowRight className="h-5 w-5" />
-                            </Link>
+                <main className="flex-1">
+                    {/* Hero Section */}
+                    <section className="relative px-6 py-24 sm:py-32 lg:px-8">
+                        <div className="mx-auto max-w-3xl text-center">
+                            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-xs font-bold tracking-wider text-primary uppercase dark:bg-primary/20">
+                                <ShieldCheck className="h-3.5 w-3.5" />
+                                Secure & Anonymous Feedback
+                            </div>
+                            <h1 className="font-heading text-5xl font-extrabold tracking-tight text-slate-900 sm:text-7xl dark:text-white">
+                                Modern Feedback <br />
+                                <span className="text-primary">Management.</span>
+                            </h1>
+                            <p className="mt-8 text-lg leading-8 text-slate-600 dark:text-slate-400">
+                                High-integrity survey systems built for professional organizations. 
+                                Collect, analyze, and act on meaningful insights with confidence.
+                            </p>
+                            <div className="mt-12 flex items-center justify-center gap-x-6">
+                                <Link
+                                    href={surveysIndex.url()}
+                                    className="rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+                                >
+                                    Get Started
+                                </Link>
+                                <Link
+                                    href="/admin/login"
+                                    className="group text-sm font-bold leading-6 text-slate-900 dark:text-white"
+                                >
+                                    Admin Login <span className="transition-transform group-hover:inline-block group-hover:translate-x-1" aria-hidden="true">→</span>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Features */}
-                    <div className="mx-auto mt-20 grid max-w-5xl gap-8 sm:grid-cols-3">
-                        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900">
-                                <ClipboardList className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    {/* Bento Grid Features */}
+                    <section className="mx-auto max-w-7xl px-6 pb-32">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <div className="col-span-1 flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 transition-colors hover:border-primary/20 dark:border-slate-800 dark:bg-slate-900">
+                                <div>
+                                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
+                                        <Zap className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <h3 className="font-heading text-xl font-bold">Instant Response</h3>
+                                    <p className="mt-3 text-slate-600 dark:text-slate-400">
+                                        Frictionless completion experience designed to maximize response rates across all devices.
+                                    </p>
+                                </div>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Easy to Use
-                            </h3>
-                            <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                Simple and intuitive surveys that take just a
-                                few minutes to complete.
-                            </p>
-                        </div>
-                        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900">
-                                <Users className="h-6 w-6 text-green-600 dark:text-green-400" />
+                            <div className="col-span-1 flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 transition-colors hover:border-primary/20 dark:border-slate-800 dark:bg-slate-900">
+                                <div>
+                                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
+                                        <ShieldCheck className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <h3 className="font-heading text-xl font-bold">Privacy First</h3>
+                                    <p className="mt-3 text-slate-600 dark:text-slate-400">
+                                        Enterprise-grade security ensuring your feedback data remains private and protected at all times.
+                                    </p>
+                                </div>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Your Voice Matters
-                            </h3>
-                            <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                Every response helps shape better services for
-                                our community.
-                            </p>
-                        </div>
-                        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900">
-                                <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                            <div className="col-span-1 flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 transition-colors hover:border-primary/20 dark:border-slate-800 dark:bg-slate-900">
+                                <div>
+                                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
+                                        <BarChart3 className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <h3 className="font-heading text-xl font-bold">Deep Analytics</h3>
+                                    <p className="mt-3 text-slate-600 dark:text-slate-400">
+                                        Transform raw data into actionable intelligence with our advanced reporting dashboard.
+                                    </p>
+                                </div>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Data-Driven
-                            </h3>
-                            <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                Your feedback is analyzed to improve city
-                                services continuously.
-                            </p>
                         </div>
-                    </div>
+                    </section>
                 </main>
 
                 {/* Footer */}
-                <footer className="border-t border-gray-200 bg-white py-8 dark:border-gray-700 dark:bg-gray-900">
-                    <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            © {new Date().getFullYear()} Survey System. All
-                            rights reserved.
-                        </p>
+                <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
+                    <div className="mx-auto max-w-7xl px-6">
+                        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+                            <div className="flex items-center gap-2">
+                                <ClipboardCheck className="h-5 w-5 text-primary/50" />
+                                <span className="text-sm font-bold tracking-tight text-slate-500">
+                                    Valenzuela<span className="text-slate-400">Insights</span>
+                                </span>
+                            </div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                                &copy; {new Date().getFullYear()} Valenzuela Survey Systems. Built for Excellence.
+                            </p>
+                        </div>
                     </div>
                 </footer>
             </div>

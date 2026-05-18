@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
+use Spatie\Permission\Models\Role;
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
@@ -25,7 +26,7 @@ test('users can authenticate using the login screen', function () {
 
 test('admin users are redirected to admin panel after login', function () {
     // Create the admin role first
-    \Spatie\Permission\Models\Role::findOrCreate('admin', 'web');
+    Role::findOrCreate('admin', 'web');
 
     $user = User::factory()->withoutTwoFactor()->create();
     $user->assignRole('admin');

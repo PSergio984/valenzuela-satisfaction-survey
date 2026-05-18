@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Enums\SurveyMode;
+use App\Models\Survey;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Survey>
+ * @extends Factory<Survey>
  */
 class SurveyFactory extends Factory
 {

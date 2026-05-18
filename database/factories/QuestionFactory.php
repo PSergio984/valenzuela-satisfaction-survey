@@ -7,7 +7,7 @@ use App\Models\Survey;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Question>
+ * @extends Factory<Question>
  */
 class QuestionFactory extends Factory
 {
@@ -21,7 +21,7 @@ class QuestionFactory extends Factory
         return [
             'survey_id' => Survey::factory(),
             'type' => fake()->randomElement(array_keys(Question::TYPES)),
-            'question' => fake()->sentence() . '?',
+            'question' => fake()->sentence().'?',
             'description' => fake()->optional()->sentence(),
             'is_required' => fake()->boolean(60),
             'order' => fake()->numberBetween(0, 100),
@@ -31,42 +31,42 @@ class QuestionFactory extends Factory
 
     public function text(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => Question::TYPE_TEXT,
         ]);
     }
 
     public function textarea(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => Question::TYPE_TEXTAREA,
         ]);
     }
 
     public function radio(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => Question::TYPE_RADIO,
         ]);
     }
 
     public function checkbox(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => Question::TYPE_CHECKBOX,
         ]);
     }
 
     public function select(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => Question::TYPE_SELECT,
         ]);
     }
 
     public function rating(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'type' => Question::TYPE_RATING,
             'settings' => [
                 'min' => 1,
@@ -79,7 +79,7 @@ class QuestionFactory extends Factory
 
     public function required(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'is_required' => true,
         ]);
     }

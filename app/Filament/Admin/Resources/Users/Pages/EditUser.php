@@ -12,7 +12,7 @@ class EditUser extends EditRecord
 {
     protected static string $resource = UserResource::class;
 
-    public function mount(int | string $record): void
+    public function mount(int|string $record): void
     {
         parent::mount($record);
 
@@ -29,7 +29,7 @@ class EditUser extends EditRecord
         }
 
         // Use policy to check if user can edit this record
-        if ($currentUser && !$currentUser->can('update', $this->record)) {
+        if ($currentUser && ! $currentUser->can('update', $this->record)) {
             Notification::make()
                 ->warning()
                 ->title('Access Denied')

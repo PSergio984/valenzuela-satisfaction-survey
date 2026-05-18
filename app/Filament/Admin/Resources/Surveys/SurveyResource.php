@@ -22,6 +22,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class SurveyResource extends Resource
@@ -44,6 +45,13 @@ class SurveyResource extends Resource
     public static function table(Table $table): Table
     {
         return SurveysTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount(['questions', 'responses'])
+            ->withAvg(['answers as answers_avg_value' => fn ($query) => $query->whereHas('question', fn ($q) => $q->where('type', 'rating'))], \Illuminate\Support\Facades\DB::raw('CAST(value AS DECIMAL)'));
     }
 
     public static function getRelations(): array

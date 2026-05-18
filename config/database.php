@@ -97,8 +97,9 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             // Render requires SSL for external connections; 'require' is safe
-            // for production and still works locally (Postgres ignores it).
-            'sslmode' => env('DB_SSLMODE', 'require'),
+            // for production but may need to be 'disable' or 'prefer' locally
+            // if the local Postgres server does not support SSL.
+            'sslmode' => env('DB_SSLMODE', 'disable'),
         ],
 
         'sqlsrv' => [
