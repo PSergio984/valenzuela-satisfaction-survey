@@ -122,7 +122,7 @@ export default function Welcome() {
                             <div className="flex items-center gap-2">
                                 <ClipboardCheck className="h-5 w-5 text-primary/50" />
                                 <span className="text-sm font-bold tracking-tight text-slate-500">
-                                    Valenzuela<span className="text-slate-400">Insights</span>
+                                    Survey System
                                 </span>
                             </div>
                             <p className="text-sm text-slate-500 dark:text-slate-400">
