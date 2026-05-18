@@ -18,7 +18,7 @@ export default function Welcome() {
                                 <ClipboardCheck className="h-5 w-5 text-white" />
                             </div>
                             <span className="font-heading text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                                Valenzuela<span className="text-primary">Insights</span>
+                                Survey <span className="text-primary">System</span>
                             </span>
                         </div>
                         <nav className="flex items-center gap-6">
@@ -126,7 +126,7 @@ export default function Welcome() {
                                 </span>
                             </div>
                             <p className="text-sm text-slate-500 dark:text-slate-400">
-                                &copy; {new Date().getFullYear()} Valenzuela Survey Systems. Built for Excellence.
+                                &copy; {new Date().getFullYear()} Survey System. Built for Excellence.
                             </p>
                         </div>
                     </div>

@@ -299,7 +299,7 @@ export default function SurveyShow({ survey }: Props) {
                             </div>
                             <div className="flex flex-col">
                                 <span className="font-heading text-lg font-bold leading-none">
-                                    Valenzuela<span className="text-primary">Insights</span>
+                                    Survey System
                                 </span>
                                 <span className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
                                     Verification System
@@ -417,7 +417,7 @@ export default function SurveyShow({ survey }: Props) {
                 <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
                     <div className="mx-auto max-w-3xl px-6 text-center">
                         <p className="text-sm font-bold text-slate-400">
-                            VALENZUELA INSIGHTS &copy; {new Date().getFullYear()} — CONFIDENTIAL DATA HANDLING
+                            SURVEY SYSTEM &copy; {new Date().getFullYear()} — CONFIDENTIAL DATA HANDLING
                         </p>
                     </div>
                 </footer>

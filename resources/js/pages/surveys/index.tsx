@@ -57,7 +57,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                                 <ClipboardCheck className="h-5 w-5 text-white" />
                             </div>
                             <span className="font-heading text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                                Valenzuela<span className="text-primary">Insights</span>
+                                Survey System
                             </span>
                         </div>
                         <Link
@@ -184,7 +184,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                 <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
                     <div className="mx-auto max-w-5xl px-6 text-center">
                         <p className="text-sm font-bold tracking-widest text-slate-400 uppercase">
-                            VALENZUELA INSIGHTS — INTEGRITY IN FEEDBACK
+                            SURVEY SYSTEM — CUSTOMER SATISFACTION
                         </p>
                     </div>
                 </footer>
