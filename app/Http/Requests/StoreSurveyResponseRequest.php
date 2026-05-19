@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Models\Question;
+use App\Models\Survey;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSurveyResponseRequest extends FormRequest
@@ -18,20 +20,25 @@ class StoreSurveyResponseRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         $rules = [
             'respondent_name' => ['nullable', 'string', 'max:255'],
             'respondent_email' => ['nullable', 'email', 'max:255'],
+            'started_at' => ['required', 'date', 'before_or_equal:now'],
             'answers' => ['required', 'array'],
         ];
 
         // Get the survey from the route
         $survey = $this->route('survey');
 
-        if ($survey) {
+        if (is_string($survey)) {
+            $survey = Survey::where('slug', $survey)->first();
+        }
+
+        if ($survey instanceof Survey) {
             $questions = $survey->questions()->get();
 
             foreach ($questions as $question) {

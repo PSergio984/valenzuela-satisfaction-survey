@@ -56,12 +56,12 @@ class SurveyStatsWidget extends StatsOverviewWidget
                 ->chart($chartData)
                 ->color('success'),
 
-            Stat::make('Weekly Trend', ($trend >= 0 ? '+' : '') . $trend . '%')
+            Stat::make('Weekly Trend', ($trend >= 0 ? '+' : '').$trend.'%')
                 ->description("{$last7Days} responses this week")
                 ->descriptionIcon($trend >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($trend >= 0 ? 'success' : 'danger'),
 
-            Stat::make('Average Rating', $avgRating ? number_format($avgRating, 1) . '/5' : 'N/A')
+            Stat::make('Average Rating', $avgRating ? number_format($avgRating, 1).'/5' : 'N/A')
                 ->description('Across all surveys')
                 ->descriptionIcon('heroicon-m-star')
                 ->color('warning'),

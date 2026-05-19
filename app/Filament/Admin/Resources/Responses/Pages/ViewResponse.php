@@ -5,8 +5,8 @@ namespace App\Filament\Admin\Resources\Responses\Pages;
 use App\Filament\Admin\Resources\Responses\ResponseResource;
 use App\Models\Question;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Placeholder;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Placeholder;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -99,13 +99,14 @@ class ViewResponse extends ViewRecord
         // Handle rating type
         if ($question->type === Question::TYPE_RATING) {
             $value = $answer->value ?? '';
-            return $value ? $value . ' / 5' : '-';
+
+            return $value ? $value.' / 5' : '-';
         }
 
         // For radio, checkbox, and select - check selected_options first
         if (in_array($question->type, [Question::TYPE_CHECKBOX, Question::TYPE_RADIO, Question::TYPE_SELECT])) {
             // If selected_options array has IDs, convert to labels
-            if (!empty($answer->selected_options) && is_array($answer->selected_options)) {
+            if (! empty($answer->selected_options) && is_array($answer->selected_options)) {
                 $options = $question->options->whereIn('id', $answer->selected_options);
                 if ($options->isNotEmpty()) {
                     return $options->pluck('label')->join(', ');
@@ -119,6 +120,7 @@ class ViewResponse extends ViewRecord
                 if ($option) {
                     return $option->label;
                 }
+
                 return $answer->value; // Return raw value if no match
             }
         }

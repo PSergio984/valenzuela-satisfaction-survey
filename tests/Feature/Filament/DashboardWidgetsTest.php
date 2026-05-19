@@ -235,7 +235,7 @@ describe('Dashboard Data Integrity', function () {
         $avgRating = Answer::join('questions', 'answers.question_id', '=', 'questions.id')
             ->where('questions.type', Question::TYPE_RATING)
             ->whereNotNull('answers.value')
-            ->avg('answers.value');
+            ->avg(\Illuminate\Support\Facades\DB::raw('CAST(answers.value AS DECIMAL)'));
 
         expect($avgRating)->toBeGreaterThanOrEqual(1);
         expect($avgRating)->toBeLessThanOrEqual(5);

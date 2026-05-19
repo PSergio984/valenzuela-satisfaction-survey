@@ -11,6 +11,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\View\View;
 
 class ViewSurvey extends ViewRecord
 {
@@ -61,7 +62,7 @@ class ViewSurvey extends ViewRecord
                 ->icon('heroicon-o-qr-code')
                 ->color('gray')
                 ->modalHeading(fn (): string => "QR Code: {$this->record->title}")
-                ->modalContent(function (): \Illuminate\Contracts\View\View {
+                ->modalContent(function (): View {
                     $qrService = app(QrCodeService::class);
 
                     return view('filament.modals.qr-code', [

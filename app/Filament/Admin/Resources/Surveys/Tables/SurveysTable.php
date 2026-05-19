@@ -2,7 +2,6 @@
 
 namespace App\Filament\Admin\Resources\Surveys\Tables;
 
-use App\Enums\SurveyMode;
 use App\Models\Survey;
 use App\Services\QrCodeService;
 use Filament\Actions\Action;
@@ -13,9 +12,9 @@ use Filament\Actions\ViewAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\View\View;
 
 class SurveysTable
 {
@@ -90,7 +89,7 @@ class SurveysTable
                     ->label('QR Code')
                     ->icon(Heroicon::OutlinedQrCode)
                     ->modalHeading(fn (Survey $record): string => "QR Code: {$record->title}")
-                    ->modalContent(function (Survey $record): \Illuminate\Contracts\View\View {
+                    ->modalContent(function (Survey $record): View {
                         $qrService = app(QrCodeService::class);
 
                         return view('filament.modals.qr-code', [

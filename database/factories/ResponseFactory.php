@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Response;
 use App\Models\Survey;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Response>
+ * @extends Factory<Response>
  */
 class ResponseFactory extends Factory
 {
@@ -31,14 +32,14 @@ class ResponseFactory extends Factory
 
     public function authenticated(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'user_id' => User::factory(),
         ]);
     }
 
     public function anonymous(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'respondent_name' => null,
             'respondent_email' => null,
             'respondent_phone' => null,

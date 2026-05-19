@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Answer;
+use App\Models\Option;
 use App\Models\Question;
 use App\Models\Response;
 use App\Models\Survey;
@@ -171,6 +172,7 @@ class ResponseSeeder extends Seeder
 
         if ($surveys->isEmpty()) {
             $this->command->warn('No surveys found. Please run SurveySeeder first.');
+
             return;
         }
 
@@ -184,8 +186,8 @@ class ResponseSeeder extends Seeder
 
             // Simulate analytics: views_count, starts_count
             // views_count: random 10-30% higher than starts_count
-            $startsCount = $responses->count() + fake()->numberBetween(0, (int)($responses->count() * 0.15));
-            $viewsCount = $startsCount + fake()->numberBetween((int)($startsCount * 0.1), (int)($startsCount * 0.3));
+            $startsCount = $responses->count() + fake()->numberBetween(0, (int) ($responses->count() * 0.15));
+            $viewsCount = $startsCount + fake()->numberBetween((int) ($startsCount * 0.1), (int) ($startsCount * 0.3));
 
             $survey->update([
                 'starts_count' => $startsCount,
@@ -255,7 +257,6 @@ class ResponseSeeder extends Seeder
 
         // Determine date range for responses
         $dateRange = $this->getDateRangeForSurvey($survey);
-
 
         for ($i = 0; $i < $count; $i++) {
             // Generate a weighted random date (more recent dates are more likely)
@@ -390,10 +391,10 @@ class ResponseSeeder extends Seeder
                     // Select 1-3 random options
                     $count = min(fake()->numberBetween(1, 3), $options->count());
                     $selected = $options->random($count);
-                    $selectedOptions = $selected instanceof \App\Models\Option
+                    $selectedOptions = $selected instanceof Option
                         ? [$selected->id]
                         : $selected->pluck('id')->toArray();
-                    $value = $selected instanceof \App\Models\Option
+                    $value = $selected instanceof Option
                         ? $selected->label
                         : $selected->pluck('label')->implode(', ');
                 }
@@ -445,7 +446,7 @@ class ResponseSeeder extends Seeder
      */
     protected function getRandomName(): string
     {
-        return $this->firstNames[array_rand($this->firstNames)] . ' ' . $this->lastNames[array_rand($this->lastNames)];
+        return $this->firstNames[array_rand($this->firstNames)].' '.$this->lastNames[array_rand($this->lastNames)];
     }
 
     /**
@@ -461,11 +462,11 @@ class ResponseSeeder extends Seeder
             "{$firstName}.{$lastName}",
             "{$firstName}{$lastName}",
             "{$firstName}_{$lastName}",
-            $firstName . fake()->numberBetween(1, 999),
-            "{$firstName}.{$lastName}" . fake()->numberBetween(1, 99),
+            $firstName.fake()->numberBetween(1, 999),
+            "{$firstName}.{$lastName}".fake()->numberBetween(1, 99),
         ];
 
-        return $patterns[array_rand($patterns)] . '@' . $domains[array_rand($domains)];
+        return $patterns[array_rand($patterns)].'@'.$domains[array_rand($domains)];
     }
 
     /**
@@ -475,6 +476,6 @@ class ResponseSeeder extends Seeder
     {
         $prefixes = ['0917', '0918', '0919', '0920', '0921', '0927', '0928', '0929', '0930', '0935', '0936', '0945', '0955', '0956', '0977', '0978', '0995', '0996', '0997'];
 
-        return $prefixes[array_rand($prefixes)] . fake()->numerify('#######');
+        return $prefixes[array_rand($prefixes)].fake()->numerify('#######');
     }
 }

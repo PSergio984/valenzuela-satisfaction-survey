@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Response;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Answer>
+ * @extends Factory<Answer>
  */
 class AnswerFactory extends Factory
 {
@@ -28,7 +29,7 @@ class AnswerFactory extends Factory
 
     public function withSelectedOptions(array $optionIds): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'value' => null,
             'selected_options' => $optionIds,
         ]);

@@ -4,10 +4,15 @@ namespace App\Filament\Admin\Resources\Responses\Tables;
 
 use App\Models\Response;
 use App\Services\ResponseExportService;
+use Carbon\Carbon;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -57,9 +62,9 @@ class ResponsesTable
 
                 Filter::make('submitted_at')
                     ->form([
-                        \Filament\Forms\Components\DatePicker::make('from')
+                        DatePicker::make('from')
                             ->label('From Date'),
-                        \Filament\Forms\Components\DatePicker::make('until')
+                        DatePicker::make('until')
                             ->label('Until Date'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
@@ -76,11 +81,12 @@ class ResponsesTable
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from'] ?? null) {
-                            $indicators[] = 'From ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                            $indicators[] = 'From '.Carbon::parse($data['from'])->toFormattedDateString();
                         }
                         if ($data['until'] ?? null) {
-                            $indicators[] = 'Until ' . \Carbon\Carbon::parse($data['until'])->toFormattedDateString();
+                            $indicators[] = 'Until '.Carbon::parse($data['until'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
 
@@ -97,6 +103,38 @@ class ResponsesTable
                     ->query(fn (Builder $query): Builder => $query->whereMonth('submitted_at', now()->month)
                         ->whereYear('submitted_at', now()->year)),
 
+                Filter::make('duration')
+                    ->form([
+                        TextInput::make('min_duration')
+                            ->label('Min Duration (sec)')
+                            ->numeric(),
+                        TextInput::make('max_duration')
+                            ->label('Max Duration (sec)')
+                            ->numeric(),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['min_duration'],
+                                fn (Builder $query, $duration): Builder => $query->where('time_to_complete', '>=', $duration),
+                            )
+                            ->when(
+                                $data['max_duration'],
+                                fn (Builder $query, $duration): Builder => $query->where('time_to_complete', '<=', $duration),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['min_duration'] ?? null) {
+                            $indicators[] = 'Min Duration: '.$data['min_duration'].'s';
+                        }
+                        if ($data['max_duration'] ?? null) {
+                            $indicators[] = 'Max Duration: '.$data['max_duration'].'s';
+                        }
+
+                        return $indicators;
+                    }),
+
                 SelectFilter::make('has_name')
                     ->label('Has Respondent Name')
                     ->options([
@@ -109,6 +147,7 @@ class ResponsesTable
                         } elseif ($data['value'] === 'no') {
                             return $query->whereNull('respondent_name');
                         }
+
                         return $query;
                     }),
 
@@ -124,7 +163,44 @@ class ResponsesTable
                         } elseif ($data['value'] === 'no') {
                             return $query->whereNull('respondent_email');
                         }
+
                         return $query;
+                    }),
+
+                Filter::make('rating')
+                    ->form([
+                        Select::make('min_rating')
+                            ->options([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]),
+                        Select::make('max_rating')
+                            ->options([1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['min_rating'],
+                                fn (Builder $query, $rating): Builder => $query->whereHas('answers', function ($q) use ($rating) {
+                                    $q->whereHas('question', fn ($q) => $q->where('type', 'rating'))
+                                        ->whereRaw('CAST(value AS INTEGER) >= ?', [$rating]);
+                                }),
+                            )
+                            ->when(
+                                $data['max_rating'],
+                                fn (Builder $query, $rating): Builder => $query->whereHas('answers', function ($q) use ($rating) {
+                                    $q->whereHas('question', fn ($q) => $q->where('type', 'rating'))
+                                        ->whereRaw('CAST(value AS INTEGER) <= ?', [$rating]);
+                                }),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['min_rating'] ?? null) {
+                            $indicators[] = 'Min Rating: '.$data['min_rating'];
+                        }
+                        if ($data['max_rating'] ?? null) {
+                            $indicators[] = 'Max Rating: '.$data['max_rating'];
+                        }
+
+                        return $indicators;
                     }),
             ])
             ->recordActions([
@@ -137,12 +213,35 @@ class ResponsesTable
                         ->icon('heroicon-o-table-cells')
                         ->color('success')
                         ->deselectRecordsAfterCompletion()
-                        ->action(function (Collection $records): mixed {
+                        ->action(function (Collection $records): void {
                             /** @var Collection<int, Response> $records */
+                            $surveyId = $records->first()?->survey_id;
+
+                            if (! $surveyId) {
+                                Notification::make()
+                                    ->title('Export Failed')
+                                    ->body('Could not determine the survey for the selected responses.')
+                                    ->danger()
+                                    ->send();
+
+                                return;
+                            }
+
                             $exportService = app(ResponseExportService::class);
                             $filename = $exportService->generateFilename('responses', 'xlsx');
 
-                            return $exportService->exportToExcel($records, $filename);
+                            $exportService->queueExcelExport(
+                                $surveyId,
+                                auth()->id(),
+                                $filename,
+                                $records->pluck('id')->toArray()
+                            );
+
+                            Notification::make()
+                                ->title('Export Started')
+                                ->body('The export has been queued and you will be notified once it is ready.')
+                                ->success()
+                                ->send();
                         }),
 
                     BulkAction::make('exportPdf')

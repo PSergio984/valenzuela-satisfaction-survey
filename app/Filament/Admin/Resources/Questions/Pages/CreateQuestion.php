@@ -28,6 +28,7 @@ class CreateQuestion extends CreateRecord
                             return true;
                         }
                     }
+
                     return false;
                 }),
             $this->getCreateAnotherFormAction()
@@ -44,6 +45,7 @@ class CreateQuestion extends CreateRecord
                             return true;
                         }
                     }
+
                     return false;
                 }),
             $this->getCancelFormAction(),

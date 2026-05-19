@@ -5,6 +5,7 @@ use App\Models\Question;
 use App\Models\Response;
 use App\Models\Survey;
 use App\Services\ResponseExportService;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 describe('ResponseExportService', function () {
     describe('transformResponse', function () {
@@ -302,7 +303,7 @@ describe('ResponseExportService', function () {
 
             $result = $exportService->exportToExcel($responses, 'test.xlsx');
 
-            expect($result)->toBeInstanceOf(\Symfony\Component\HttpFoundation\StreamedResponse::class);
+            expect($result)->toBeInstanceOf(StreamedResponse::class);
         });
     });
 
@@ -314,7 +315,7 @@ describe('ResponseExportService', function () {
 
             $result = $exportService->exportToCsv($responses, 'test.csv');
 
-            expect($result)->toBeInstanceOf(\Symfony\Component\HttpFoundation\StreamedResponse::class);
+            expect($result)->toBeInstanceOf(StreamedResponse::class);
         });
     });
 });

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Surveys\Widgets;
 
+use App\Models\Answer;
 use App\Models\Survey;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Model;
@@ -53,12 +54,12 @@ class SurveyRatingsChart extends ChartWidget
             $labels[] = Str::limit($question->question, 40);
 
             // Calculate average rating for this question
-            $avgRating = \App\Models\Answer::where('question_id', $question->id)
+            $avgRating = Answer::where('question_id', $question->id)
                 ->whereHas('response', function ($query) use ($survey) {
                     $query->where('survey_id', $survey->id)
                         ->whereNotNull('submitted_at');
                 })
-                ->avg('value') ?? 0;
+                ->avg(\Illuminate\Support\Facades\DB::raw('CAST(value AS DECIMAL)')) ?? 0;
 
             $averages[] = round($avgRating, 2);
 

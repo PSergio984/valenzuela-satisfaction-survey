@@ -1,14 +1,13 @@
 <?php
 
 declare(strict_types=1);
-
-use function Pest\Laravel\get;
+use App\Models\Survey;
 
 it('renders the QR code modal with copy button', function () {
-    $survey = \App\Models\Survey::factory()->create([
+    $survey = Survey::factory()->create([
         'slug' => 'test-survey',
     ]);
-    $surveyUrl = url('/survey/' . $survey->slug);
+    $surveyUrl = url('/survey/'.$survey->slug);
     $qrCode = '<svg></svg>';
     $qrCodeRaw = '<svg></svg>';
 

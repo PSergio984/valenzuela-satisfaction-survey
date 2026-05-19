@@ -132,7 +132,7 @@ class QuestionForm
 
                                         $max = $get('settings.max');
                                         if ($max !== null && $value >= $max) {
-                                            $fail('Please make the minimum value less than the maximum value (' . $max . ').');
+                                            $fail('Please make the minimum value less than the maximum value ('.$max.').');
                                         }
                                     };
                                 },
@@ -147,7 +147,7 @@ class QuestionForm
                                 $max = $get('settings.max');
                                 if ($max !== null && $state !== null && (int) $state >= (int) $max) {
                                     throw ValidationException::withMessages([
-                                        'data.settings.min' => 'Please make the minimum value less than the maximum value (' . $max . ').',
+                                        'data.settings.min' => 'Please make the minimum value less than the maximum value ('.$max.').',
                                     ]);
                                 }
                             }),
@@ -175,7 +175,7 @@ class QuestionForm
 
                                         $min = $get('settings.min');
                                         if ($min !== null && $min >= $value) {
-                                            $fail('Please make the maximum value greater than the minimum value (' . $min . ').');
+                                            $fail('Please make the maximum value greater than the minimum value ('.$min.').');
                                         }
                                     };
                                 },
@@ -190,7 +190,7 @@ class QuestionForm
                                 $min = $get('settings.min');
                                 if ($min !== null && $state !== null && (int) $min >= (int) $state) {
                                     throw ValidationException::withMessages([
-                                        'data.settings.max' => 'Please make the maximum value greater than the minimum value (' . $min . ').',
+                                        'data.settings.max' => 'Please make the maximum value greater than the minimum value ('.$min.').',
                                     ]);
                                 }
                             }),

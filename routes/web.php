@@ -25,6 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/export/pdf', [SurveyExportController::class, 'exportPdf'])->name('export.pdf');
     });
 
+    Route::get('admin/exports/download', [SurveyExportController::class, 'downloadExport'])->name('admin.exports.download');
+
     // Admin All Responses Export Routes
     Route::prefix('admin/responses')->name('admin.responses.')->group(function () {
         Route::get('/export/excel', [ResponseExportController::class, 'exportExcel'])->name('export.excel');
