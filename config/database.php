@@ -99,7 +99,7 @@ return [
             // Render requires SSL for external connections; 'require' is safe
             // for production but may need to be 'disable' or 'prefer' locally
             // if the local Postgres server does not support SSL.
-            'sslmode' => env('DB_SSLMODE', 'disable'),
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
         ],
 
         'sqlsrv' => [
