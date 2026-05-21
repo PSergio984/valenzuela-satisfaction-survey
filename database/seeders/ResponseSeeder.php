@@ -164,6 +164,37 @@ class ResponseSeeder extends Seeder
     ];
 
     /**
+     * Common user agents.
+     *
+     * @var array<int, string>
+     */
+    protected array $userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1',
+        'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0'
+    ];
+
+    /**
+     * Short text answers for TYPE_TEXT questions.
+     *
+     * @var array<int, string>
+     */
+    protected array $shortTextAnswers = [
+        'Very good',
+        'Satisfied',
+        'Could be better',
+        'Excellent',
+        'Smooth process',
+        'Helpful staff',
+        'Thank you',
+        'No issues',
+        'Okay',
+        'Great service',
+    ];
+
+    /**
      * Run the database seeds.
      */
     public function run(): void
@@ -186,8 +217,8 @@ class ResponseSeeder extends Seeder
 
             // Simulate analytics: views_count, starts_count
             // views_count: random 10-30% higher than starts_count
-            $startsCount = $responses->count() + fake()->numberBetween(0, (int) ($responses->count() * 0.15));
-            $viewsCount = $startsCount + fake()->numberBetween((int) ($startsCount * 0.1), (int) ($startsCount * 0.3));
+            $startsCount = $responses->count() + mt_rand(0, (int) ($responses->count() * 0.15));
+            $viewsCount = $startsCount + mt_rand((int) ($startsCount * 0.1), (int) ($startsCount * 0.3));
 
             $survey->update([
                 'starts_count' => $startsCount,
@@ -265,10 +296,10 @@ class ResponseSeeder extends Seeder
             // Simulate started_at and time_to_complete (2-8 min typical, some outliers)
             $minSeconds = 90; // 1.5 min
             $maxSeconds = 600; // 10 min
-            $timeToComplete = fake()->numberBetween($minSeconds, $maxSeconds);
+            $timeToComplete = mt_rand($minSeconds, $maxSeconds);
             // 10% chance of a long response (10-20 min)
-            if (fake()->boolean(10)) {
-                $timeToComplete = fake()->numberBetween(600, 1200);
+            if (mt_rand(1, 100) <= 10) {
+                $timeToComplete = mt_rand(600, 1200);
             }
             $startedAt = (clone $submittedAt)->subSeconds($timeToComplete);
 
@@ -277,8 +308,8 @@ class ResponseSeeder extends Seeder
                 'user_id' => null,
                 'respondent_name' => $survey->collect_respondent_info ? $this->getRandomName() : null,
                 'respondent_email' => $survey->collect_respondent_info ? $this->getRandomEmail() : null,
-                'respondent_phone' => $survey->collect_respondent_info && fake()->boolean(30) ? $this->getRandomPhone() : null,
-                'user_agent' => fake()->userAgent(),
+                'respondent_phone' => $survey->collect_respondent_info && (mt_rand(1, 100) <= 30) ? $this->getRandomPhone() : null,
+                'user_agent' => $this->userAgents[array_rand($this->userAgents)],
                 'started_at' => $startedAt,
                 'submitted_at' => $submittedAt,
                 'time_to_complete' => $timeToComplete,
@@ -337,7 +368,7 @@ class ResponseSeeder extends Seeder
         }
 
         // Use exponential distribution to favor recent dates
-        $random = fake()->randomFloat(2, 0, 1);
+        $random = mt_rand(0, 100) / 100;
         $weighted = pow($random, 0.5); // Square root makes it favor recent dates
         $daysToAdd = (int) ($weighted * $totalDays);
 
@@ -345,9 +376,9 @@ class ResponseSeeder extends Seeder
 
         // Add random time
         $date->setTime(
-            fake()->numberBetween(7, 18),
-            fake()->numberBetween(0, 59),
-            fake()->numberBetween(0, 59)
+            mt_rand(7, 18),
+            mt_rand(0, 59),
+            mt_rand(0, 59)
         );
 
         return $date;
@@ -368,11 +399,11 @@ class ResponseSeeder extends Seeder
                 break;
 
             case Question::TYPE_TEXT:
-                $value = fake()->boolean(80) ? fake()->sentence(fake()->numberBetween(3, 8)) : null;
+                $value = (mt_rand(1, 100) <= 80) ? $this->shortTextAnswers[array_rand($this->shortTextAnswers)] : null;
                 break;
 
             case Question::TYPE_TEXTAREA:
-                $value = fake()->boolean(60) ? $this->feedbackComments[array_rand($this->feedbackComments)] : null;
+                $value = (mt_rand(1, 100) <= 60) ? $this->feedbackComments[array_rand($this->feedbackComments)] : null;
                 break;
 
             case Question::TYPE_RADIO:
@@ -389,7 +420,7 @@ class ResponseSeeder extends Seeder
                 $options = $question->options;
                 if ($options->isNotEmpty()) {
                     // Select 1-3 random options
-                    $count = min(fake()->numberBetween(1, 3), $options->count());
+                    $count = min(mt_rand(1, 3), $options->count());
                     $selected = $options->random($count);
                     $selectedOptions = $selected instanceof Option
                         ? [$selected->id]
@@ -401,11 +432,12 @@ class ResponseSeeder extends Seeder
                 break;
 
             case Question::TYPE_NUMBER:
-                $value = (string) fake()->numberBetween(1, 100);
+                $value = (string) mt_rand(1, 100);
                 break;
 
             case Question::TYPE_DATE:
-                $value = fake()->dateTimeBetween('-1 year', 'now')->format('Y-m-d');
+                $timestamp = mt_rand(strtotime('-1 year'), time());
+                $value = date('Y-m-d', $timestamp);
                 break;
         }
 
@@ -423,7 +455,7 @@ class ResponseSeeder extends Seeder
      */
     protected function getWeightedRating(): string
     {
-        $rand = fake()->numberBetween(1, 100);
+        $rand = mt_rand(1, 100);
 
         if ($rand <= 5) {
             return '1';
@@ -462,8 +494,8 @@ class ResponseSeeder extends Seeder
             "{$firstName}.{$lastName}",
             "{$firstName}{$lastName}",
             "{$firstName}_{$lastName}",
-            $firstName.fake()->numberBetween(1, 999),
-            "{$firstName}.{$lastName}".fake()->numberBetween(1, 99),
+            $firstName.mt_rand(1, 999),
+            "{$firstName}.{$lastName}".mt_rand(1, 99),
         ];
 
         return $patterns[array_rand($patterns)].'@'.$domains[array_rand($domains)];
@@ -476,6 +508,11 @@ class ResponseSeeder extends Seeder
     {
         $prefixes = ['0917', '0918', '0919', '0920', '0921', '0927', '0928', '0929', '0930', '0935', '0936', '0945', '0955', '0956', '0977', '0978', '0995', '0996', '0997'];
 
-        return $prefixes[array_rand($prefixes)].fake()->numerify('#######');
+        $suffix = '';
+        for ($i = 0; $i < 7; $i++) {
+            $suffix .= mt_rand(0, 9);
+        }
+
+        return $prefixes[array_rand($prefixes)].$suffix;
     }
 }
