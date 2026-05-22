@@ -26,3 +26,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+graphify-out/manifest.json
+graphify-out/cost.json
+graphify-out/cache/

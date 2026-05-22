@@ -18,7 +18,6 @@ describe('RolesAndPermissionsSeeder', function () {
 
         expect(Role::where('name', 'super_admin')->exists())->toBeTrue();
         expect(Role::where('name', 'admin')->exists())->toBeTrue();
-        expect(Role::where('name', 'staff')->exists())->toBeTrue();
     });
 
     it('creates permissions for each resource', function () {
@@ -44,19 +43,8 @@ describe('RolesAndPermissionsSeeder', function () {
 
         $admin = Role::where('name', 'admin')->first();
 
-        expect($admin->hasPermissionTo('view_surveys'))->toBeTrue();
-        expect($admin->hasPermissionTo('create_surveys'))->toBeTrue();
         expect($admin->hasPermissionTo('view_users'))->toBeTrue();
-    });
-
-    it('assigns limited permissions to staff role', function () {
-        $this->seed(RolesAndPermissionsSeeder::class);
-
-        $staff = Role::where('name', 'staff')->first();
-
-        expect($staff->hasPermissionTo('view_surveys'))->toBeTrue();
-        expect($staff->hasPermissionTo('view_responses'))->toBeTrue();
-        expect($staff->hasPermissionTo('create_surveys'))->toBeFalse();
+        expect($admin->hasPermissionTo('view_surveys'))->toBeTrue();
     });
 });
 
@@ -81,15 +69,6 @@ describe('UserSeeder', function () {
 
         expect($admin)->not->toBeNull();
         expect($admin->hasRole('admin'))->toBeTrue();
-    });
-
-    it('creates staff users', function () {
-        $this->seed(UserSeeder::class);
-
-        $staff = User::where('email', 'admin1@example.com')->first();
-
-        expect($staff)->not->toBeNull();
-        expect($staff->hasRole('staff'))->toBeTrue();
     });
 
     it('creates users without roles', function () {

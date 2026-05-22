@@ -10,9 +10,10 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -29,11 +30,11 @@ class ManageSurveyResponses extends ManageRelatedRecords
 
     protected static ?string $title = 'Submissions';
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-inbox-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-inbox-stack';
 
-    public function infolist(Schema $schema): Schema
+    public function infolist(Infolist $infolist): Infolist
     {
-        return $schema
+        return $infolist
             ->components([
                 TextEntry::make('respondent_name')
                     ->label('Name')
@@ -193,3 +194,5 @@ class ManageSurveyResponses extends ManageRelatedRecords
             ]);
     }
 }
+
+

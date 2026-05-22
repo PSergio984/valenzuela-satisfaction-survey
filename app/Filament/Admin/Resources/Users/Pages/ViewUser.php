@@ -24,3 +24,5 @@ class ViewUser extends ViewRecord
         ];
     }
 }
+
+

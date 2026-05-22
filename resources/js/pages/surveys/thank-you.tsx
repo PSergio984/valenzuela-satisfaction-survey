@@ -15,7 +15,7 @@ export default function ThankYou({ survey }: Props) {
     return (
         <>
             <Head title="Feedback Received" />
-            <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-6 font-sans text-slate-900 selection:bg-primary selection:text-white dark:bg-slate-950 dark:text-slate-100">
+            <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-6 font-sans text-slate-900 selection:bg-primary selection:text-primary-foreground dark:bg-slate-950 dark:text-slate-100">
                 <Card className="w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white text-center shadow-2xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
                     <div className="h-2 w-full bg-emerald-500" />
                     <CardContent className="px-8 pb-12 pt-16">
@@ -42,7 +42,7 @@ export default function ThankYou({ survey }: Props) {
                                 </Button>
                             </Link>
                             <Link href="/" className="flex-1">
-                                <Button className="h-14 w-full rounded-2xl bg-slate-900 font-bold text-white transition-all hover:bg-primary">
+                                <Button className="h-14 w-full rounded-2xl bg-slate-900 font-bold text-white transition-all hover:bg-primary hover:text-primary-foreground dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-primary dark:hover:text-primary-foreground">
                                     <Home className="mr-2 h-5 w-5" />
                                     Portal Home
                                 </Button>

@@ -55,7 +55,7 @@
 
     /* Premium Overlay Text and Graphics in Left Banner */
     .fi-simple-layout::after {
-        content: "Valenzuela\00000aSatisfaction\00000aSurvey\00000a\00000aFeedback Management System";
+        content: "Survey System\00000a\00000aFeedback Management System";
         white-space: pre-wrap;
         position: absolute;
         top: 30%;

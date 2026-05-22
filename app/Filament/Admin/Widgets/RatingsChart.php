@@ -10,9 +10,9 @@ class RatingsChart extends ChartWidget
 {
     protected static ?int $sort = 3;
 
-    protected ?string $heading = 'Rating Distribution';
+    protected static ?string $heading = 'Rating Distribution';
 
-    protected ?string $description = 'Distribution of all rating responses';
+    protected static ?string $description = 'Distribution of all rating responses';
 
     protected function getData(): array
     {
@@ -83,3 +83,4 @@ class RatingsChart extends ChartWidget
         ];
     }
 }
+

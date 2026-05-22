@@ -9,8 +9,8 @@ use App\Filament\Admin\Resources\Questions\Schemas\QuestionForm;
 use App\Filament\Admin\Resources\Questions\Tables\QuestionsTable;
 use App\Models\Question;
 use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
@@ -19,15 +19,15 @@ class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
+    protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Surveys';
+    protected static ?string $navigationGroup = 'Surveys';
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return QuestionForm::configure($schema);
+        return QuestionForm::configure($form);
     }
 
     public static function table(Table $table): Table
@@ -51,3 +51,5 @@ class QuestionResource extends Resource
         ];
     }
 }
+
+

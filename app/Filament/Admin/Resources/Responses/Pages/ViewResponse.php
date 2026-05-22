@@ -4,19 +4,20 @@ namespace App\Filament\Admin\Resources\Responses\Pages;
 
 use App\Filament\Admin\Resources\Responses\ResponseResource;
 use App\Models\Question;
+use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Schemas\Components\Placeholder;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Form;
 
 class ViewResponse extends ViewRecord
 {
     protected static string $resource = ResponseResource::class;
 
-    public function infolist(Schema $schema): Schema
+    public function infolist(Infolist $infolist): Infolist
     {
-        return $schema
+        return $infolist
             ->components([
                 Section::make('Survey Information')
                     ->schema([
@@ -129,3 +130,5 @@ class ViewResponse extends ViewRecord
         return $answer->value ?? '-';
     }
 }
+
+

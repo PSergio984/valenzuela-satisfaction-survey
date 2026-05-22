@@ -10,7 +10,7 @@ export default function Welcome() {
     return (
         <>
             <Head title="Insights & Feedback" />
-            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-white dark:bg-slate-950 dark:text-slate-100">
+            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-primary-foreground dark:bg-slate-950 dark:text-slate-100">
                 {/* Navigation */}
                 <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/70 backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/70">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -25,20 +25,20 @@ export default function Welcome() {
                         <nav className="flex items-center gap-4">
                             <AppearanceToggleDropdown />
                             {auth.user ? (
-                                <Link
+                                <a
                                     href="/admin"
-                                    className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/10"
+                                    className="group inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/10"
                                 >
                                     Admin Console
                                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                                </Link>
+                                </a>
                             ) : (
-                                <Link
+                                <a
                                     href="/admin/login"
                                     className="text-sm font-semibold text-slate-600 transition-colors hover:text-primary dark:text-slate-400 dark:hover:text-white"
                                 >
                                     Sign In
-                                </Link>
+                                </a>
                             )}
                         </nav>
                     </div>
@@ -63,16 +63,16 @@ export default function Welcome() {
                             <div className="mt-12 flex items-center justify-center gap-x-6">
                                 <Link
                                     href={surveysIndex.url()}
-                                    className="rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+                                    className="rounded-full bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
                                 >
                                     Get Started
                                 </Link>
-                                <Link
+                                <a
                                     href="/admin/login"
                                     className="group text-sm font-bold leading-6 text-slate-900 dark:text-white"
                                 >
                                     Admin Login <span className="transition-transform group-hover:inline-block group-hover:translate-x-1" aria-hidden="true">→</span>
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </section>

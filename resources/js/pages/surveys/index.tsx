@@ -19,8 +19,20 @@ import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 interface Props {
     surveys: {
         data: Survey[];
-        links: any[];
-        meta: any;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+        meta: {
+            current_page: number;
+            from: number | null;
+            last_page: number;
+            path: string;
+            per_page: number;
+            to: number | null;
+            total: number;
+        };
     };
     filters: {
         search: string;
@@ -49,7 +61,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
     return (
         <>
             <Head title="Available Surveys" />
-            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-white dark:bg-slate-950 dark:text-slate-100">
+            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-primary-foreground dark:bg-slate-950 dark:text-slate-100">
                 {/* Header */}
                 <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/70 backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/70">
                     <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
@@ -101,7 +113,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                                 </div>
                                 <Button 
                                     type="submit"
-                                    className="h-12 rounded-xl bg-primary px-6 font-bold text-white transition-all hover:bg-primary/90"
+                                    className="h-12 rounded-xl bg-primary px-6 font-bold text-primary-foreground transition-all hover:bg-primary/90"
                                 >
                                     Filter
                                 </Button>
@@ -168,7 +180,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                                                 <Link
                                                     href={`/surveys/${survey.slug}`}
                                                 >
-                                                    <Button className="h-12 w-full rounded-xl bg-slate-900 font-bold text-white transition-all group-hover:bg-primary">
+                                                    <Button className="h-12 w-full rounded-xl bg-slate-900 font-bold text-white transition-all group-hover:bg-primary group-hover:text-primary-foreground dark:bg-slate-800 dark:text-slate-100 dark:group-hover:bg-primary dark:group-hover:text-primary-foreground">
                                                         Access Survey
                                                         <ArrowRight className="ml-2 h-4 w-4" />
                                                     </Button>

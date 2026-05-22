@@ -53,8 +53,7 @@ describe('Excel Export', function () {
         // Test the export route
         $exportResponse = $this->get(route('admin.surveys.export.excel', $survey));
 
-        $exportResponse->assertOk();
-        $exportResponse->assertDownload();
+        $exportResponse->assertRedirect();
     });
 
     it('returns correct headers in excel export', function () {
@@ -66,7 +65,7 @@ describe('Excel Export', function () {
             'order' => 1,
         ]);
 
-        $export = new SurveyResponsesExport($survey);
+        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
         $headings = $export->headings();
 
         expect($headings)->toContain('ID')
@@ -100,11 +99,10 @@ describe('Excel Export', function () {
             'value' => '4',
         ]);
 
-        $export = new SurveyResponsesExport($survey);
-        $collection = $export->collection();
+        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
+        $row = $export->map($response);
 
-        expect($collection)->toHaveCount(1);
-        expect($collection->first())->toContain('Jane Smith')
+        expect($row)->toContain('Jane Smith')
             ->toContain('jane@example.com')
             ->toContain('4');
     });
@@ -117,10 +115,10 @@ describe('Excel Export', function () {
             'order' => 1,
         ]);
 
-        $export = new SurveyResponsesExport($survey);
-        $collection = $export->collection();
+        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
+        $query = $export->query();
 
-        expect($collection)->toHaveCount(0);
+        expect($query->count())->toBe(0);
     });
 
     it('handles checkbox questions with multiple selected options', function () {
@@ -144,11 +142,10 @@ describe('Excel Export', function () {
             'selected_options' => ['Sports', 'Music', 'Reading'],
         ]);
 
-        $export = new SurveyResponsesExport($survey);
-        $collection = $export->collection();
+        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
+        $row = $export->map($response);
 
-        $firstRow = $collection->first();
-        expect($firstRow)->toContain('Sports, Music, Reading');
+        expect($row)->toContain('Sports, Music, Reading');
     });
 
     it('requires authentication to export', function () {

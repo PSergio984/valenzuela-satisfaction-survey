@@ -1,19 +1,11 @@
-import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type Question, type Survey } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Loader2, Star, CheckCircle2, ClipboardCheck, Lock } from 'lucide-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect } from 'react';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface Props {
@@ -39,17 +31,14 @@ export default function SurveyShow({ survey }: Props) {
 
     useEffect(() => {
         setData('started_at', new Date().toISOString());
-    }, []);
+    }, [setData]);
 
-    const [progress, setProgress] = useState(0);
-
-    useEffect(() => {
-        if (!survey.questions) return;
+    const calculateProgress = () => {
+        if (!survey.questions) return 0;
         
         const requiredQuestions = survey.questions.filter(q => q.is_required);
         if (requiredQuestions.length === 0) {
-            setProgress(100);
-            return;
+            return 100;
         }
 
         const answeredRequired = requiredQuestions.filter(q => {
@@ -58,8 +47,10 @@ export default function SurveyShow({ survey }: Props) {
             return answer !== undefined && answer !== '';
         });
 
-        setProgress(Math.round((answeredRequired.length / requiredQuestions.length) * 100));
-    }, [data.answers, survey.questions]);
+        return Math.round((answeredRequired.length / requiredQuestions.length) * 100);
+    };
+
+    const progress = calculateProgress();
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -230,7 +221,7 @@ export default function SurveyShow({ survey }: Props) {
                                     onClick={() => handleAnswerChange(question.id, rating.toString())}
                                     className={`flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all ${
                                         data.answers[question.id] === rating.toString()
-                                            ? 'border-primary bg-primary text-white shadow-xl shadow-primary/20 scale-110'
+                                            ? 'border-primary bg-primary text-primary-foreground shadow-xl shadow-primary/20 scale-110'
                                             : 'border-slate-100 bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-800 dark:hover:border-slate-700'
                                     }`}
                                     aria-label={`Rate ${rating} out of 5`}
@@ -270,7 +261,7 @@ export default function SurveyShow({ survey }: Props) {
     return (
         <>
             <Head title={survey.title} />
-            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-white dark:bg-slate-950 dark:text-slate-100">
+            <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-primary selection:text-primary-foreground dark:bg-slate-950 dark:text-slate-100">
                 {/* Sticky Progress Header */}
                 <div className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/80">
                     <div className="mx-auto max-w-3xl px-6 py-4">
@@ -396,7 +387,7 @@ export default function SurveyShow({ survey }: Props) {
                             <div className="pt-12 text-center">
                                 <Button
                                     type="submit"
-                                    className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+                                    className="h-16 w-full max-md rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
                                     disabled={processing}
                                 >
                                     {processing ? (

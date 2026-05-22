@@ -12,13 +12,13 @@ class SurveyRatingsChart extends ChartWidget
 {
     public ?Model $record = null;
 
-    protected ?string $heading = 'Average Ratings by Question';
+    protected static ?string $heading = 'Average Ratings by Question';
 
-    protected ?string $description = 'Average rating score for each rating question';
+    protected static ?string $description = 'Average rating score for each rating question';
 
     protected int|string|array $columnSpan = 'full';
 
-    protected ?string $maxHeight = '400px';
+    protected static ?string $maxHeight = '400px';
 
     protected function getData(): array
     {
@@ -122,3 +122,6 @@ class SurveyRatingsChart extends ChartWidget
         ];
     }
 }
+
+
+

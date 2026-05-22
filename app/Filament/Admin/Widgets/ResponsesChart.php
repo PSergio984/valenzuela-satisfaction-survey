@@ -10,9 +10,9 @@ class ResponsesChart extends ChartWidget
 {
     protected static ?int $sort = 2;
 
-    protected ?string $heading = 'Responses Over Time';
+    protected static ?string $heading = 'Responses Over Time';
 
-    protected ?string $description = 'Daily responses for the last 30 days';
+    protected static ?string $description = 'Daily responses for the last 30 days';
 
     protected int|string|array $columnSpan = 'full';
 
@@ -67,3 +67,4 @@ class ResponsesChart extends ChartWidget
         ];
     }
 }
+

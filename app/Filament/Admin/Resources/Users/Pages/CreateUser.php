@@ -23,3 +23,5 @@ class CreateUser extends CreateRecord
         $this->record->assignRole('admin');
     }
 }
+
+

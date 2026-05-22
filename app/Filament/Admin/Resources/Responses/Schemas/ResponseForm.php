@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\Responses\Schemas;
 
 use Filament\Forms\Components\Placeholder;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Form;
 
 class ResponseForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
+        return $form
             ->components([
                 Section::make('Survey Information')
                     ->schema([
@@ -44,3 +44,5 @@ class ResponseForm
             ]);
     }
 }
+
+

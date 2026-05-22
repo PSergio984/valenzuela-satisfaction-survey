@@ -1,12 +1,22 @@
 <?php
 
+use Laravel\Fortify\Features;
+
 test('registration screen can be rendered', function () {
+    if (! Features::enabled(Features::registration())) {
+        $this->markTestSkipped('Registration is not enabled.');
+    }
+
     $response = $this->get(route('register'));
 
     $response->assertStatus(200);
 });
 
 test('new users can register', function () {
+    if (! Features::enabled(Features::registration())) {
+        $this->markTestSkipped('Registration is not enabled.');
+    }
+
     $response = $this->post(route('register.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -15,5 +25,5 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect('/admin');
 });
