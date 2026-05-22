@@ -13,7 +13,7 @@
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/fortify": "^1.20",
         "laravel/framework": "^11.0",
-        "laravel/octane": "^2.3",
+        "laravel/octane": "^2.17",
         "laravel/tinker": "^2.9",
         "laravel/wayfinder": "^0.1.9",
         "maatwebsite/excel": "^3.1",
