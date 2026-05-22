@@ -87,13 +87,10 @@ const Pagination = ({ links }: PaginationProps) => {
                         <li key={index}>
                             <Link
                                 href={link.url || '#'}
-                                className={cn(
-                                    buttonVariants({
-                                        variant: link.active ? 'outline' : 'ghost',
-                                        size: 'icon',
-                                    }),
-                                    link.active && 'bg-blue-50 text-blue-600 border-blue-200'
-                                )}
+                                className={buttonVariants({
+                                    variant: link.active ? 'default' : 'outline',
+                                    size: 'icon',
+                                })}
                                 preserveScroll
                                 dangerouslySetInnerHTML={{ __html: link.label }}
                             />

@@ -14,6 +14,7 @@ import { type Question, type Survey } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Loader2, Star, CheckCircle2, ClipboardCheck, Lock } from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface Props {
     survey: Survey;
@@ -306,13 +307,16 @@ export default function SurveyShow({ survey }: Props) {
                                 </span>
                             </div>
                         </div>
-                        <Link
-                            href="/surveys"
-                            className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
-                        >
-                            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-                            Return
-                        </Link>
+                        <div className="flex items-center gap-4">
+                            <AppearanceToggleDropdown />
+                            <Link
+                                href="/surveys"
+                                className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
+                            >
+                                <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                                Return
+                            </Link>
+                        </div>
                     </div>
                 </header>
 
