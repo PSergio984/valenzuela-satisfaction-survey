@@ -29,3 +29,6 @@ yarn-error.log
 graphify-out/manifest.json
 graphify-out/cost.json
 graphify-out/cache/
+**/caddy
+frankenphp
+frankenphp-worker.php
