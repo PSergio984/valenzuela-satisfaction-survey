@@ -17,5 +17,3 @@ class ListQuestions extends ListRecords
         ];
     }
 }
-
-

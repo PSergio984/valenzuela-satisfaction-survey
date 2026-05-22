@@ -76,6 +76,7 @@ test('can create a response for a survey', function () {
 });
 
 test('authenticated user can access admin surveys page', function () {
+    // Seed roles and permissions
     $this->seed(RolesAndPermissionsSeeder::class);
 
     $user = User::factory()->create([
@@ -87,14 +88,14 @@ test('authenticated user can access admin surveys page', function () {
 
     $this->actingAs($user);
 
-    // Using the Filament route name instead of hardcoded path
-    $response = $this->get(route('filament.admin.resources.surveys.surveys.index'));
+    $response = $this->get('/admin/surveys');
 
+    // Filament may require specific authentication, so we check it's not a redirect to login
     $response->assertSuccessful();
 });
 
 test('guest cannot access admin surveys page', function () {
-    $response = $this->get('/admin/surveys/surveys');
+    $response = $this->get('/admin/surveys');
 
     $response->assertRedirect('/admin/login');
 });
@@ -109,15 +110,12 @@ test('surveys index page can be accessed', function () {
 });
 
 test('surveys index shows active surveys', function () {
-    Survey::query()->delete();
-    
-    $activeSurvey = Survey::factory()->create([
-        'is_active' => true,
-        'is_public' => true,
+    $activeSurvey = Survey::factory()->active()->create([
         'starts_at' => now()->subDay(),
         'ends_at' => now()->addDay(),
     ]);
-    Survey::factory()->inactive()->create();
+
+    $inactiveSurvey = Survey::factory()->inactive()->create();
 
     $response = $this->get('/surveys');
 
@@ -125,9 +123,9 @@ test('surveys index shows active surveys', function () {
     $response->assertInertia(
         fn ($page) => $page
             ->component('surveys/index')
-            ->has('surveys.data', 1)
+            ->has('surveys', 1)
             ->has(
-                'surveys.data.0',
+                'surveys.0',
                 fn ($survey) => $survey
                     ->where('id', $activeSurvey->id)
                     ->where('title', $activeSurvey->title)
@@ -185,7 +183,6 @@ test('can submit survey response', function () {
     $response = $this->post("/surveys/{$survey->slug}", [
         'respondent_name' => 'Test User',
         'respondent_email' => 'test@example.com',
-        'started_at' => now()->subMinutes(5)->toIso8601String(),
         'answers' => [
             $textQuestion->id => 'This is my feedback',
             $ratingQuestion->id => '5',
@@ -226,5 +223,15 @@ test('thank you page can be accessed after submission', function () {
     $response = $this->get("/surveys/{$survey->slug}/thank-you");
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page->component('surveys/thank-you'));
+    $response->assertInertia(
+        fn ($page) => $page
+            ->component('surveys/thank-you')
+            ->has(
+                'survey',
+                fn ($s) => $s
+                    ->where('id', $survey->id)
+                    ->where('title', $survey->title)
+                    ->etc()
+            )
+    );
 });

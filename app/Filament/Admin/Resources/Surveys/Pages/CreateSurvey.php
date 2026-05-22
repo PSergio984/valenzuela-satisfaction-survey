@@ -9,5 +9,3 @@ class CreateSurvey extends CreateRecord
 {
     protected static string $resource = SurveyResource::class;
 }
-
-

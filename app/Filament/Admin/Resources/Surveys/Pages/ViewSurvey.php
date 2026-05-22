@@ -21,7 +21,7 @@ class ViewSurvey extends ViewRecord
 
     protected static ?string $title = 'Details & Analytics';
 
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
 
     protected function getHeaderWidgets(): array
     {
@@ -79,5 +79,3 @@ class ViewSurvey extends ViewRecord
         ];
     }
 }
-
-

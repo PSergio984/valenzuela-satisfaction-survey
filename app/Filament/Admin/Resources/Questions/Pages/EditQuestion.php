@@ -99,5 +99,3 @@ class EditQuestion extends EditRecord
         }
     }
 }
-
-

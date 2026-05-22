@@ -15,9 +15,9 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Utilities\Get;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -32,11 +32,11 @@ class ManageSurveyQuestions extends ManageRelatedRecords
 
     protected static ?string $title = 'Form Builder';
 
-    protected static ?string $navigationIcon = 'heroicon-o-bars-3-bottom-left';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bars-3-bottom-left';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->components([
                 Section::make('Question Details')
                     ->schema([
@@ -163,5 +163,3 @@ class ManageSurveyQuestions extends ManageRelatedRecords
             ]);
     }
 }
-
-

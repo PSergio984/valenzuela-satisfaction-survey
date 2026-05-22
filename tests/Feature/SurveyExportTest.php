@@ -53,7 +53,8 @@ describe('Excel Export', function () {
         // Test the export route
         $exportResponse = $this->get(route('admin.surveys.export.excel', $survey));
 
-        $exportResponse->assertRedirect();
+        $exportResponse->assertOk();
+        $exportResponse->assertDownload();
     });
 
     it('returns correct headers in excel export', function () {
@@ -65,7 +66,7 @@ describe('Excel Export', function () {
             'order' => 1,
         ]);
 
-        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
+        $export = new SurveyResponsesExport($survey);
         $headings = $export->headings();
 
         expect($headings)->toContain('ID')
@@ -99,10 +100,11 @@ describe('Excel Export', function () {
             'value' => '4',
         ]);
 
-        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
-        $row = $export->map($response);
+        $export = new SurveyResponsesExport($survey);
+        $collection = $export->collection();
 
-        expect($row)->toContain('Jane Smith')
+        expect($collection)->toHaveCount(1);
+        expect($collection->first())->toContain('Jane Smith')
             ->toContain('jane@example.com')
             ->toContain('4');
     });
@@ -115,10 +117,10 @@ describe('Excel Export', function () {
             'order' => 1,
         ]);
 
-        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
-        $query = $export->query();
+        $export = new SurveyResponsesExport($survey);
+        $collection = $export->collection();
 
-        expect($query->count())->toBe(0);
+        expect($collection)->toHaveCount(0);
     });
 
     it('handles checkbox questions with multiple selected options', function () {
@@ -142,10 +144,11 @@ describe('Excel Export', function () {
             'selected_options' => ['Sports', 'Music', 'Reading'],
         ]);
 
-        $export = new SurveyResponsesExport($survey->id, 1, 'test.xlsx');
-        $row = $export->map($response);
+        $export = new SurveyResponsesExport($survey);
+        $collection = $export->collection();
 
-        expect($row)->toContain('Sports, Music, Reading');
+        $firstRow = $collection->first();
+        expect($firstRow)->toContain('Sports, Music, Reading');
     });
 
     it('requires authentication to export', function () {

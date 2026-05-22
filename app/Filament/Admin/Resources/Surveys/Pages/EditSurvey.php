@@ -13,7 +13,7 @@ class EditSurvey extends EditRecord
 
     protected static ?string $navigationLabel = 'Edit Settings';
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected function getHeaderActions(): array
     {
@@ -22,5 +22,3 @@ class EditSurvey extends EditRecord
         ];
     }
 }
-
-

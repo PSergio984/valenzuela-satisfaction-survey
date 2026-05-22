@@ -11,13 +11,13 @@ class SurveyResponsesChart extends ChartWidget
 {
     public ?Model $record = null;
 
-    protected static ?string $heading = 'Responses Over Time';
+    protected ?string $heading = 'Responses Over Time';
 
-    protected static ?string $description = 'Daily responses for this survey (last 30 days)';
+    protected ?string $description = 'Daily responses for this survey (last 30 days)';
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     protected function getData(): array
     {
@@ -82,6 +82,3 @@ class SurveyResponsesChart extends ChartWidget
         ];
     }
 }
-
-
-

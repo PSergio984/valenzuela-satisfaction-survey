@@ -17,5 +17,3 @@ class ListSurveys extends ListRecords
         ];
     }
 }
-
-

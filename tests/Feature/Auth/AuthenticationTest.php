@@ -5,14 +5,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
 use Spatie\Permission\Models\Role;
 
-test('login route redirects to admin login', function () {
-    $response = $this->get(route('login'));
-
-    $response->assertRedirect('/admin/login');
-});
-
 test('login screen can be rendered', function () {
-    $response = $this->get('/admin/login');
+    $response = $this->get(route('login'));
 
     $response->assertStatus(200);
 });
@@ -26,7 +20,8 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect('/admin');
+    // Regular users (without admin roles) are redirected to surveys
+    $response->assertRedirect(route('surveys.index', absolute: false));
 });
 
 test('admin users are redirected to admin panel after login', function () {

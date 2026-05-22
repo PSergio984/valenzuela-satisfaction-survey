@@ -13,9 +13,9 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Utilities\Get;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -26,9 +26,9 @@ class QuestionsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'question';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->components([
                 Section::make('Question Details')
                     ->schema([
@@ -152,5 +152,3 @@ class QuestionsRelationManager extends RelationManager
             ]);
     }
 }
-
-

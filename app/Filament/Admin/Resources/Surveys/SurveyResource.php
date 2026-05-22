@@ -15,11 +15,11 @@ use App\Filament\Admin\Resources\Surveys\Widgets\SurveyResponsesChart;
 use App\Filament\Admin\Resources\Surveys\Widgets\SurveyStatsOverview;
 use App\Models\Survey;
 use BackedEnum;
-use Filament\Forms\Form;
 use Filament\Navigation\NavigationItem;
-use Filament\Pages\SubNavigationPosition;
+use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,15 +29,17 @@ class SurveyResource extends Resource
 {
     protected static ?string $model = Survey::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static ?string $navigationGroup = 'Surveys';
+    protected static string|UnitEnum|null $navigationGroup = 'Surveys';
+
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return SurveyForm::configure($form);
+        return SurveyForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -100,5 +102,3 @@ class SurveyResource extends Resource
         ];
     }
 }
-
-

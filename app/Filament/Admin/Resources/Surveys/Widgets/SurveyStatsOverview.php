@@ -57,5 +57,3 @@ class SurveyStatsOverview extends StatsOverviewWidget
         ];
     }
 }
-
-

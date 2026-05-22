@@ -8,8 +8,8 @@ use App\Filament\Admin\Resources\Responses\Schemas\ResponseForm;
 use App\Filament\Admin\Resources\Responses\Tables\ResponsesTable;
 use App\Models\Response;
 use BackedEnum;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,17 +19,17 @@ class ResponseResource extends Resource
 {
     protected static ?string $model = Response::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
-    protected static ?string $navigationGroup = 'Surveys';
+    protected static string|UnitEnum|null $navigationGroup = 'Surveys';
 
     protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationLabel = 'Responses';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return ResponseForm::configure($form);
+        return ResponseForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -63,5 +63,3 @@ class ResponseResource extends Resource
         return false;
     }
 }
-
-

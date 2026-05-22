@@ -54,5 +54,3 @@ class ListResponses extends ListRecords
         ];
     }
 }
-
-
