@@ -396,7 +396,7 @@ export default function SurveyShow({ survey }: Props) {
                             <div className="pt-12 text-center">
                                 <Button
                                     type="submit"
-                                    className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
                                     disabled={processing}
                                 >
                                     {processing ? (

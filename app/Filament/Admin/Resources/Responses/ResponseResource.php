@@ -19,6 +19,8 @@ class ResponseResource extends Resource
 {
     protected static ?string $model = Response::class;
 
+    protected static ?string $slug = 'responses';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
 
     protected static string|UnitEnum|null $navigationGroup = 'Surveys';

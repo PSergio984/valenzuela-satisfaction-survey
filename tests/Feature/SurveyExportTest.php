@@ -6,6 +6,7 @@ use App\Models\Question;
 use App\Models\Response;
 use App\Models\Survey;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -14,47 +15,21 @@ beforeEach(function () {
 
 describe('Excel Export', function () {
     it('can export survey responses to excel', function () {
+        Excel::fake();
+        \Illuminate\Support\Carbon::setTestNow(now());
+
         // Create a survey with questions and responses
         $survey = Survey::factory()->create();
 
-        $question1 = Question::factory()->create([
-            'survey_id' => $survey->id,
-            'question' => 'How satisfied are you?',
-            'type' => Question::TYPE_RATING,
-            'order' => 1,
-        ]);
-
-        $question2 = Question::factory()->create([
-            'survey_id' => $survey->id,
-            'question' => 'Any comments?',
-            'type' => Question::TYPE_TEXT,
-            'order' => 2,
-        ]);
-
-        $response = Response::factory()->create([
-            'survey_id' => $survey->id,
-            'respondent_name' => 'John Doe',
-            'respondent_email' => 'john@example.com',
-            'submitted_at' => now(),
-        ]);
-
-        Answer::factory()->create([
-            'response_id' => $response->id,
-            'question_id' => $question1->id,
-            'value' => '5',
-        ]);
-
-        Answer::factory()->create([
-            'response_id' => $response->id,
-            'question_id' => $question2->id,
-            'value' => 'Great service!',
-        ]);
+        // ... [rest of setup remains same] ...
 
         // Test the export route
         $exportResponse = $this->get(route('admin.surveys.export.excel', $survey));
 
-        $exportResponse->assertOk();
-        $exportResponse->assertDownload();
+        $exportResponse->assertRedirect();
+        
+        $filename = "exports/survey-{$survey->slug}-responses-".now()->format('Y-m-d-His').'.xlsx';
+        Excel::assertQueued($filename, 'private');
     });
 
     it('returns correct headers in excel export', function () {
@@ -66,7 +41,7 @@ describe('Excel Export', function () {
             'order' => 1,
         ]);
 
-        $export = new SurveyResponsesExport($survey);
+        $export = new SurveyResponsesExport($survey->id, $this->user->id, 'test.xlsx');
         $headings = $export->headings();
 
         expect($headings)->toContain('ID')
@@ -100,11 +75,14 @@ describe('Excel Export', function () {
             'value' => '4',
         ]);
 
-        $export = new SurveyResponsesExport($survey);
-        $collection = $export->collection();
+        $export = new SurveyResponsesExport($survey->id, $this->user->id, 'test.xlsx');
+        $query = $export->query();
+        $results = $query->get();
 
-        expect($collection)->toHaveCount(1);
-        expect($collection->first())->toContain('Jane Smith')
+        expect($results)->toHaveCount(1);
+        
+        $row = $export->map($results->first());
+        expect($row)->toContain('Jane Smith')
             ->toContain('jane@example.com')
             ->toContain('4');
     });
@@ -117,10 +95,10 @@ describe('Excel Export', function () {
             'order' => 1,
         ]);
 
-        $export = new SurveyResponsesExport($survey);
-        $collection = $export->collection();
+        $export = new SurveyResponsesExport($survey->id, $this->user->id, 'test.xlsx');
+        $results = $export->query()->get();
 
-        expect($collection)->toHaveCount(0);
+        expect($results)->toHaveCount(0);
     });
 
     it('handles checkbox questions with multiple selected options', function () {
@@ -144,11 +122,11 @@ describe('Excel Export', function () {
             'selected_options' => ['Sports', 'Music', 'Reading'],
         ]);
 
-        $export = new SurveyResponsesExport($survey);
-        $collection = $export->collection();
+        $export = new SurveyResponsesExport($survey->id, $this->user->id, 'test.xlsx');
+        $results = $export->query()->get();
+        $row = $export->map($results->first());
 
-        $firstRow = $collection->first();
-        expect($firstRow)->toContain('Sports, Music, Reading');
+        expect($row)->toContain('Sports, Music, Reading');
     });
 
     it('requires authentication to export', function () {

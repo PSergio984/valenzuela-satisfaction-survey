@@ -29,6 +29,8 @@ class SurveyResource extends Resource
 {
     protected static ?string $model = Survey::class;
 
+    protected static ?string $slug = 'surveys';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
     protected static string|UnitEnum|null $navigationGroup = 'Surveys';

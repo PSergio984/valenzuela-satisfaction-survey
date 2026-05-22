@@ -26,12 +26,12 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-<<<<<<< HEAD
 graphify-out/manifest.json
 graphify-out/cost.json
 graphify-out/cache/
 **/caddy
 frankenphp
 frankenphp-worker.php
-=======
->>>>>>> parent of 90480f76 (chore: align dependencies and restore compatibility for PHP 8.2 and Filament v3)
+
+# Graphify
+graphify-out/
