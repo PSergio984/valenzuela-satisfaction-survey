@@ -14,6 +14,7 @@ import { type Survey } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowRight, ClipboardCheck, Search, Sparkles, LayoutGrid } from 'lucide-react';
 import * as React from 'react';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface Props {
     surveys: {
@@ -60,12 +61,15 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                                 Survey System
                             </span>
                         </div>
-                        <Link
-                            href="/"
-                            className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
-                        >
-                            Return Home
-                        </Link>
+                        <div className="flex items-center gap-4">
+                            <AppearanceToggleDropdown />
+                            <Link
+                                href="/"
+                                className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
+                            >
+                                Return Home
+                            </Link>
+                        </div>
                     </div>
                 </header>
 

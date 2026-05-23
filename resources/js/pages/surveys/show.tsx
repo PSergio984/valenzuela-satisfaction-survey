@@ -14,6 +14,7 @@ import { type Question, type Survey } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Loader2, Star, CheckCircle2, ClipboardCheck, Lock } from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface Props {
     survey: Survey;
@@ -306,13 +307,16 @@ export default function SurveyShow({ survey }: Props) {
                                 </span>
                             </div>
                         </div>
-                        <Link
-                            href="/surveys"
-                            className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
-                        >
-                            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-                            Return
-                        </Link>
+                        <div className="flex items-center gap-4">
+                            <AppearanceToggleDropdown />
+                            <Link
+                                href="/surveys"
+                                className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
+                            >
+                                <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+                                Return
+                            </Link>
+                        </div>
                     </div>
                 </header>
 
@@ -392,7 +396,7 @@ export default function SurveyShow({ survey }: Props) {
                             <div className="pt-12 text-center">
                                 <Button
                                     type="submit"
-                                    className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
                                     disabled={processing}
                                 >
                                     {processing ? (

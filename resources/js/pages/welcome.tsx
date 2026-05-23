@@ -2,6 +2,7 @@ import { index as surveysIndex } from '@/actions/App/Http/Controllers/SurveyCont
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowRight, BarChart3, ClipboardCheck, ShieldCheck, Zap } from 'lucide-react';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -21,7 +22,8 @@ export default function Welcome() {
                                 Survey <span className="text-primary">System</span>
                             </span>
                         </div>
-                        <nav className="flex items-center gap-6">
+                        <nav className="flex items-center gap-4">
+                            <AppearanceToggleDropdown />
                             {auth.user ? (
                                 <Link
                                     href="/admin"

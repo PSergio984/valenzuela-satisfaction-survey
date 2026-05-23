@@ -88,7 +88,8 @@ test('authenticated user can access admin surveys page', function () {
 
     $this->actingAs($user);
 
-    $response = $this->get('/admin/surveys');
+    // Using the Filament route name instead of hardcoded path
+    $response = $this->get(route('filament.admin.resources.surveys.index'));
 
     // Filament may require specific authentication, so we check it's not a redirect to login
     $response->assertSuccessful();
@@ -110,7 +111,11 @@ test('surveys index page can be accessed', function () {
 });
 
 test('surveys index shows active surveys', function () {
+    // Ensure clean state
+    Survey::query()->delete();
+
     $activeSurvey = Survey::factory()->active()->create([
+        'is_public' => true,
         'starts_at' => now()->subDay(),
         'ends_at' => now()->addDay(),
     ]);
@@ -123,9 +128,9 @@ test('surveys index shows active surveys', function () {
     $response->assertInertia(
         fn ($page) => $page
             ->component('surveys/index')
-            ->has('surveys', 1)
+            ->has('surveys.data', 1)
             ->has(
-                'surveys.0',
+                'surveys.data.0',
                 fn ($survey) => $survey
                     ->where('id', $activeSurvey->id)
                     ->where('title', $activeSurvey->title)
@@ -183,6 +188,7 @@ test('can submit survey response', function () {
     $response = $this->post("/surveys/{$survey->slug}", [
         'respondent_name' => 'Test User',
         'respondent_email' => 'test@example.com',
+        'started_at' => now()->subMinutes(5)->toDateTimeString(),
         'answers' => [
             $textQuestion->id => 'This is my feedback',
             $ratingQuestion->id => '5',
@@ -211,6 +217,7 @@ test('survey response validation for required questions', function () {
     ]);
 
     $response = $this->post("/surveys/{$survey->slug}", [
+        'started_at' => now()->toDateTimeString(),
         'answers' => [],
     ]);
 
