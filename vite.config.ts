@@ -28,4 +28,10 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+    // @ts-ignore
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './resources/js/test-setup.ts',
+    },
 });

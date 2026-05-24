@@ -3,8 +3,14 @@
 .editorconfig
 .env
 .env.example
+.env.testing
 .gemini
 .gemini\settings.json
+.gemini\skills
+.gemini\skills\ui-ux-pro-max
+.gemini\skills\ui-ux-pro-max\data
+.gemini\skills\ui-ux-pro-max\scripts
+.gemini\skills\ui-ux-pro-max\SKILL.md
 .gitattributes
 .github
 .github\agents
@@ -24,6 +30,15 @@
 .github\workflows\tests.yml
 .gitignore
 .nvmrc
+.planning
+.planning\codebase
+.planning\phases
+.planning\phases\01-maintenance-qol-perf
+.planning\phases\01-maintenance-qol-perf\01-01-PLAN.md
+.planning\phases\01-maintenance-qol-perf\01-01-SUMMARY.md
+.planning\phases\01-maintenance-qol-perf\01-02-SUMMARY.md
+.planning\ROADMAP.md
+.planning\STATE.md
 .prettierignore
 .prettierrc
 .vscode
@@ -60,6 +75,10 @@ app\Http\Requests\Settings
 app\Http\Requests\StoreSurveyResponseRequest.php
 app\Http\Responses
 app\Http\Responses\LoginResponse.php
+app\Jobs
+app\Jobs\GenerateSurveyPdfReport.php
+app\Logging
+app\Logging\PiiScrubberProcessor.php
 app\Models
 app\Models\Answer.php
 app\Models\Option.php
@@ -67,6 +86,8 @@ app\Models\Question.php
 app\Models\Response.php
 app\Models\Survey.php
 app\Models\User.php
+app\Observers
+app\Observers\AnswerObserver.php
 app\Policies
 app\Policies\RolePolicy.php
 app\Policies\UserPolicy.php
@@ -102,6 +123,7 @@ config\fortify.php
 config\inertia.php
 config\logging.php
 config\mail.php
+config\octane.php
 config\permission.php
 config\queue.php
 config\services.php
@@ -132,6 +154,7 @@ database\migrations\2025_12_05_143545_add_mode_and_analytics_to_surveys_table.ph
 database\migrations\2025_12_05_143600_add_timing_columns_to_responses_table.php
 database\migrations\2025_12_12_151038_remove_requires_authentication_from_surveys_table.php
 database\migrations\2025_12_12_153533_remove_staff_role.php
+database\migrations\2026_05_16_173829_create_notifications_table.php
 database\seeders
 database\seeders\AnswerSeeder.php
 database\seeders\CleanupStaffRoleSeeder.php
@@ -145,61 +168,38 @@ database\seeders\UserSeeder.php
 docs
 docs\codebase
 docs\codebase\.codebase-scan.txt
+docs\codebase\ARCHITECTURE.md
+docs\codebase\CONCERNS.md
+docs\codebase\CONVENTIONS.md
+docs\codebase\INTEGRATIONS.md
+docs\codebase\STACK.md
+docs\codebase\STRUCTURE.md
+docs\codebase\TESTING.md
+docs\planning
+docs\planning\1-01-PLAN.md
+docs\planning\1-02-PLAN.md
+docs\planning\1-CONTEXT.md
+docs\planning\1-RESEARCH.md
+docs\planning\1-VALIDATION.md
+docs\planning\2-01-PLAN.md
+docs\planning\2-02-PLAN.md
+docs\planning\2-CONTEXT.md
+docs\planning\3-CONTEXT.md
 eslint.config.js
 GEMINI.md
-package-lock.json
-package.json
-phpunit.xml
-project-instructions.md
-public
-public\.htaccess
-public\apple-touch-icon.png
-public\css
-public\css\filament
-public\css\filament\filament
-public\favicon.ico
-public\favicon.png
-public\favicon.svg
-public\fonts
-public\fonts\filament
-public\fonts\filament\filament
-public\images
-public\images\logo.png
-public\index.php
-public\js
-public\js\filament
-public\js\filament\actions
-public\js\filament\filament
-public\js\filament\forms
-public\js\filament\notifications
-public\js\filament\schemas
-public\js\filament\support
-public\js\filament\tables
-public\js\filament\widgets
-public\logo.svg
-public\robots.txt
-README.md
-resources
-resources\css
-resources\css\app.css
-resources\css\filament
-resources\css\filament\admin
-resources\js
-resources\js\actions
-resources\js\actions\App
-resources\js\actions\Barryvdh
-resources\js\actions\Filament
-resources\js\actions\Illuminate
-resources\js\actions\Laravel
-resources\js\actions\Livewire
-resources\js\app.tsx
-resources\js\components
-resources\js\components\alert-error.tsx
-resources\js\components\app-content.tsx
-resources\js\components\app-header.tsx
-resources\js\components\app-logo-icon.tsx
-resources\js\components\app-logo.tsx
-resources\js\components\app-shell.tsx
+graphify-out
+graphify-out\cache
+graphify-out\cache\ast
+graphify-out\cache\ast\00020ac96111999d2f374f667fd0e47f8f37a5d1ead44084a62d1a138b458972.json
+graphify-out\cache\ast\0004d4214199981c6fc3ff9b3c402c1bca940968077c75d11b0ebd9e22b1ca52.json
+graphify-out\cache\ast\0009d3865bd6fa11cf2d88fd77c0e3dc1c8a4e4239866a6b7f490b11472ef957.json
+graphify-out\cache\ast\000b405f800b40178a2ff8e104d8119c1165b565e88fe2a0aebb66bab2419e36.json
+graphify-out\cache\ast\000b494baee273055e2c82ffd648e3c820926ac53ebe8c8e00f2208b4bf172cf.json
+graphify-out\cache\ast\000c7bcdbe19109130c56e0fa6b6a33e1fd64f182b69513a9c593f9a0cbf6594.json
+graphify-out\cache\ast\00109c4cd02c0b2fce3aa0131b625418561586a6c87b348e36a2bf412e037286.json
+graphify-out\cache\ast\0010ba08a63df2c9ecd6be9652f28466e600fbdd48bbcc435d668915f5148b9c.json
+graphify-out\cache\ast\0012f705fc1ea8095f98209b481c1227e60b53a50924222e347362b06ea5231d.json
+graphify-out\cache\ast\0015611f54e079a04e77129f734de71c9932fb2459dff64682c57768ab32df9c.json
 
 === STACK DETECTION (manifest files) ===
 
@@ -215,10 +215,11 @@ resources\js\components\app-shell.tsx
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
         "barryvdh/laravel-snappy": "^1.0",
-        "filament/filament": "4.0",
+        "filament/filament": "^4.0",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
+        "laravel/octane": "^2.17",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
         "maatwebsite/excel": "^3.1",
@@ -283,9 +284,8 @@ resources\js\components\app-shell.tsx
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi",
 
-[TRUNCATED] Showing first 80 of 104 lines.
+[TRUNCATED] Showing first 80 of 109 lines.
 --- composer.lock ---
 {
     "_readme": [
@@ -293,82 +293,82 @@ resources\js\components\app-shell.tsx
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed4f8811ae17ca6dbdc2c8ed88f31dee",
+    "content-hash": "3d3590570f6c7b5660ba8ece8cc742e3",
     "packages": [
         {
-            "name": "anourvalar/eloquent-serialize",
-            "version": "1.3.5",
+            "name": "bacon/bacon-qr-code",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/AnourValar/eloquent-serialize.git",
-                "reference": "1a7dead8d532657e5358f8f27c0349373517681e"
+                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "reference": "4da2233e72eeecd9be3b62e0dc2cc9ed8e2e31c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AnourValar/eloquent-serialize/zipball/1a7dead8d532657e5358f8f27c0349373517681e",
-                "reference": "1a7dead8d532657e5358f8f27c0349373517681e",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/4da2233e72eeecd9be3b62e0dc2cc9ed8e2e31c2",
+                "reference": "4da2233e72eeecd9be3b62e0dc2cc9ed8e2e31c2",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "^8.0|^9.0|^10.0|^11.0|^12.0",
-                "php": "^7.4|^8.0"
+                "dasprid/enum": "^1.0.3",
+                "ext-iconv": "*",
+                "php": "^8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.26",
-                "laravel/legacy-factories": "^1.1",
-                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.5|^10.5|^11.0",
-                "psalm/plugin-laravel": "^2.8|^3.0",
-                "squizlabs/php_codesniffer": "^3.7"
+                "phly/keep-a-changelog": "^2.12",
+                "phpunit/phpunit": "^10.5.11 || ^11.0.4",
+                "spatie/phpunit-snapshot-assertions": "^5.1.5",
+                "spatie/pixelmatch-php": "^1.2.0",
+                "squizlabs/php_codesniffer": "^3.9"
+            },
+            "suggest": {
+                "ext-imagick": "to generate QR code images"
             },
             "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "EloquentSerialize": "AnourValar\\EloquentSerialize\\Facades\\EloquentSerializeFacade"
-                    }
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "AnourValar\\EloquentSerialize\\": "src/"
+                    "BaconQrCode\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-2-Clause"
             ],
-            "description": "Laravel Query Builder (Eloquent) serialization",
-            "homepage": "https://github.com/AnourValar/eloquent-serialize",
-            "keywords": [
-                "anourvalar",
-                "builder",
-                "copy",
-                "eloquent",
-                "job",
-                "laravel",
-                "query",
-                "querybuilder",
-                "queue",
-                "serializable",
-                "serialization",
-                "serialize"
+            "authors": [
+                {
+                    "name": "Ben Scholzen 'DASPRiD'",
+                    "email": "mail@dasprids.de",
+                    "homepage": "https://dasprids.de/",
+                    "role": "Developer"
+                }
             ],
+            "description": "BaconQrCode is a QR code generator for PHP.",
+            "homepage": "https://github.com/Bacon/BaconQrCode",
             "support": {
-                "issues": "https://github.com/AnourValar/eloquent-serialize/issues",
-                "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.3.5"
+                "issues": "https://github.com/Bacon/BaconQrCode/issues",
+                "source": "https://github.com/Bacon/BaconQrCode/tree/v3.1.1"
             },
-            "time": "2025-12-04T13:38:21+00:00"
+            "time": "2026-04-05T21:06:35+00:00"
         },
         {
-            "name": "bacon/bacon-qr-code",
-            "version": "v3.0.1",
+            "name": "barryvdh/laravel-dompdf",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "url": "https://github.com/barryvdh/laravel-dompdf.git",
+                "reference": "ee3b72b19ccdf57d0243116ecb2b90261344dedc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/ee3b72b19ccdf57d0243116ecb2b90261344dedc",
+                "reference": "ee3b72b19ccdf57d0243116ecb2b90261344dedc",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/dompdf": "^3.0",
+                "illuminate/support": "^9|^10|^11|^12|^13.0",
 
-[TRUNCATED] Showing first 80 of 13329 lines.
+[TRUNCATED] Showing first 80 of 14567 lines.
 --- package-lock.json ---
 {
     "name": "valenzuela-satisfaction-survey",
@@ -378,7 +378,7 @@ resources\js\components\app-shell.tsx
         "": {
             "dependencies": {
                 "@headlessui/react": "^2.2.9",
-                "@inertiajs/react": "^2.2.17",
+                "@inertiajs/react": "^2.3.3",
                 "@radix-ui/react-avatar": "^1.1.11",
                 "@radix-ui/react-checkbox": "^1.3.3",
                 "@radix-ui/react-collapsible": "^1.1.12",
@@ -394,16 +394,16 @@ resources\js\components\app-shell.tsx
                 "@radix-ui/react-tooltip": "^1.2.8",
                 "@types/react": "^19.2.5",
                 "@types/react-dom": "^19.2.3",
-                "@vitejs/plugin-react": "^5.1.1",
                 "class-variance-authority": "^0.7.1",
                 "clsx": "^2.1.1",
                 "concurrently": "^9.2.1",
                 "globals": "^16.5.0",
                 "input-otp": "^1.4.2",
                 "laravel-vite-plugin": "^2.0",
-                "lucide-react": "^0.553.0",
-                "react": "^19.2.0",
-                "react-dom": "^19.2.0",
+                "lucide-react": "^0.554.0",
+                "radix-ui": "^1.4.3",
+                "react": "^19.2.3",
+                "react-dom": "^19.2.3",
                 "react-qr-code": "^2.0.18",
                 "tailwind-merge": "^3.4.0",
                 "tw-animate-css": "^1.4.0",
@@ -414,47 +414,48 @@ resources\js\components\app-shell.tsx
                 "@eslint/js": "^9.39.1",
                 "@laravel/vite-plugin-wayfinder": "^0.1.7",
                 "@tailwindcss/vite": "^4.1.17",
+                "@testing-library/dom": "^10.4.1",
+                "@testing-library/jest-dom": "^6.9.1",
+                "@testing-library/react": "^16.3.2",
                 "@types/node": "^24.10.1",
+                "@vitejs/plugin-react": "^5.2.0",
                 "babel-plugin-react-compiler": "^1.0.0",
                 "eslint": "^9.39.1",
                 "eslint-config-prettier": "^10.1.8",
                 "eslint-plugin-react": "^7.37.5",
                 "eslint-plugin-react-hooks": "^7.0.1",
+                "jsdom": "^28.1.0",
                 "prettier": "^3.6.2",
                 "prettier-plugin-organize-imports": "^4.3.0",
                 "prettier-plugin-tailwindcss": "^0.7.1",
                 "shadcn": "^3.5.0",
                 "tailwindcss": "^4.1.17",
-                "typescript-eslint": "^8.46.4"
+                "typescript-eslint": "^8.46.4",
+                "vitest": "^4.1.7"
             },
             "optionalDependencies": {
-                "@rollup/rollup-linux-x64-gnu": "4.53.2",
-                "@rollup/rollup-win32-x64-msvc": "4.53.2",
+                "@rollup/rollup-linux-x64-gnu": "^4.53.3",
+                "@rollup/rollup-win32-x64-msvc": "^4.53.3",
                 "@tailwindcss/oxide-linux-x64-gnu": "^4.1.17",
                 "@tailwindcss/oxide-win32-x64-msvc": "^4.1.17",
                 "lightningcss-linux-x64-gnu": "^1.30.2",
                 "lightningcss-win32-x64-msvc": "^1.30.2"
             }
         },
-        "node_modules/@antfu/ni": {
-            "version": "25.0.0",
-            "resolved": "https://registry.npmjs.org/@antfu/ni/-/ni-25.0.0.tgz",
-            "integrity": "sha512-9q/yCljni37pkMr4sPrI3G4jqdIk074+iukc5aFJl7kmDCCsiJrbZ6zKxnES1Gwg+i9RcDZwvktl23puGslmvA==",
+        "node_modules/@acemir/cssom": {
+            "version": "0.9.31",
+            "resolved": "https://registry.npmjs.org/@acemir/cssom/-/cssom-0.9.31.tgz",
+            "integrity": "sha512-ZnR3GSaH+/vJ0YlHau21FjfLYjMpYVIzTD8M8vIEQvIGxeOXyXdzCI140rrCY862p/C/BbzWsjc1dgnM9mkoTA==",
             "dev": true,
-            "license": "MIT",
-            "dependencies": {
-                "ansis": "^4.0.0",
-                "fzf": "^0.5.2",
-                "package-manager-detector": "^1.3.0",
-                "tinyexec": "^1.0.1"
-            },
-            "bin": {
-                "na": "bin/na.mjs",
+            "license": "MIT"
+        },
+        "node_modules/@adobe/css-tools": {
 
-[TRUNCATED] Showing first 80 of 11671 lines.
+[TRUNCATED] Showing first 80 of 15155 lines.
 --- package.json ---
 {
     "private": true,
+    "name": "satisfaction-survey",
     "type": "module",
     "scripts": {
         "build": "vite build",
@@ -463,28 +464,35 @@ resources\js\components\app-shell.tsx
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
+        "test": "vitest",
         "types": "tsc --noEmit"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.1",
         "@laravel/vite-plugin-wayfinder": "^0.1.7",
         "@tailwindcss/vite": "^4.1.17",
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.3.2",
         "@types/node": "^24.10.1",
+        "@vitejs/plugin-react": "^5.2.0",
         "babel-plugin-react-compiler": "^1.0.0",
         "eslint": "^9.39.1",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.0.1",
+        "jsdom": "^28.1.0",
         "prettier": "^3.6.2",
         "prettier-plugin-organize-imports": "^4.3.0",
         "prettier-plugin-tailwindcss": "^0.7.1",
         "shadcn": "^3.5.0",
         "tailwindcss": "^4.1.17",
-        "typescript-eslint": "^8.46.4"
+        "typescript-eslint": "^8.46.4",
+        "vitest": "^4.1.7"
     },
     "dependencies": {
         "@headlessui/react": "^2.2.9",
-        "@inertiajs/react": "^2.2.17",
+        "@inertiajs/react": "^2.3.3",
         "@radix-ui/react-avatar": "^1.1.11",
         "@radix-ui/react-checkbox": "^1.3.3",
         "@radix-ui/react-collapsible": "^1.1.12",
@@ -500,16 +508,16 @@ resources\js\components\app-shell.tsx
         "@radix-ui/react-tooltip": "^1.2.8",
         "@types/react": "^19.2.5",
         "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^5.1.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "concurrently": "^9.2.1",
         "globals": "^16.5.0",
         "input-otp": "^1.4.2",
         "laravel-vite-plugin": "^2.0",
-        "lucide-react": "^0.553.0",
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0",
+        "lucide-react": "^0.554.0",
+        "radix-ui": "^1.4.3",
+        "react": "^19.2.3",
+        "react-dom": "^19.2.3",
         "react-qr-code": "^2.0.18",
         "tailwind-merge": "^3.4.0",
         "tw-animate-css": "^1.4.0",
@@ -517,8 +525,8 @@ resources\js\components\app-shell.tsx
         "vite": "^7.2.2"
     },
     "optionalDependencies": {
-        "@rollup/rollup-linux-x64-gnu": "4.53.2",
-        "@rollup/rollup-win32-x64-msvc": "4.53.2",
+        "@rollup/rollup-linux-x64-gnu": "^4.53.3",
+        "@rollup/rollup-win32-x64-msvc": "^4.53.3",
         "@tailwindcss/oxide-linux-x64-gnu": "^4.1.17",
         "@tailwindcss/oxide-win32-x64-msvc": "^4.1.17",
         "lightningcss-linux-x64-gnu": "^1.30.2",
@@ -613,68 +621,75 @@ VITE_APP_NAME="${APP_NAME}"
 None found.
 
 === GIT RECENT COMMITS (last 20) ===
-c7e6fe3 feat: implement database seeders for surveys and users and configure Filament admin panel provider
-35740a3 Address technical feedback: unify DB URL keys, set safe SSL default, and fix formatting
-1105565 feat: implement landing page, survey export templates, and database seeders
-2631db0 Merge pull request #18 from PSergio984/Lunacs-patch-1
-40be0a8 Create README.md
-c3babac Merge pull request #17 from PSergio984/RemoveAnswerColumn
-a351bec Enhance question form validation and update branding
-af19ce7 Improve validation for rating and survey forms
-114610e Add validation for rating question min/max values
-75b2ebb Enhance survey response filters and user creation logic
-1210e3e Merge pull request #14 from PSergio984/Remove_Roles
-ee41955 Remove completed and incomplete filters from survey responses
-55393f9 Refactor survey response views and add filters
-2303e7b Merge pull request #16 from PSergio984/export
-f1c83a9 Enhance response export functionality to support filtering by survey and improve PDF layout
-bba83c6 Add branding, improve survey UI, and localize times
-b953450 Remove survey mode and respondent info options
-d243b97 Merge pull request #15 from PSergio984/update-excel
-7f07e4c Refactor AllResponsesExport to utilize WithMultipleSheets and streamline response handling
-65d7d57 Remove Roles resource and update Users table actions
+71b49a3b fix: patch Filament schemas to prevent dropped events
+ae4fac70 chore: align dependencies and fix various issues from code review
+e4bd8832 Revert "chore: align dependencies and restore compatibility for PHP 8.2 and Filament v3"
+ae0b37cd security: relocate CSRF bypass to TestCase
+2557b003 chore: update .gitignore for Octane and FrankenPHP
+eb841544 chore: fix missing laravel/octane in composer.lock
+90480f76 chore: align dependencies and restore compatibility for PHP 8.2 and Filament v3
+47989ac9 feat: upgrade dependencies, implement split-screen admin login page, and add theme toggle and pagination polish
+ba9a2ab4 fix: remove Faker dependency from ResponseSeeder to prevent production crash
+967920a9 Merge pull request #25 from PSergio984/fix/db-ssl-mode
+183e3930 fix: change default pgsql sslmode to prefer for Laravel Cloud
+70950c5a Merge pull request #24 from PSergio984/update/npm-dependencies
+4e86f10a chore: upgrade npm dependencies and resolve Snyk PRs
+69bfbe7c Merge pull request #23 from PSergio984/fix/composer-php-platform
+f6f18d64 fix: override PHP platform to 8.4.0 for Laravel Cloud
+739a1c90 Merge pull request #22 from PSergio984/fix/php-8-5-compatibility
+6254f646 fix: resolve PHP 8.5 compatibility by upgrading dependencies and Laravel Excel to 4.x-dev
+991e52f9 fix: finalize branding removal and CSS compatibility
+8500ca3e fix: revert branding to Survey System and resolve admin login issues
+35e38cb4 feat: implement high-trust UI overhaul and complete postgres migration
 
 === HIGH-CHURN FILES (last 90 days, top 20) ===
-   2 database/seeders/SurveySeeder.php
-   2 database/seeders/UserSeeder.php
-   2 .env.example
-   2 config/database.php
-   2 resources/js/pages/welcome.tsx
-   1 app/Providers/Filament/AdminPanelProvider.php
-   1 .github/copilot-instructions.md
-   1 README.md
-   1 resources/js/components/app-logo.tsx
-   1 resources/views/errors/layout.blade.php
-   1 resources/views/exports/all-responses-pdf.blade.php
-   1 resources/views/exports/responses-pdf.blade.php
-   1 resources/views/exports/survey-responses.blade.php
-   1 tests/Feature/Seeders/SeederTest.php
+   8 composer.json
+   8 composer.lock
+   8 resources/js/pages/welcome.tsx
+   6 resources/js/pages/surveys/show.tsx
+   6 config/database.php
+   5 resources/js/pages/surveys/index.tsx
+   4 public/js/filament/schemas/schemas.js
+   4 .gitignore
+   4 app/Filament/Admin/Resources/Responses/Pages/ViewResponse.php
+   4 app/Filament/Admin/Resources/Responses/ResponseResource.php
+   4 app/Filament/Admin/Resources/Surveys/SurveyResource.php
+   4 app/Filament/Admin/Resources/Users/UserResource.php
+   4 phpunit.xml
+   4 tests/Feature/Survey/SurveyTest.php
+   4 tests/TestCase.php
+   4 app/Providers/Filament/AdminPanelProvider.php
+   4 graphify-out/.graphify_root
+   4 graphify-out/GRAPH_REPORT.md
+   4 graphify-out/graph.json
+   4 resources/js/components/pagination.tsx
 
 === MONOREPO SIGNALS ===
 No monorepo signals detected.
 
 === CODE METRICS ===
-Total files scanned: 2467
-Total lines of code: 44973
+Total files scanned: 22546
+Total lines of code: 86436
 
 Files by language:
-  Other: 2071
-  PHP: 158
-  TypeScript: 134
-  TypeScript/React: 75
+  Other: 22011
+  PHP: 285
+  TypeScript: 140
+  TypeScript/React: 78
   JavaScript: 29
+  Python: 3
 
 Top 10 largest files:
-public\js\filament\forms\components\code-editor.js: 916.5KB
-storage\logs\laravel.log: 604.8KB
-public\js\filament\forms\components\markdown-editor.js: 509.6KB
-public\css\filament\filament\app.css: 495.3KB
-composer.lock: 481.0KB
-package-lock.json: 476.8KB
-public\js\filament\forms\components\rich-editor.js: 414.9KB
-public\js\filament\forms\components\file-upload.js: 355.6KB
-public\js\filament\widgets\components\chart.js: 273.2KB
-storage\debugbar\01KC8QBAN70V98J54S7Q2HYPP6.json: 239.9KB
+graphify-out\manifest.json: 4067.8KB
+graphify-out\cache\ast\d8fab226db879d6fb6a9436b11082a6ddcaf0a28a790ddb720c566a6638e177b.json: 2417.3KB
+graphify-out\cache\ast\550ed34c729fa17260b6ee9aca14b3e48899af083f1c822fab224e3c56d36b29.json: 2357.0KB
+graphify-out\cache\ast\8521310a8edbda62fc4ca4548442bd3abc416c62c086dda22a314078f38107b3.json: 2149.8KB
+graphify-out\cache\ast\c7fe8b8b1892b97761a5e5ef58fc00efd0dc8f3807373262d0c9665ea2beebe8.json: 2000.7KB
+storage\logs\laravel.log: 1968.2KB
+graphify-out\cache\ast\2b3d8827c5ad56b7250e25b9ab7ea09b7391ad09183ec65fce1fce940a8a67f1.json: 1746.5KB
+graphify-out\cache\ast\e53536c44a930d2ebd79cf6f313c73045a6b9b7f5e8e466014c7de2f044078c7.json: 1742.4KB
+graphify-out\cache\ast\2a682f2e79ede1defc4d7a2e1c1eca67d7400d44de21b3930ba82edaa7794fab.json: 1498.4KB
+graphify-out\cache\ast\ab8be8ae42a7b13e5fcdc9644540e1b3ce4b50ea5619fd47af13ab3b0b971735.json: 1494.7KB
 
 === CI/CD PIPELINES ===
 CI/CD: GitHub Actions

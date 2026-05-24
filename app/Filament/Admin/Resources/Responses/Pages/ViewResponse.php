@@ -4,10 +4,10 @@ namespace App\Filament\Admin\Resources\Responses\Pages;
 
 use App\Filament\Admin\Resources\Responses\ResponseResource;
 use App\Models\Question;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Placeholder;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ViewResponse extends ViewRecord
@@ -57,40 +57,21 @@ class ViewResponse extends ViewRecord
                     ])
                     ->compact(),
 
-                // Section::make('Answers')
-                //     ->schema(function ($record) {
-                //         $entries = [];
-
-                //         // Load answers with question and options relationships
-                //         $answers = $record->answers()
-                //             ->with(['question', 'question.options'])
-                //             ->orderBy('question_id')
-                //             ->get();
-
-                //         foreach ($answers as $answer) {
-                //             $question = $answer->question;
-
-                //             if (!$question) {
-                //                 continue; // Skip if question was deleted
-                //             }
-
-                //             $value = $this->formatAnswerValue($answer, $question);
-
-                //             $entries[] = Placeholder::make('answer_' . $answer->id)
-                //                 ->label($question->question)
-                //                 ->content($value)
-                //                 ->columnSpanFull();
-                //         }
-
-                //         if (empty($entries)) {
-                //             $entries[] = Placeholder::make('no_answers')
-                //                 ->label('No Answers')
-                //                 ->content('This response has no answers recorded.')
-                //                 ->columnSpanFull();
-                //         }
-
-                //         return $entries;
-                //     }),
+                Section::make('Answers')
+                    ->schema(function ($record) {
+                        return $record->answers()
+                            ->with(['question'])
+                            ->orderBy('question_id')
+                            ->get()
+                            ->map(function ($answer) {
+                                return TextEntry::make('answer_' . $answer->id)
+                                    ->label($answer->question->question ?? 'Question deleted')
+                                    ->formatStateUsing(fn () => $this->formatAnswerValue($answer, $answer->question))
+                                    ->columnSpanFull();
+                            })
+                            ->toArray();
+                    })
+                    ->collapsible(),
             ]);
     }
 

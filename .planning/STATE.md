@@ -1,18 +1,27 @@
 # Project State
 
 ## Current Phase
-- **Phase 1: Maintenance, QOL, and Performance**
+- **Phase 2: Reliability, Security, and Advanced Insights**
 - **Status:** Execution complete.
 
 ## Decisions (from CONTEXT.md)
-- D-01: Implement standard Laravel pagination and search in public list.
-- D-02: Use Maatwebsite for queued Excel exports.
-- D-03: Implement 5-minute cache for expensive metrics.
-- D-04: Use Filament advanced filters for admin tables.
-- D-05: Frontend-initiated `started_at` capture for duration tracking.
-- D-06: Use `private` disk for exports and notify via Filament Notifications.
+- D-07: Move PDF generation to background queued jobs.
+- D-08: Use `PiiScrubberProcessor` to globally redact sensitive answers from logs.
+- D-09: Trigger "Silent" detractor alerts via Filament Database Notifications for ratings < 3.
+- D-10: Mandate 120-character line limit.
+- D-11: Integrate Skeleton loaders and prefetch tags for Heuristic UX improvements.
+- D-12: Implement Vitest and React Testing Library for frontend quality assurance.
 
 ## Pending Work
+### Phase 2
+- [x] Task 1: Queued PDF Generation
+- [x] Task 2: Log Scrubbing and Security Hardening
+- [x] Task 3: Detractor Alert System
+- [x] Task 4: Vitest & RTL Configuration
+- [x] Task 5: Heuristic UX (Skeletons & Prefetching)
+- [x] Task 6: Documentation and Convention Updates
+
+### Phase 1
 - [x] Task 0: Test Scaffolding
 - [x] Task 1: Backend Performance & Admin Filters
 - [x] Task 2: Queued Excel Exports
