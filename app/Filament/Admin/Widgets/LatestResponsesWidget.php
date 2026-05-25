@@ -5,10 +5,14 @@ namespace App\Filament\Admin\Widgets;
 use App\Models\Response;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
 
 class LatestResponsesWidget extends BaseWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?int $sort = 4;
 
     protected int|string|array $columnSpan = 'full';
@@ -17,12 +21,16 @@ class LatestResponsesWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
+        $startDate = $this->filters['startDate'] ?? null;
+        $endDate = $this->filters['endDate'] ?? null;
+
         return $table
             ->query(
                 Response::query()
                     ->with('survey')
+                    ->when($startDate, fn (Builder $query, $date) => $query->whereDate('submitted_at', '>=', $date))
+                    ->when($endDate, fn (Builder $query, $date) => $query->whereDate('submitted_at', '<=', $date))
                     ->latest('submitted_at')
-                    ->limit(10)
             )
             ->columns([
                 TextColumn::make('survey.title')

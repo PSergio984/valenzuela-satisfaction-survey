@@ -4,10 +4,13 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Models\Response;
 use Carbon\Carbon;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class PremiumResponsesChart extends ApexChartWidget
 {
+    use InteractsWithPageFilters;
+
     /**
      * Chart Id
      *
@@ -30,7 +33,7 @@ class PremiumResponsesChart extends ApexChartWidget
     /**
      * Column Span
      */
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = ['sm' => 1, 'xl' => 1];
 
     /**
      * Chart options (series, labels, types, size, animations...)
@@ -40,14 +43,42 @@ class PremiumResponsesChart extends ApexChartWidget
      */
     protected function getOptions(): array
     {
+        $startDate = $this->filters['startDate'] ?? null;
+        $endDate = $this->filters['endDate'] ?? null;
+
+        $query = Response::query();
+
+        if ($startDate) {
+            $query->whereDate('submitted_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('submitted_at', '<=', $endDate);
+        }
+
         $data = [];
         $labels = [];
 
-        // Get data for last 30 days
-        for ($i = 29; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i);
+        // Determine date range
+        $start = $startDate ? Carbon::parse($startDate) : Carbon::now()->subDays(29);
+        $end = $endDate ? Carbon::parse($endDate) : Carbon::now();
+        $days = $start->diffInDays($end);
+        
+        // Cap to 30 days max for performance/display if no filters
+        if (!$startDate && !$endDate) {
+            $days = 29;
+            $start = Carbon::now()->subDays(29);
+            $end = Carbon::now();
+        }
+
+        // Get data
+        for ($i = $days; $i >= 0; $i--) {
+            $date = clone $end;
+            $date->subDays($i);
             $labels[] = $date->format('M d');
-            $data[] = Response::whereDate('submitted_at', $date)->count();
+            
+            // Build separate query per day to respect other potential filters
+            $dayQuery = clone $query;
+            $data[] = $dayQuery->whereDate('submitted_at', $date)->count();
         }
 
         return [

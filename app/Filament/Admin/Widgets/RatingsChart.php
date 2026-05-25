@@ -4,11 +4,16 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Models\Question;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Facades\DB;
 
 class RatingsChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?int $sort = 3;
+
+    protected int | string | array $columnSpan = ['sm' => 1, 'xl' => 1];
 
     protected ?string $heading = 'Rating Distribution';
 
@@ -16,12 +21,24 @@ class RatingsChart extends ChartWidget
 
     protected function getData(): array
     {
+        $startDate = $this->filters['startDate'] ?? null;
+        $endDate = $this->filters['endDate'] ?? null;
+
         // Get rating distribution
-        $ratings = DB::table('answers')
+        $query = DB::table('answers')
             ->join('questions', 'answers.question_id', '=', 'questions.id')
+            ->join('responses', 'answers.response_id', '=', 'responses.id')
             ->where('questions.type', Question::TYPE_RATING)
-            ->whereNotNull('answers.value')
-            ->select(DB::raw('answers.value as rating'), DB::raw('COUNT(*) as count'))
+            ->whereNotNull('answers.value');
+
+        if ($startDate) {
+            $query->whereDate('responses.submitted_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('responses.submitted_at', '<=', $endDate);
+        }
+
+        $ratings = $query->select(DB::raw('answers.value as rating'), DB::raw('COUNT(*) as count'))
             ->groupBy('answers.value')
             ->orderBy('answers.value')
             ->pluck('count', 'rating')

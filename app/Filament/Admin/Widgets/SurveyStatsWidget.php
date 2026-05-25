@@ -5,43 +5,83 @@ namespace App\Filament\Admin\Widgets;
 use App\Models\Question;
 use App\Models\Response;
 use App\Models\Survey;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
 
 class SurveyStatsWidget extends StatsOverviewWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?int $sort = 1;
 
     protected function getStats(): array
     {
+        $startDate = $this->filters['startDate'] ?? null;
+        $endDate = $this->filters['endDate'] ?? null;
+
+        $surveyQuery = Survey::query();
+        $responseQuery = Response::query();
+
+        if ($startDate) {
+            $surveyQuery->whereDate('created_at', '>=', $startDate);
+            $responseQuery->whereDate('submitted_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $surveyQuery->whereDate('created_at', '<=', $endDate);
+            $responseQuery->whereDate('submitted_at', '<=', $endDate);
+        }
+
         // Get total surveys
-        $totalSurveys = Survey::count();
-        $activeSurveys = Survey::where('is_active', true)->count();
+        $totalSurveys = $surveyQuery->count();
+        $activeSurveys = (clone $surveyQuery)->where('is_active', true)->count();
 
         // Get total responses
-        $totalResponses = Response::count();
-        $responsesThisMonth = Response::whereMonth('submitted_at', now()->month)
-            ->whereYear('submitted_at', now()->year)
-            ->count();
+        $totalResponses = $responseQuery->count();
+        
+        $responsesThisMonthQuery = clone $responseQuery;
+        if (!$startDate && !$endDate) {
+            $responsesThisMonthQuery->whereMonth('submitted_at', now()->month)
+                                    ->whereYear('submitted_at', now()->year);
+        }
+        $responsesThisMonth = $responsesThisMonthQuery->count();
 
         // Get response trend (last 7 days vs previous 7 days)
-        $last7Days = Response::where('submitted_at', '>=', now()->subDays(7))->count();
-        $previous7Days = Response::whereBetween('submitted_at', [now()->subDays(14), now()->subDays(7)])->count();
+        $trendQueryCurrent = clone $responseQuery;
+        $trendQueryPrevious = clone $responseQuery;
+        
+        if (!$startDate && !$endDate) {
+            $trendQueryCurrent->where('submitted_at', '>=', now()->subDays(7));
+            $trendQueryPrevious->whereBetween('submitted_at', [now()->subDays(14), now()->subDays(7)]);
+        }
+        
+        $last7Days = $trendQueryCurrent->count();
+        $previous7Days = $trendQueryPrevious->count();
         $trend = $previous7Days > 0 ? round((($last7Days - $previous7Days) / $previous7Days) * 100) : 0;
 
         // Get average rating across all rating questions
-        $avgRating = DB::table('answers')
+        $avgRatingQuery = DB::table('answers')
             ->join('questions', 'answers.question_id', '=', 'questions.id')
+            ->join('responses', 'answers.response_id', '=', 'responses.id')
             ->where('questions.type', Question::TYPE_RATING)
-            ->whereNotNull('answers.value')
-            ->avg(DB::raw('CAST(answers.value AS DECIMAL(10,2))'));
+            ->whereNotNull('answers.value');
+            
+        if ($startDate) {
+            $avgRatingQuery->whereDate('responses.submitted_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $avgRatingQuery->whereDate('responses.submitted_at', '<=', $endDate);
+        }
+
+        $avgRating = $avgRatingQuery->avg(DB::raw('CAST(answers.value AS DECIMAL(10,2))'));
 
         // Generate chart data for last 7 days
         $chartData = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i)->format('Y-m-d');
-            $chartData[] = Response::whereDate('submitted_at', $date)->count();
+            $chartDataQuery = clone $responseQuery;
+            $chartData[] = $chartDataQuery->whereDate('submitted_at', $date)->count();
         }
 
         return [
