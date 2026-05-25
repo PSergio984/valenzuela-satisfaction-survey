@@ -5,42 +5,35 @@
 
 /* Premium Layout Differentiation */
 .fi-sidebar {
-    background-color: var(--color-slate-900) !important;
-    border-right: 1px solid var(--color-slate-800);
+    @apply !bg-slate-900 dark:!bg-slate-950 !border-r !border-slate-800 dark:!border-slate-900;
 }
 
 .fi-sidebar-nav-label,
 .fi-sidebar-nav-link {
-    color: var(--color-slate-300) !important;
+    @apply !text-slate-300 dark:!text-slate-400;
 }
 
 .fi-sidebar-nav-link:hover,
 .fi-sidebar-nav-link.fi-active {
-    background-color: var(--color-slate-800) !important;
-    color: var(--color-white) !important;
+    @apply !bg-slate-800 dark:!bg-slate-900 !text-white dark:!text-white;
 }
 
 .fi-sidebar-header {
-    background-color: var(--color-slate-950) !important;
-    border-bottom: 1px solid var(--color-slate-800);
+    @apply !bg-slate-950 dark:!bg-black !border-b !border-slate-800 dark:!border-slate-900;
 }
 
 .fi-main {
-    background-color: var(--color-slate-50);
+    @apply !bg-slate-50 dark:!bg-slate-900;
 }
 
 /* Tasteful Card Styling */
 .fi-section,
 .fi-ta-ctn,
 .fi-wi-stats-overview-stat {
-    background-color: var(--color-white) !important;
-    border: 1px solid var(--color-slate-200) !important;
+    @apply !bg-white dark:!bg-slate-800 !border !border-slate-200 dark:!border-slate-700 !rounded-xl;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
-    border-radius: 0.75rem !important;
 }
 
 .fi-header-heading {
-    color: var(--color-slate-900);
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    @apply !text-slate-900 dark:!text-white font-bold tracking-tight;
 }
