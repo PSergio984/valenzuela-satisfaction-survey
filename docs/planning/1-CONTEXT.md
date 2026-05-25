@@ -11,7 +11,8 @@ This document captures the implementation decisions for Phase 1, focusing on bug
 
 ### B. Scalable Exports (Performance)
 - **Queued Exports**: Transition Excel exports to use Maatwebsite's `FromQuery` with `Exportable` and `ShouldQueue`.
-- **PDF Generation**: Keep PDF generation synchronous for now but optimize data fetching. If timeouts occur, transition to an asynchronous "Generation Started" UI flow.
+- **PDF Generation**: Keep PDF generation synchronous for now but optimize data fetching.
+  If timeouts occur, transition to an asynchronous "Generation Started" UI flow.
 - **Storage**: Use the `private` disk for temporary export files before download.
 
 ### C. N+1 & Metric Optimization (Performance)

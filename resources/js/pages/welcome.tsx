@@ -33,12 +33,12 @@ export default function Welcome() {
                                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                                 </Link>
                             ) : (
-                                <Link
+                                <a
                                     href="/admin/login"
                                     className="text-sm font-semibold text-slate-600 transition-colors hover:text-primary dark:text-slate-400 dark:hover:text-white"
                                 >
                                     Sign In
-                                </Link>
+                                </a>
                             )}
                         </nav>
                     </div>

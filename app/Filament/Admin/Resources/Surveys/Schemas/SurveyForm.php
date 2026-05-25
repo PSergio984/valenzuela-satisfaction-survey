@@ -26,7 +26,11 @@ class SurveyForm
                         Textarea::make('description')
                             ->rows(3)
                             ->columnSpanFull(),
+                    ])
+                    ->columns(2),
 
+                Section::make('Branding & Configuration')
+                    ->schema([
                         TextInput::make('slug')
                             ->helperText('Leave empty to auto-generate from title')
                             ->unique(ignoreRecord: true)

@@ -27,8 +27,6 @@ class Survey extends Model
         'starts_at',
         'ends_at',
         'thank_you_message',
-        'views_count',
-        'starts_count',
         'created_by',
     ];
 

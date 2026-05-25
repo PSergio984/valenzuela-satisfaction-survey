@@ -25,54 +25,32 @@ class SurveysTable
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable()
+                    ->weight('bold')
                     ->limit(50),
 
-                TextColumn::make('slug')
-                    ->searchable()
-                    ->copyable()
-                    ->copyMessage('Slug copied')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                IconColumn::make('is_active')
-                    ->label('Active')
-                    ->boolean()
+                TextColumn::make('is_active')
+                    ->label('Status')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Inactive')
+                    ->color(fn ($state) => $state ? 'success' : 'danger')
                     ->sortable(),
 
                 TextColumn::make('questions_count')
                     ->label('Questions')
                     ->counts('questions')
+                    ->badge()
+                    ->color('gray')
                     ->sortable(),
 
                 TextColumn::make('responses_count')
-                    ->label('Responses')
+                    ->label('Submissions')
                     ->counts('responses')
+                    ->badge()
+                    ->color('primary')
                     ->sortable(),
 
-                TextColumn::make('views_count')
-                    ->label('Views')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('starts_count')
-                    ->label('Starts')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('starts_at')
-                    ->label('Start')
-                    ->dateTime('M d, Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('ends_at')
-                    ->label('End')
-                    ->dateTime('M d, Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
                 TextColumn::make('created_at')
+                    ->label('Created')
                     ->dateTime('M d, Y')
                     ->sortable()
                     ->toggleable(),

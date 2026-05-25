@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Widgets\LatestResponsesWidget;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Admin\Widgets\RatingsChart;
 use App\Filament\Admin\Widgets\ResponsesChart;
 use App\Filament\Admin\Widgets\SurveyStatsWidget;
@@ -22,6 +23,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,8 +33,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
-            ->brandName('Survey System')
+            ->login(\App\Filament\Admin\Pages\Auth\Login::class)
+            ->brandName('Satisfaction Survey')
             ->colors([
                 'primary' => Color::Blue,
             ])
@@ -62,6 +64,16 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make()
+                    ->gridColumns(['default' => 1, 'sm' => 2, 'lg' => 3])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns(['default' => 1, 'sm' => 2, 'lg' => 2])
+                    ->resourceCheckboxListColumns(['default' => 1, 'sm' => 2])
+                    ->navigationGroup('Users')
+                    ->navigationLabel('Roles & Permissions'),
+                SpotlightPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

@@ -1,20 +1,21 @@
-import { Progress } from '@/components/ui/progress';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
+import { SurveyShowSkeleton } from '@/components/survey-skeleton';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type Question, type Survey } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Loader2, Star, CheckCircle2, ClipboardCheck, Lock } from 'lucide-react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { motion } from 'framer-motion';
+import {
+    ArrowLeft,
+    CheckCircle2,
+    ClipboardCheck,
+    Loader2,
+    Lock,
+    Star,
+} from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface Props {
     survey: Survey;
@@ -37,28 +38,43 @@ export default function SurveyShow({ survey }: Props) {
         answers: {},
     });
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         setData('started_at', new Date().toISOString());
+        
+        const start = () => setIsLoading(true);
+        const end = () => setIsLoading(false);
+
+        router.on('start', start);
+        router.on('finish', end);
+
+        return () => {
+            router.off('start', start);
+            router.off('finish', end);
+        };
     }, []);
 
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         if (!survey.questions) return;
-        
-        const requiredQuestions = survey.questions.filter(q => q.is_required);
+
+        const requiredQuestions = survey.questions.filter((q) => q.is_required);
         if (requiredQuestions.length === 0) {
             setProgress(100);
             return;
         }
 
-        const answeredRequired = requiredQuestions.filter(q => {
+        const answeredRequired = requiredQuestions.filter((q) => {
             const answer = data.answers[q.id];
             if (Array.isArray(answer)) return answer.length > 0;
             return answer !== undefined && answer !== '';
         });
 
-        setProgress(Math.round((answeredRequired.length / requiredQuestions.length) * 100));
+        setProgress(
+            Math.round((answeredRequired.length / requiredQuestions.length) * 100),
+        );
     }, [data.answers, survey.questions]);
 
     const handleSubmit = (e: FormEvent) => {
@@ -66,10 +82,7 @@ export default function SurveyShow({ survey }: Props) {
         post(`/surveys/${survey.slug}`);
     };
 
-    const handleAnswerChange = (
-        questionId: number,
-        value: string | string[],
-    ) => {
+    const handleAnswerChange = (questionId: number, value: string | string[]) => {
         setData('answers', {
             ...data.answers,
             [questionId]: value,
@@ -95,13 +108,20 @@ export default function SurveyShow({ survey }: Props) {
 
     const renderQuestion = (question: Question) => {
         const error = errors[`answers.${question.id}` as keyof typeof errors];
-        const isAnswered = data.answers[question.id] !== undefined && 
-                          (Array.isArray(data.answers[question.id]) 
-                            ? (data.answers[question.id] as string[]).length > 0 
-                            : data.answers[question.id] !== '');
+        const isAnswered =
+            data.answers[question.id] !== undefined &&
+            (Array.isArray(data.answers[question.id])
+                ? (data.answers[question.id] as string[]).length > 0
+                : data.answers[question.id] !== '');
 
         return (
-            <div key={question.id} className="group space-y-6 rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary/30 dark:hover:shadow-none">
+            <motion.div
+                key={question.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+                className="group space-y-6 rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary/30 dark:hover:shadow-none"
+            >
                 <div className="flex items-start justify-between gap-4">
                     <Label className="font-heading text-xl font-bold leading-tight text-slate-900 dark:text-white">
                         {question.question}
@@ -159,8 +179,12 @@ export default function SurveyShow({ survey }: Props) {
                                     type="radio"
                                     name={`question-${question.id}`}
                                     value={option.value}
-                                    checked={data.answers[question.id] === option.value}
-                                    onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+                                    checked={
+                                        data.answers[question.id] === option.value
+                                    }
+                                    onChange={(e) =>
+                                        handleAnswerChange(question.id, e.target.value)
+                                    }
                                     className="h-4 w-4 border-slate-300 text-primary focus:ring-primary"
                                 />
                                 <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
@@ -174,7 +198,8 @@ export default function SurveyShow({ survey }: Props) {
                 {question.type === 'checkbox' && question.options && (
                     <div className="grid gap-3 sm:grid-cols-2">
                         {question.options.map((option) => {
-                            const currentValues = (data.answers[question.id] as string[]) || [];
+                            const currentValues =
+                                (data.answers[question.id] as string[]) || [];
                             const isChecked = currentValues.includes(option.value);
                             return (
                                 <label
@@ -188,7 +213,11 @@ export default function SurveyShow({ survey }: Props) {
                                     <Checkbox
                                         checked={isChecked}
                                         onCheckedChange={(checked) =>
-                                            handleCheckboxChange(question.id, option.value, checked as boolean)
+                                            handleCheckboxChange(
+                                                question.id,
+                                                option.value,
+                                                checked as boolean,
+                                            )
                                         }
                                         className="border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                     />
@@ -204,7 +233,9 @@ export default function SurveyShow({ survey }: Props) {
                 {question.type === 'select' && question.options && (
                     <select
                         value={(data.answers[question.id] as string) || ''}
-                        onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+                        onChange={(e) =>
+                            handleAnswerChange(question.id, e.target.value)
+                        }
                         className={`h-12 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 dark:border-slate-700 dark:bg-slate-800/50 ${
                             error
                                 ? 'border-red-500 focus:ring-red-500'
@@ -227,7 +258,9 @@ export default function SurveyShow({ survey }: Props) {
                                 <button
                                     key={rating}
                                     type="button"
-                                    onClick={() => handleAnswerChange(question.id, rating.toString())}
+                                    onClick={() =>
+                                        handleAnswerChange(question.id, rating.toString())
+                                    }
                                     className={`flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all ${
                                         data.answers[question.id] === rating.toString()
                                             ? 'border-primary bg-primary text-white shadow-xl shadow-primary/20 scale-110'
@@ -259,11 +292,13 @@ export default function SurveyShow({ survey }: Props) {
                     </p>
                 )}
 
-                {error && <p className="flex items-center gap-1.5 text-sm font-bold text-red-500">
-                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                    {error}
-                </p>}
-            </div>
+                {error && (
+                    <p className="flex items-center gap-1.5 text-sm font-bold text-red-500">
+                        <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                        {error}
+                    </p>
+                )}
+            </motion.div>
         );
     };
 
@@ -283,7 +318,7 @@ export default function SurveyShow({ survey }: Props) {
                             </span>
                         </div>
                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-                            <div 
+                            <div
                                 className="h-full bg-primary transition-all duration-500 ease-out"
                                 style={{ width: `${progress}%` }}
                             />
@@ -312,6 +347,7 @@ export default function SurveyShow({ survey }: Props) {
                             <Link
                                 href="/surveys"
                                 className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
+                                prefetch
                             >
                                 <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
                                 Return
@@ -323,97 +359,140 @@ export default function SurveyShow({ survey }: Props) {
                 {/* Main Content */}
                 <main className="flex-1 px-6 pb-32 pt-4">
                     <div className="mx-auto max-w-3xl">
-                        <div className="mb-16 text-center">
-                            <h1 className="font-heading text-4xl font-extrabold tracking-tight sm:text-5xl">
-                                {survey.title}
-                            </h1>
-                            {survey.description && (
-                                <p className="mt-6 text-xl leading-relaxed text-slate-600 dark:text-slate-400">
-                                    {survey.description}
-                                </p>
-                            )}
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-12">
-                            {/* Optional Respondent Info */}
-                            {survey.collect_respondent_info && (
-                                <div className="rounded-3xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
-                                    <div className="mb-8 flex items-center gap-3">
-                                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                                            <Lock className="h-4 w-4 text-primary" />
-                                        </div>
-                                        <div>
-                                            <h2 className="font-heading text-xl font-bold">Your Identity</h2>
-                                            <p className="text-sm font-medium text-slate-500">Optional: Helps us provide a personalized response.</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="space-y-6">
-                                        <div className="grid gap-6 sm:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="respondent_name" className="text-xs font-bold uppercase tracking-wider text-slate-500">Full Name</Label>
-                                                <Input
-                                                    id="respondent_name"
-                                                    value={data.respondent_name}
-                                                    onChange={(e) => setData('respondent_name', e.target.value)}
-                                                    placeholder="John Doe"
-                                                    className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="respondent_email" className="text-xs font-bold uppercase tracking-wider text-slate-500">Email Address</Label>
-                                                <Input
-                                                    id="respondent_email"
-                                                    type="email"
-                                                    value={data.respondent_email}
-                                                    onChange={(e) => setData('respondent_email', e.target.value)}
-                                                    placeholder="john@example.com"
-                                                    className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="respondent_phone" className="text-xs font-bold uppercase tracking-wider text-slate-500">Phone Number</Label>
-                                            <Input
-                                                id="respondent_phone"
-                                                type="tel"
-                                                value={data.respondent_phone}
-                                                onChange={(e) => setData('respondent_phone', e.target.value)}
-                                                placeholder="+1 (555) 000-0000"
-                                                className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Questions */}
-                            <div className="space-y-8">
-                                {survey.questions?.map((question) => renderQuestion(question))}
-                            </div>
-
-                            {/* Submit Button */}
-                            <div className="pt-12 text-center">
-                                <Button
-                                    type="submit"
-className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
-                                    disabled={processing}
-                                >
-                                    {processing ? (
-                                        <div className="flex items-center gap-3">
-                                            <Loader2 className="h-6 w-6 animate-spin" />
-                                            Encrypting & Submitting...
-                                        </div>
-                                    ) : (
-                                        'Complete Your Feedback'
+                        {isLoading ? (
+                            <SurveyShowSkeleton count={survey.questions?.length || 3} />
+                        ) : (
+                            <>
+                                <div className="mb-16 text-center">
+                                    <h1 className="font-heading text-4xl font-extrabold tracking-tight sm:text-5xl">
+                                        {survey.title}
+                                    </h1>
+                                    {survey.description && (
+                                        <p className="mt-6 text-xl leading-relaxed text-slate-600 dark:text-slate-400">
+                                            {survey.description}
+                                        </p>
                                     )}
-                                </Button>
-                                <div className="mt-8 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-                                    <Lock className="h-3 w-3" />
-                                    Secure Submission Portal
                                 </div>
-                            </div>
-                        </form>
+
+                                <form onSubmit={handleSubmit} className="space-y-12">
+                                    {/* Optional Respondent Info */}
+                                    {survey.collect_respondent_info && (
+                                        <div className="rounded-3xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+                                            <div className="mb-8 flex items-center gap-3">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                    <Lock className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <h2 className="font-heading text-xl font-bold">
+                                                        Your Identity
+                                                    </h2>
+                                                    <p className="text-sm font-medium text-slate-500">
+                                                        Optional: Helps us provide a personalized
+                                                        response.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <div className="grid gap-6 sm:grid-cols-2">
+                                                    <div className="space-y-2">
+                                                        <Label
+                                                            htmlFor="respondent_name"
+                                                            className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                                                        >
+                                                            Full Name
+                                                        </Label>
+                                                        <Input
+                                                            id="respondent_name"
+                                                            value={data.respondent_name}
+                                                            onChange={(e) =>
+                                                                setData(
+                                                                    'respondent_name',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            placeholder="John Doe"
+                                                            className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label
+                                                            htmlFor="respondent_email"
+                                                            className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                                                        >
+                                                            Email Address
+                                                        </Label>
+                                                        <Input
+                                                            id="respondent_email"
+                                                            type="email"
+                                                            value={data.respondent_email}
+                                                            onChange={(e) =>
+                                                                setData(
+                                                                    'respondent_email',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            placeholder="john@example.com"
+                                                            className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label
+                                                        htmlFor="respondent_phone"
+                                                        className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                                                    >
+                                                        Phone Number
+                                                    </Label>
+                                                    <Input
+                                                        id="respondent_phone"
+                                                        type="tel"
+                                                        value={data.respondent_phone}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                'respondent_phone',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        placeholder="+1 (555) 000-0000"
+                                                        className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Questions */}
+                                    <div className="space-y-8">
+                                        {survey.questions?.map((question) =>
+                                            renderQuestion(question),
+                                        )}
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <div className="pt-12 text-center">
+                                        <Button
+                                            type="submit"
+                                            className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+                                            disabled={processing}
+                                        >
+                                            {processing ? (
+                                                <div className="flex items-center gap-3">
+                                                    <Loader2 className="h-6 w-6 animate-spin" />
+                                                    Encrypting & Submitting...
+                                                </div>
+                                            ) : (
+                                                'Complete Your Feedback'
+                                            )}
+                                        </Button>
+                                        <div className="mt-8 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                                            <Lock className="h-3 w-3" />
+                                            Secure Submission Portal
+                                        </div>
+                                    </div>
+                                </form>
+                            </>
+                        )}
                     </div>
                 </main>
 
@@ -421,7 +500,8 @@ className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-pr
                 <footer className="border-t border-slate-200 bg-white py-12 dark:border-slate-800 dark:bg-slate-950">
                     <div className="mx-auto max-w-3xl px-6 text-center">
                         <p className="text-sm font-bold text-slate-400">
-                            SURVEY SYSTEM &copy; {new Date().getFullYear()} — CONFIDENTIAL DATA HANDLING
+                            SURVEY SYSTEM &copy; {new Date().getFullYear()} — CONFIDENTIAL DATA
+                            HANDLING
                         </p>
                     </div>
                 </footer>

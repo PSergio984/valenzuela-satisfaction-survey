@@ -12,6 +12,7 @@
 /vendor
 .DS_Store
 .env
+.env.testing
 .env.backup
 .env.production
 .phpactor.json
@@ -26,9 +27,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-graphify-out/manifest.json
-graphify-out/cost.json
-graphify-out/cache/
+/storage/logs/*.log
 **/caddy
 frankenphp
 frankenphp-worker.php

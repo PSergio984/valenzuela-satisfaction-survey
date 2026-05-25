@@ -1,4 +1,7 @@
 import { index as surveysIndex } from '@/actions/App/Http/Controllers/SurveyController';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
+import { Pagination } from '@/components/pagination';
+import { SurveyListSkeleton } from '@/components/survey-skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,12 +12,16 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Pagination } from '@/components/pagination';
 import { type Survey } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowRight, ClipboardCheck, Search, Sparkles, LayoutGrid } from 'lucide-react';
+import {
+    ArrowRight,
+    ClipboardCheck,
+    LayoutGrid,
+    Search,
+    Sparkles,
+} from 'lucide-react';
 import * as React from 'react';
-import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface Props {
     surveys: {
@@ -29,6 +36,20 @@ interface Props {
 
 export default function SurveyIndex({ surveys, filters }: Props) {
     const [search, setSearch] = React.useState(filters.search || '');
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    React.useEffect(() => {
+        const start = () => setIsLoading(true);
+        const finish = () => setIsLoading(false);
+
+        const removeStart = router.on('start', start);
+        const removeFinish = router.on('finish', finish);
+
+        return () => {
+            removeStart();
+            removeFinish();
+        };
+    }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -66,6 +87,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                             <Link
                                 href="/"
                                 className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
+                                prefetch
                             >
                                 Return Home
                             </Link>
@@ -108,7 +130,9 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                             </form>
                         </div>
 
-                        {surveys.data.length === 0 ? (
+                        {isLoading ? (
+                            <SurveyListSkeleton count={surveys.data.length || 4} />
+                        ) : surveys.data.length === 0 ? (
                             <Card className="rounded-3xl border-dashed border-slate-200 bg-transparent text-center shadow-none dark:border-slate-800">
                                 <CardContent className="py-20">
                                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-900">
@@ -167,6 +191,7 @@ export default function SurveyIndex({ surveys, filters }: Props) {
                                             <CardContent className="p-8 pt-0">
                                                 <Link
                                                     href={`/surveys/${survey.slug}`}
+                                                    prefetch
                                                 >
                                                     <Button className="h-12 w-full rounded-xl bg-slate-900 font-bold text-white transition-all group-hover:bg-primary">
                                                         Access Survey
