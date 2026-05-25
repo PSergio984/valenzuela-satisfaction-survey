@@ -121,7 +121,7 @@ describe('SurveyStatsWidget', function () {
         actingAs($admin);
 
         Livewire::test(SurveyStatsWidget::class)
-            ->assertSee('Average Rating');
+            ->assertSee('Avg Rating');
     });
 
     it('displays weekly trend stat', function () {

@@ -2,9 +2,14 @@
 
 namespace App\Providers;
 
+use App\Filament\Admin\Widgets\LatestResponsesWidget;
+use App\Filament\Admin\Widgets\PremiumResponsesChart;
+use App\Filament\Admin\Widgets\RatingsChart;
+use App\Filament\Admin\Widgets\SurveyStatsWidget;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider

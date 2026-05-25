@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Widgets;
 use App\Models\Response;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Support\Facades\DB;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class PremiumResponsesChart extends ApexChartWidget
@@ -33,7 +34,7 @@ class PremiumResponsesChart extends ApexChartWidget
     /**
      * Column Span
      */
-    protected int | string | array $columnSpan = ['sm' => 1, 'xl' => 1];
+    protected int | string | array $columnSpan = ['md' => 2];
 
     /**
      * Chart options (series, labels, types, size, animations...)
@@ -46,39 +47,33 @@ class PremiumResponsesChart extends ApexChartWidget
         $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;
 
-        $query = Response::query();
+        // Determine date range
+        $end = $endDate ? Carbon::parse($endDate) : Carbon::now();
+        $start = $startDate ? Carbon::parse($startDate) : Carbon::now()->subDays(29);
+        
+        // Cap range to prevent huge queries if needed, but here we'll just follow the filter
+        $days = (int) $start->diffInDays($end);
 
-        if ($startDate) {
-            $query->whereDate('submitted_at', '>=', $startDate);
-        }
-        if ($endDate) {
-            $query->whereDate('submitted_at', '<=', $endDate);
-        }
+        // Fetch all data in a single query
+        $results = Response::query()
+            ->select(DB::raw('DATE(submitted_at) as date'), DB::raw('count(*) as aggregate'))
+            ->whereDate('submitted_at', '>=', $start->format('Y-m-d'))
+            ->whereDate('submitted_at', '<=', $end->format('Y-m-d'))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('aggregate', 'date')
+            ->toArray();
 
         $data = [];
         $labels = [];
 
-        // Determine date range
-        $start = $startDate ? Carbon::parse($startDate) : Carbon::now()->subDays(29);
-        $end = $endDate ? Carbon::parse($endDate) : Carbon::now();
-        $days = $start->diffInDays($end);
-        
-        // Cap to 30 days max for performance/display if no filters
-        if (!$startDate && !$endDate) {
-            $days = 29;
-            $start = Carbon::now()->subDays(29);
-            $end = Carbon::now();
-        }
-
-        // Get data
+        // Fill in gaps (days with 0 responses)
         for ($i = $days; $i >= 0; $i--) {
-            $date = clone $end;
-            $date->subDays($i);
-            $labels[] = $date->format('M d');
+            $date = (clone $end)->subDays($i);
+            $dateString = $date->format('Y-m-d');
             
-            // Build separate query per day to respect other potential filters
-            $dayQuery = clone $query;
-            $data[] = $dayQuery->whereDate('submitted_at', $date)->count();
+            $labels[] = $date->format('M d');
+            $data[] = $results[$dateString] ?? 0;
         }
 
         return [
