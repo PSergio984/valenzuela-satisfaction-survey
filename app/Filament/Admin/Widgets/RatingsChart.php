@@ -11,6 +11,8 @@ class RatingsChart extends ChartWidget
 {
     use InteractsWithPageFilters;
 
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 3;
 
     protected int | string | array $columnSpan = ['md' => 1];
@@ -21,22 +23,34 @@ class RatingsChart extends ChartWidget
 
     protected function getData(): array
     {
+        $range = $this->filters['range'] ?? '7_days';
         $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;
+
+        // Determine date range
+        $end = now();
+        $start = now()->subDays(29);
+
+        if ($range === 'custom') {
+            $end = $endDate ? Carbon::parse($endDate)->endOfDay() : now();
+            $start = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(29)->startOfDay();
+        } else {
+            $start = match ($range) {
+                'today' => now()->startOfDay(),
+                '7_days' => now()->subDays(6)->startOfDay(),
+                '30_days' => now()->subDays(29)->startOfDay(),
+                default => now()->subDays(29)->startOfDay(),
+            };
+        }
 
         // Get rating distribution
         $query = DB::table('answers')
             ->join('questions', 'answers.question_id', '=', 'questions.id')
             ->join('responses', 'answers.response_id', '=', 'responses.id')
             ->where('questions.type', Question::TYPE_RATING)
-            ->whereNotNull('answers.value');
-
-        if ($startDate) {
-            $query->whereDate('responses.submitted_at', '>=', $startDate);
-        }
-        if ($endDate) {
-            $query->whereDate('responses.submitted_at', '<=', $endDate);
-        }
+            ->whereNotNull('answers.value')
+            ->where('responses.submitted_at', '>=', $start)
+            ->where('responses.submitted_at', '<=', $end);
 
         $ratings = $query->select(DB::raw('answers.value as rating'), DB::raw('COUNT(*) as count'))
             ->groupBy('answers.value')
@@ -84,6 +98,17 @@ class RatingsChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
+            'animation' => [
+                'duration' => 1000,
+                'easing' => 'easeOutQuart',
+            ],
+            'transitions' => [
+                'active' => [
+                    'animation' => [
+                        'duration' => 400
+                    ]
+                ]
+            ],
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,

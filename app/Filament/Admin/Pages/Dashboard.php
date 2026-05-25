@@ -31,11 +31,10 @@ class Dashboard extends BaseDashboard
                             'today' => 'Last 24 Hours',
                             '7_days' => 'Last 7 Days',
                             '30_days' => 'Last 30 Days',
-                            'this_month' => 'This Month',
                             'custom' => 'Custom Range',
                         ])
                         ->default('7_days')
-                        ->live()
+                        ->live(debounce: 0)
                         ->afterStateUpdated(function (?string $state, Set $set) {
                             if (! $state || $state === 'custom') {
                                 return;
@@ -45,7 +44,6 @@ class Dashboard extends BaseDashboard
                                 'today' => now()->startOfDay()->format('Y-m-d'),
                                 '7_days' => now()->subDays(6)->startOfDay()->format('Y-m-d'),
                                 '30_days' => now()->subDays(29)->startOfDay()->format('Y-m-d'),
-                                'this_month' => now()->startOfMonth()->format('Y-m-d'),
                                 default => null,
                             });
 
@@ -56,14 +54,14 @@ class Dashboard extends BaseDashboard
                         ->label('From')
                         ->maxDate(fn (Get $get) => $get('endDate') ?: now())
                         ->visible(fn (Get $get) => $get('range') === 'custom')
-                        ->live()
+                        ->live(onBlur: true)
                         ->native(false),
                     DatePicker::make('endDate')
                         ->label('To')
                         ->minDate(fn (Get $get) => $get('startDate'))
                         ->maxDate(now())
                         ->visible(fn (Get $get) => $get('range') === 'custom')
-                        ->live()
+                        ->live(onBlur: true)
                         ->native(false),
                 ])
                 ->columnSpan('full'),

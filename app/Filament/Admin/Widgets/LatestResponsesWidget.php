@@ -13,6 +13,8 @@ class LatestResponsesWidget extends BaseWidget
 {
     use InteractsWithPageFilters;
 
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = 4;
 
     protected int|string|array $columnSpan = 'full';
@@ -21,15 +23,32 @@ class LatestResponsesWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
+        $range = $this->filters['range'] ?? '7_days';
         $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;
+
+        // Determine date range
+        $end = now();
+        $start = now()->subDays(29);
+
+        if ($range === 'custom') {
+            $end = $endDate ? Carbon::parse($endDate)->endOfDay() : now();
+            $start = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(29)->startOfDay();
+        } else {
+            $start = match ($range) {
+                'today' => now()->startOfDay(),
+                '7_days' => now()->subDays(6)->startOfDay(),
+                '30_days' => now()->subDays(29)->startOfDay(),
+                default => now()->subDays(29)->startOfDay(),
+            };
+        }
 
         return $table
             ->query(
                 Response::query()
                     ->with('survey')
-                    ->when($startDate, fn (Builder $query, $date) => $query->whereDate('submitted_at', '>=', $date))
-                    ->when($endDate, fn (Builder $query, $date) => $query->whereDate('submitted_at', '<=', $date))
+                    ->where('submitted_at', '>=', $start)
+                    ->where('submitted_at', '<=', $end)
                     ->latest('submitted_at')
             )
             ->columns([

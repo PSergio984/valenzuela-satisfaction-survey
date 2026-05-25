@@ -1,5 +1,10 @@
 <x-filament-widgets::widget>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="relative">
+        <div wire:loading.delay.shorter class="absolute inset-0 z-10 flex items-center justify-center bg-white/50 dark:bg-gray-900/50 backdrop-blur-[1px] rounded-2xl">
+            <x-filament::loading-indicator class="h-8 w-8 text-primary-500" />
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {{-- Stat 1: Total Surveys --}}
         <div class="fi-wi-stats-overview-stat relative rounded-2xl bg-white p-6 shadow-sm border border-gray-200 dark:bg-gray-900 dark:border-white/5 transition duration-200 hover:shadow-md">
             <div class="flex items-center gap-x-4">

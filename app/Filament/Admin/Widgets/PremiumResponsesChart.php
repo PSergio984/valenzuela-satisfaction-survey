@@ -13,6 +13,11 @@ class PremiumResponsesChart extends ApexChartWidget
     use InteractsWithPageFilters;
 
     /**
+     * Disable lazy loading to ensure snappier updates
+     */
+    protected static bool $isLazy = false;
+
+    /**
      * Chart Id
      *
      * @var string
@@ -44,34 +49,44 @@ class PremiumResponsesChart extends ApexChartWidget
      */
     protected function getOptions(): array
     {
+        $range = $this->filters['range'] ?? '7_days';
         $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;
 
         // Determine date range
-        $end = $endDate ? Carbon::parse($endDate) : Carbon::now();
-        $start = $startDate ? Carbon::parse($startDate) : Carbon::now()->subDays(29);
-        
-        // Cap range to prevent huge queries if needed, but here we'll just follow the filter
+        $end = now();
+        $start = now()->subDays(29);
+
+        if ($range === 'custom') {
+            $end = $endDate ? Carbon::parse($endDate)->endOfDay() : now();
+            $start = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(29)->startOfDay();
+        } else {
+            $start = match ($range) {
+                'today' => now()->startOfDay(),
+                '7_days' => now()->subDays(6)->startOfDay(),
+                '30_days' => now()->subDays(29)->startOfDay(),
+                default => now()->subDays(29)->startOfDay(),
+            };
+        }
+
         $days = (int) $start->diffInDays($end);
 
-        // Fetch all data in a single query
+        // Fetch data using index-friendly range query
         $results = Response::query()
-            ->select(DB::raw('DATE(submitted_at) as date'), DB::raw('count(*) as aggregate'))
-            ->whereDate('submitted_at', '>=', $start->format('Y-m-d'))
-            ->whereDate('submitted_at', '<=', $end->format('Y-m-d'))
+            ->selectRaw('DATE(submitted_at) as date, count(*) as aggregate')
+            ->where('submitted_at', '>=', $start)
+            ->where('submitted_at', '<=', $end)
             ->groupBy('date')
-            ->orderBy('date')
             ->pluck('aggregate', 'date')
             ->toArray();
-
         $data = [];
         $labels = [];
 
-        // Fill in gaps (days with 0 responses)
+        // Single pass to generate labels and data
         for ($i = $days; $i >= 0; $i--) {
             $date = (clone $end)->subDays($i);
             $dateString = $date->format('Y-m-d');
-            
+
             $labels[] = $date->format('M d');
             $data[] = $results[$dateString] ?? 0;
         }
@@ -83,18 +98,23 @@ class PremiumResponsesChart extends ApexChartWidget
                 'toolbar' => [
                     'show' => false,
                 ],
-                'fontFamily' => 'inherit',
+                'zoom' => [
+                    'enabled' => false,
+                ],
+                'selection' => [
+                    'enabled' => false,
+                ],
                 'animations' => [
                     'enabled' => true,
                     'easing' => 'easeinout',
-                    'speed' => 800,
+                    'speed' => 600,
                     'animateGradually' => [
                         'enabled' => true,
-                        'delay' => 150
+                        'delay' => 100
                     ],
                     'dynamicAnimation' => [
                         'enabled' => true,
-                        'speed' => 350
+                        'speed' => 450
                     ]
                 ]
             ],

@@ -13,6 +13,8 @@ class SurveyStatsWidget extends BaseWidget
 {
     use InteractsWithPageFilters;
 
+    protected static bool $isLazy = false;
+
     protected string $view = 'filament.admin.widgets.survey-stats-widget';
 
     protected static ?int $sort = 1;
@@ -20,38 +22,52 @@ class SurveyStatsWidget extends BaseWidget
     protected int|string|array $columnSpan = 'full';
 
     protected function getViewData(): array
-    {        $startDate = $this->filters['startDate'] ?? null;
+    {
+        $range = $this->filters['range'] ?? '7_days';
+        $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;
 
-        // Base queries
-        $surveyQuery = Survey::query();
-        $responseQuery = Response::query();
+        // Determine date range
+        $end = now();
+        $start = now()->subDays(29);
 
-        if ($startDate) {
-            $surveyQuery->whereDate('created_at', '>=', $startDate);
-            $responseQuery->whereDate('submitted_at', '>=', $startDate);
-        }
-        if ($endDate) {
-            $surveyQuery->whereDate('created_at', '<=', $endDate);
-            $responseQuery->whereDate('submitted_at', '<=', $endDate);
+        if ($range === 'custom') {
+            $end = $endDate ? Carbon::parse($endDate)->endOfDay() : now();
+            $start = $startDate ? Carbon::parse($startDate)->startOfDay() : now()->subDays(29)->startOfDay();
+        } else {
+            $start = match ($range) {
+                'today' => now()->startOfDay(),
+                '7_days' => now()->subDays(6)->startOfDay(),
+                '30_days' => now()->subDays(29)->startOfDay(),
+                default => now()->subDays(29)->startOfDay(),
+            };
         }
 
         // --- Stat 1: Total Surveys ---
-        $totalSurveys = (clone $surveyQuery)->count();
-        $activeSurveys = (clone $surveyQuery)->where('is_active', true)->count();
+        $surveys = Survey::query()
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->selectRaw('count(*) as total, sum(case when is_active = true then 1 else 0 end) as active')
+            ->first();
+
+        $totalSurveys = $surveys->total ?? 0;
+        $activeSurveys = $surveys->active ?? 0;
 
         // --- Stat 2: Total Responses ---
-        $totalResponses = (clone $responseQuery)->count();
-        $responsesThisMonthQuery = clone $responseQuery;
-        if (!$startDate && !$endDate) {
-            $responsesThisMonthQuery->whereMonth('submitted_at', now()->month)
-                                    ->whereYear('submitted_at', now()->year);
-        }
-        $responsesThisMonth = $responsesThisMonthQuery->count();
+        $responseQuery = Response::query()
+            ->where('submitted_at', '>=', $start)
+            ->where('submitted_at', '<=', $end);
 
-        // Optimized sparkline data: Single grouped query instead of 7 individual ones
+        $totalResponses = (clone $responseQuery)->count();
+        
+        $responsesThisMonth = (clone $responseQuery)
+            ->whereMonth('submitted_at', now()->month)
+            ->whereYear('submitted_at', now()->year)
+            ->count();
+
+        // Optimized sparkline data
         $sparklineResults = (clone $responseQuery)
-            ->select(DB::raw('DATE(submitted_at) as date'), DB::raw('count(*) as aggregate'))
+            ->selectRaw('DATE(submitted_at) as date, count(*) as aggregate')
             ->where('submitted_at', '>=', now()->subDays(6)->startOfDay())
             ->groupBy('date')
             ->pluck('aggregate', 'date')
