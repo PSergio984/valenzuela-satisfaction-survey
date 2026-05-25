@@ -199,6 +199,8 @@ class ResponseSeeder extends Seeder
      */
     public function run(): void
     {
+        config(['app.seeding' => true]);
+
         $surveys = Survey::with(['questions.options'])->get();
 
         if ($surveys->isEmpty()) {
@@ -207,17 +209,17 @@ class ResponseSeeder extends Seeder
             return;
         }
 
-        $totalResponses = 0;
+        $totalResponsesCreated = 0;
 
         foreach ($surveys as $survey) {
             // Determine number of responses based on survey type
             $responseCount = $this->getResponseCountForSurvey($survey);
-            $responses = $this->generateResponses($survey, $responseCount);
-            $totalResponses += $responses->count();
+            $createdCount = $this->generateResponses($survey, $responseCount);
+            $totalResponsesCreated += $createdCount;
 
             // Simulate analytics: views_count, starts_count
             // views_count: random 10-30% higher than starts_count
-            $startsCount = $responses->count() + mt_rand(0, (int) ($responses->count() * 0.15));
+            $startsCount = $createdCount + mt_rand(0, (int) ($createdCount * 0.15));
             $viewsCount = $startsCount + mt_rand((int) ($startsCount * 0.1), (int) ($startsCount * 0.3));
 
             $survey->update([
@@ -225,12 +227,12 @@ class ResponseSeeder extends Seeder
                 'views_count' => $viewsCount,
             ]);
 
-            $this->command->info("Generated {$responses->count()} responses for: {$survey->title} (Views: {$viewsCount}, Starts: {$startsCount})");
+            $this->command->info("Generated {$createdCount} responses for: {$survey->title} (Views: {$viewsCount}, Starts: {$startsCount})");
         }
 
         $this->command->newLine();
         $this->command->info('Response seeding completed!');
-        $this->command->info("Total responses created: {$totalResponses}");
+        $this->command->info("Total responses created: {$totalResponsesCreated}");
     }
 
     /**
@@ -275,15 +277,14 @@ class ResponseSeeder extends Seeder
     /**
      * Generate responses for a survey.
      *
-     * @return Collection<int, Response>
+     * @return int The number of responses created.
      */
-    protected function generateResponses(Survey $survey, int $count): Collection
+    protected function generateResponses(Survey $survey, int $count): int
     {
-        $responses = collect();
         $questions = $survey->questions;
 
         if ($questions->isEmpty()) {
-            return $responses;
+            return 0;
         }
 
         // Determine date range for responses
@@ -319,11 +320,9 @@ class ResponseSeeder extends Seeder
             foreach ($questions as $question) {
                 $this->createAnswerForQuestion($response, $question);
             }
-
-            $responses->push($response);
         }
 
-        return $responses;
+        return $count;
     }
 
     /**

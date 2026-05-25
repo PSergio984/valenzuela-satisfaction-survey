@@ -53,13 +53,26 @@ class PiiScrubberProcessor implements ProcessorInterface
     /**
      * Recursively scrub an array of sensitive keys.
      */
-    protected function scrubArray(array $data): array
+    protected function scrubArray(array $data, array &$visited = [], int $depth = 0): array
     {
+        // Prevent excessive recursion or circular references
+        if ($depth > 10) {
+            return ['[DEPTH_LIMIT_REACHED]'];
+        }
+
         foreach ($data as $key => $value) {
             if (in_array($key, $this->sensitiveKeys)) {
                 $data[$key] = '[REDACTED]';
             } elseif (is_array($value)) {
-                $data[$key] = $this->scrubArray($value);
+                // Track visited arrays to prevent circular references
+                $hash = spl_object_hash((object) $value);
+                if (isset($visited[$hash])) {
+                    $data[$key] = '[CIRCULAR_REFERENCE]';
+                    continue;
+                }
+                $visited[$hash] = true;
+
+                $data[$key] = $this->scrubArray($value, $visited, $depth + 1);
             }
         }
 

@@ -13,6 +13,11 @@ class AnswerObserver
      */
     public function created(Answer $answer): void
     {
+        // Skip alerts during seeding
+        if (config('app.seeding')) {
+            return;
+        }
+
         $question = $answer->question;
 
         if ($question && $question->type === Question::TYPE_RATING) {

@@ -6,10 +6,16 @@ This document captures the implementation decisions for Phase 3, focusing on tra
 
 ### A. Admin UI Overhaul (Plugins & Power-Ups)
 - **Theme**: Build a custom Filament Tailwind theme. We will replace the default fonts with a modern sans-serif (e.g., Inter) and refine the color palette.
+- **Layout Differentiation**: 
+  - **Sidebar**: Deep, professional background (Slate 900 or similar) with high-contrast text and refined icons.
+  - **Main Area**: Clean, neutral background (Gray 50/Zinc 50) to create a clear visual hierarchy and "airy" feel.
+- **Interactive Widgets (The "Taste" Factor)**: 
+  - Leverage Filament's custom view widgets to embed **React components** (via Inertia or custom JS entry points).
+  - Use these for core dashboard metrics to provide a more dynamic, "appealing" visual experience than standard static widgets.
 - **Layouts**: Use "Grid" and "Split" layouts for resources (like Surveys and Responses) to make them look more like a dashboard than a raw database table.
 - **Power-Ups**: 
-  - Install `pxlrbt/filament-spotlight` for a `Cmd+K` global command palette to make navigation feel instantaneous.
-  - Install `awcodes/overlook` to add quick-stat overview widgets to the top of the dashboard.
+  - Install `pxlrbt/filament-spotlight` for a `Cmd+K` global command palette (Completed in previous attempts but verified).
+  - Install `awcodes/overlook` for quick-stat overview widgets.
 
 ### B. Access Control (Roles & Permissions)
 - **Restoration**: The user noted that `filament-shield` was previously used but its files are missing. We will do a fresh installation of `bezhansalleh/filament-shield`.

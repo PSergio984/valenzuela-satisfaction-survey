@@ -4,8 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Admin\Widgets\LatestResponsesWidget;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use App\Filament\Admin\Widgets\PremiumResponsesChart;
 use App\Filament\Admin\Widgets\RatingsChart;
-use App\Filament\Admin\Widgets\ResponsesChart;
 use App\Filament\Admin\Widgets\SurveyStatsWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -34,10 +34,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Admin\Pages\Auth\Login::class)
-            ->brandName('Satisfaction Survey')
+            ->brandName('Survey System')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Indigo,
+                'gray' => Color::Slate,
             ])
+            ->font('DM Sans', url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap')
             ->maxContentWidth(Width::Full)
             ->sidebarWidth('14rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
@@ -50,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 SurveyStatsWidget::class,
-                ResponsesChart::class,
+                PremiumResponsesChart::class,
                 RatingsChart::class,
                 LatestResponsesWidget::class,
             ])
