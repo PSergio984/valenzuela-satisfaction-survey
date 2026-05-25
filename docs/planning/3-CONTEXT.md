@@ -17,7 +17,7 @@ This document captures the implementation decisions for Phase 3, focusing on tra
 - **Current State**: `spatie/laravel-permission` is already installed and seeded; Shield will sit perfectly on top of it.
 
 ### C. Public Portal Visual Polish (Swift & Minimal)
-- **Animation Strategy**: Keep it simple. We will add lightweight, "swift" animations (e.g., using Framer Motion) to the survey taking form. 
+- **Animation Strategy**: Keep it simple. We will add lightweight, "swift" animations (e.g., using Framer Motion) to the survey-taking form. 
 - **Transitions**: Questions will slide/fade in smoothly, rather than jarringly appearing.
 - **Aesthetics**: Ensure the gradient and shadows are subtle and professional, matching the "Feedback Management System" generic branding established in Phase 2.
 

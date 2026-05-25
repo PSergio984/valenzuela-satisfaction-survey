@@ -1,17 +1,12 @@
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 import { SurveyShowSkeleton } from '@/components/survey-skeleton';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
 import { type Question, type Survey } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
     ArrowLeft,
     CheckCircle2,

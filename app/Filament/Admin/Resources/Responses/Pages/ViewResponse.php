@@ -6,7 +6,6 @@ use App\Filament\Admin\Resources\Responses\ResponseResource;
 use App\Models\Question;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Schemas\Components\Placeholder;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -60,13 +59,13 @@ class ViewResponse extends ViewRecord
                 Section::make('Answers')
                     ->schema(function ($record) {
                         return $record->answers()
-                            ->with(['question'])
+                            ->with(['question.options'])
                             ->orderBy('question_id')
                             ->get()
                             ->map(function ($answer) {
-                                return TextEntry::make('answer_' . $answer->id)
+                                return TextEntry::make('answer_'.$answer->id)
                                     ->label($answer->question->question ?? 'Question deleted')
-                                    ->formatStateUsing(fn () => $this->formatAnswerValue($answer, $answer->question))
+                                    ->formatStateUsing(fn () => $answer->question ? $this->formatAnswerValue($answer, $answer->question) : 'Question deleted')
                                     ->columnSpanFull();
                             })
                             ->toArray();

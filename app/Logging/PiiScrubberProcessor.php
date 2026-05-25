@@ -12,6 +12,16 @@ class PiiScrubberProcessor implements ProcessorInterface
      */
     protected array $sensitiveKeys = [
         'answers',
+        'email',
+        'email_address',
+        'name',
+        'first_name',
+        'last_name',
+        'ip',
+        'ip_address',
+        'phone',
+        'phone_number',
+        'address',
         'password',
         'password_confirmation',
         'current_password',

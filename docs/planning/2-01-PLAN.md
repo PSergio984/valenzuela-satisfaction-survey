@@ -15,9 +15,9 @@ Goal: Harden the platform through background processing and security best practi
 
 ## 2. Security: Log Scrubbing & Auditing
 - **Task 2.1**: Implement Log Scrubbing.
-  - Strategy: Add a custom processor to the Laravel log channel or use 
-    `Http\Middleware\TrustProxies` equivalent for redacting `answers` keys from 
-    all requests/logs.
+  - Strategy: Perform redaction in the logging stack using Monolog processors and/or custom handlers/channels. 
+  - Note: `TrustProxies` only configures trusted reverse proxies / X-Forwarded-* handling (e.g., client IP/scheme) and does not scrub request or log payloads.
+  - Implementation: Add custom processors to the Laravel log channel for sensitive-data scrubbing (see `app/Logging/PiiScrubberProcessor.php`).
 - **Task 2.2**: Audit `ProfileController` and `SurveyController`.
   - Action: Ensure all inputs are strictly validated and no mass-assignment 
     risks exist.
