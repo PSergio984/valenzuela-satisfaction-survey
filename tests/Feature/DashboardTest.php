@@ -1,13 +1,18 @@
 <?php
 
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 test('guests are redirected to the login page', function () {
-    $this->get(route('dashboard'))->assertRedirect(route('login'));
+    $this->get('/admin')->assertRedirect('/admin/login');
 });
 
-test('authenticated users can visit the dashboard', function () {
-    $this->actingAs($user = User::factory()->create());
+test('authenticated admin users can visit the dashboard', function () {
+    $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    $user = User::factory()->create();
+    $user->assignRole('admin');
 
-    $this->get(route('dashboard'))->assertOk();
+    $this->actingAs($user);
+
+    $this->get('/admin')->assertOk();
 });

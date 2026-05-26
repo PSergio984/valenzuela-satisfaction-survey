@@ -143,6 +143,8 @@ describe('Excel Export', function () {
 
 describe('PDF Export', function () {
     it('can export survey responses to pdf', function () {
+        \Illuminate\Support\Facades\Queue::fake();
+
         $survey = Survey::factory()->create();
 
         Question::factory()->create([
@@ -159,8 +161,8 @@ describe('PDF Export', function () {
 
         $response = $this->get(route('admin.surveys.export.pdf', $survey));
 
-        $response->assertOk();
-        $response->assertDownload();
+        $response->assertRedirect();
+        \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\GenerateSurveyPdfReport::class);
     });
 
     it('requires authentication to export pdf', function () {

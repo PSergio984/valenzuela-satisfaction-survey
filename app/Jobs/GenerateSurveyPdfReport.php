@@ -55,7 +55,7 @@ class GenerateSurveyPdfReport implements ShouldQueue
             ->actions([
                 \Filament\Actions\Action::make('download')
                     ->button()
-                    ->url(route('surveys.exports.download', ['path' => $this->filename])),
+                    ->url(route('admin.exports.download', ['path' => $this->filename])),
             ])
             ->sendToDatabase($user);
     }
