@@ -20,19 +20,23 @@
 - [ ] 02-01-PLAN.md — Reliability & Security
 - [ ] 02-02-PLAN.md — Testing, Alerts, and UX Performance
 
-## Phase 3: Engaging UI Overhaul & Access Control
-**Goal:** Transform the bland admin and public interfaces into highly engaging, premium experiences, and restore robust Role & Permission management.
+## Phase 3: Premium UI Overhaul, Interactive Dashboards & Access Control
+**Goal:** Transform the bland admin and public interfaces into a premium, high-end visual experience with distinct layouts, React-powered interactive dashboards, and robust Role & Permission management.
 
-**Requirements:** [UI-01, UI-02, AUTH-01]
+**Requirements:** [UI-01, UI-02, AUTH-01, DASH-01, DASH-02, DASH-03]
 
 ### Plans
-- [ ] 03-01-PLAN.md — Admin UI & Role Management
+- [ ] 03-01-PLAN.md — Admin UI, Theme & Role Management
 - [ ] 03-02-PLAN.md — Public Portal Visual Polish
+- [ ] 03-03-PLAN.md — Advanced Aesthetic Dashboard (Draft)
 
-### Requirements Detail
+### Requirements Detail (Phase 3)
 - **UI-01**: Admin Panel Theme Overhaul (Custom Tailwind theme, custom fonts, advanced widgets, grid layouts).
 - **UI-02**: Public Portal Visual Polish (Animations, micro-interactions, premium styling).
 - **AUTH-01**: Restore and implement a working Role & Permission management resource in the admin sidebar.
+- **DASH-01**: Custom Sidebar & Layout Differentiation (Distinct background colors, high-end borders, and refined typography).
+- **DASH-02**: React-Powered Dashboard Widgets (Interactive, high-taste visual components for analytics).
+- **DASH-03**: Aesthetic Polish (Motion effects, premium shadows, and micro-interactions via Framer Motion).
 
 ### Requirements Detail (Phase 2)
 - **RELI-01**: Transition PDF generation to queued background jobs.

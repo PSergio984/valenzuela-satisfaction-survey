@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
-    $response->assertStatus(200);
+    $response->assertRedirect('/admin/login');
 });
 
 test('users can authenticate using the login screen', function () {
@@ -20,8 +20,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    // Regular users (without admin roles) are redirected to surveys
-    $response->assertRedirect(route('surveys.index', absolute: false));
+    $response->assertRedirect('/admin');
 });
 
 test('admin users are redirected to admin panel after login', function () {

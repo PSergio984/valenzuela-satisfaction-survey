@@ -4,25 +4,25 @@ namespace App\Providers\Filament;
 
 use App\Filament\Admin\Widgets\LatestResponsesWidget;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use App\Filament\Admin\Widgets\PremiumResponsesChart;
 use App\Filament\Admin\Widgets\RatingsChart;
-use App\Filament\Admin\Widgets\ResponsesChart;
 use App\Filament\Admin\Widgets\SurveyStatsWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use App\Filament\Admin\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
-use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -34,10 +34,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Admin\Pages\Auth\Login::class)
-            ->brandName('Satisfaction Survey')
+            ->brandName('Survey System')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Indigo,
+                'gray' => Color::Slate,
             ])
+            ->font('DM Sans', url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap')
             ->maxContentWidth(Width::Full)
             ->sidebarWidth('14rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
@@ -48,9 +50,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
             ->widgets([
-                AccountWidget::class,
                 SurveyStatsWidget::class,
-                ResponsesChart::class,
+                PremiumResponsesChart::class,
                 RatingsChart::class,
                 LatestResponsesWidget::class,
             ])
@@ -66,6 +67,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                FilamentApexChartsPlugin::make(),
                 FilamentShieldPlugin::make()
                     ->gridColumns(['default' => 1, 'sm' => 2, 'lg' => 3])
                     ->sectionColumnSpan(1)

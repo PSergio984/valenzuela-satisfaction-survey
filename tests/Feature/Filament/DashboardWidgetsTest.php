@@ -2,7 +2,7 @@
 
 use App\Filament\Admin\Widgets\LatestResponsesWidget;
 use App\Filament\Admin\Widgets\RatingsChart;
-use App\Filament\Admin\Widgets\ResponsesChart;
+use App\Filament\Admin\Widgets\PremiumResponsesChart;
 use App\Filament\Admin\Widgets\SurveyStatsWidget;
 use App\Models\Answer;
 use App\Models\Option;
@@ -121,7 +121,7 @@ describe('SurveyStatsWidget', function () {
         actingAs($admin);
 
         Livewire::test(SurveyStatsWidget::class)
-            ->assertSee('Average Rating');
+            ->assertSee('Avg Rating');
     });
 
     it('displays weekly trend stat', function () {
@@ -133,20 +133,20 @@ describe('SurveyStatsWidget', function () {
     });
 });
 
-describe('ResponsesChart', function () {
+describe('PremiumResponsesChart', function () {
     it('renders with correct heading', function () {
         $admin = setupDashboardTestData();
         actingAs($admin);
 
-        Livewire::test(ResponsesChart::class)
-            ->assertSee('Responses Over Time');
+        Livewire::test(PremiumResponsesChart::class)
+            ->assertSee('Response Trends');
     });
 
     it('renders successfully without errors', function () {
         $admin = setupDashboardTestData();
         actingAs($admin);
 
-        Livewire::test(ResponsesChart::class)
+        Livewire::test(PremiumResponsesChart::class)
             ->assertSuccessful();
     });
 });

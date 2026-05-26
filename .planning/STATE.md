@@ -13,6 +13,12 @@
 - D-12: Implement Vitest and React Testing Library for frontend quality assurance.
 
 ## Pending Work
+### Phase 3
+- [ ] Task 1: Custom Admin Theme & Layout Differentiation (Sidebar/Main)
+- [ ] Task 2: React-Powered Interactive Dashboard Widgets
+- [ ] Task 3: Public Portal Premium Styling & Animations
+- [ ] Task 4: Role & Permission Management Implementation
+
 ### Phase 2
 - [x] Task 1: Queued PDF Generation
 - [x] Task 2: Log Scrubbing and Security Hardening

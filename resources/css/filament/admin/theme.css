@@ -2,3 +2,57 @@
 
 @source '../../../../app/Filament/Admin/**/*';
 @source '../../../../resources/views/filament/admin/**/*';
+
+/* Premium Layout Differentiation */
+.fi-sidebar {
+    @apply !bg-white dark:!bg-slate-950 !border-r !border-slate-200 dark:!border-white/5;
+}
+
+.fi-sidebar-nav-label,
+.fi-sidebar-nav-link {
+    @apply !text-slate-600 dark:!text-slate-400;
+}
+
+.fi-sidebar-nav-link:hover,
+.fi-sidebar-nav-link.fi-active {
+    @apply !bg-slate-50 dark:!bg-slate-900 !text-indigo-600 dark:!text-white;
+}
+
+.fi-sidebar-header {
+    @apply !bg-white dark:!bg-black !border-b !border-slate-200 dark:!border-white/5;
+}
+
+.fi-main {
+    @apply !bg-slate-50 dark:!bg-slate-900;
+}
+
+/* Tasteful Card Styling */
+.fi-section,
+.fi-ta-ctn,
+.fi-wi-stats-overview-stat,
+.fi-wi-widget > div {
+    @apply !bg-white dark:!bg-slate-900 !border !border-slate-200 dark:!border-white/5 !rounded-2xl;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+.fi-header-heading {
+    @apply !text-slate-900 dark:!text-white font-extrabold tracking-tight text-3xl;
+}
+
+.fi-sidebar-header {
+    @apply !bg-slate-950 dark:!bg-black !border-b !border-slate-800 dark:!border-white/5;
+}
+
+/* Dashboard spacing and transitions */
+.fi-page-content {
+    @apply pt-6;
+}
+
+.fi-wi-widget {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.fi-wi-widget.livewire-loading {
+    opacity: 0.7;
+    filter: blur(1px);
+}
