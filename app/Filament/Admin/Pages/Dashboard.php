@@ -16,6 +16,11 @@ class Dashboard extends BaseDashboard
 {
     use HasFiltersForm;
 
+    public function getWidgets(): array
+    {
+        return [];
+    }
+
     public function filtersForm(Schema $schema): Schema
     {
         return $schema

@@ -70,7 +70,7 @@ class SurveyResponsesChart extends ChartWidget
                 'y' => [
                     'beginAtZero' => true,
                     'ticks' => [
-                        'stepSize' => 1,
+                        'precision' => 0,
                     ],
                 ],
             ],
