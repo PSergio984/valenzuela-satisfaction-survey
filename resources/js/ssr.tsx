@@ -16,6 +16,9 @@ createServer((page) =>
                 import.meta.glob('./pages/**/*.tsx'),
             ),
         setup: ({ App, props }) => {
+            if (props.initialPage && !props.initialPage.url) {
+                props.initialPage.url = '/';
+            }
             return <App {...props} />;
         },
     }),

@@ -18,6 +18,13 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
+        // Safeguard to ensure props.initialPage.url is defined to prevent Inertia 2.x router setUrlHash / includes crash
+        if (props.initialPage && !props.initialPage.url) {
+            props.initialPage.url = typeof window !== 'undefined'
+                ? window.location.pathname + window.location.search + window.location.hash
+                : '/';
+        }
+
         root.render(
             <StrictMode>
                 <App {...props} />
