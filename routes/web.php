@@ -43,3 +43,29 @@ Route::prefix('surveys')->name('surveys.')->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+// Dynamic static asset server with CORS headers for sandboxed iframes (origin null)
+Route::match(['get', 'options'], 'js/{path}', function ($path) {
+    $basePath = realpath(resource_path('js-static')) . DIRECTORY_SEPARATOR;
+    $file = realpath(resource_path('js-static/' . $path));
+
+    if (!$file || !str_starts_with($file, $basePath) || !file_exists($file) || is_dir($file)) {
+        abort(404);
+    }
+
+    $extension = pathinfo($file, PATHINFO_EXTENSION);
+    $contentType = match ($extension) {
+        'js' => 'application/javascript',
+        'css' => 'text/css',
+        'json', 'map' => 'application/json',
+        default => mime_content_type($file) ?: 'application/octet-stream',
+    };
+
+    return response()->file($file, [
+        'Content-Type' => $contentType,
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => '*',
+    ]);
+})->where('path', '.*');
+
