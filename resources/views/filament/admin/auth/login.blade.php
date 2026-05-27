@@ -24,11 +24,7 @@
                     <h1 class="text-2xl font-bold text-slate-900">Satisfaction Survey</h1>
                 </div>
                 
-                {{ $this->form }}
-
-                <div class="mt-6">
-                    {{ $this->authenticateAction }}
-                </div>
+                {{ $this->content }}
             </div>
         </div>
     </div>
