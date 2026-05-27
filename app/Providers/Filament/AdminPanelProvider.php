@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Admin\Pages\Auth\Login::class)
-            ->brandName('Survey System')
+            ->brandName('')
             ->colors([
                 'primary' => Color::Indigo,
                 'gray' => Color::Slate,
@@ -47,13 +47,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
             ->pages([
                 Dashboard::class,
-            ])
-            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
-            ->widgets([
-                SurveyStatsWidget::class,
-                PremiumResponsesChart::class,
-                RatingsChart::class,
-                LatestResponsesWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

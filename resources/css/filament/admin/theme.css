@@ -56,3 +56,9 @@
     opacity: 0.7;
     filter: blur(1px);
 }
+
+/* Hide brand logo and name from the sidebar/topbar header */
+.fi-sidebar-header a,
+.fi-topbar-header a {
+    display: none !important;
+}

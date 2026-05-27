@@ -57,12 +57,22 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
+        // Generate Shield permissions dynamically
+        \Illuminate\Support\Facades\Artisan::call('shield:generate', [
+            '--all' => true,
+            '--panel' => 'admin',
+            '--option' => 'policies_and_permissions',
+            '--no-interaction' => true,
+            '--ignore-existing-policies' => true,
+        ]);
+
         // Create roles and assign permissions
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
-        $superAdminRole->givePermissionTo(Permission::all());
+        $superAdminRole->syncPermissions(Permission::all());
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminRole->givePermissionTo([
+        $adminRole->syncPermissions([
+            // Basic permissions (expected by tests)
             'view_users',
             'view_surveys',
             'create_surveys',
@@ -75,6 +85,23 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_responses',
             'delete_responses',
             'export_responses',
+
+            // Shield permissions (expected by policies)
+            'ViewAny:User',
+            'View:User',
+            'ViewAny:Survey',
+            'View:Survey',
+            'Create:Survey',
+            'Update:Survey',
+            'Delete:Survey',
+            'ViewAny:Question',
+            'View:Question',
+            'Create:Question',
+            'Update:Question',
+            'Delete:Question',
+            'ViewAny:Response',
+            'View:Response',
+            'Delete:Response',
         ]);
 
         $this->command->info('Roles and permissions seeded successfully!');

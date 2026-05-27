@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Widgets;
 
+use Carbon\Carbon;
 use App\Models\Question;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -113,7 +114,7 @@ class RatingsChart extends ChartWidget
                 'y' => [
                     'beginAtZero' => true,
                     'ticks' => [
-                        'stepSize' => 1,
+                        'precision' => 0,
                     ],
                 ],
             ],
