@@ -3,27 +3,27 @@
 @source '../../../../app/Filament/Admin/**/*';
 @source '../../../../resources/views/filament/admin/**/*';
 
-/* Premium Layout Differentiation */
+/* Sidebar: Slate 900 */
 .fi-sidebar {
-    @apply !bg-white dark:!bg-slate-950 !border-r !border-slate-200 dark:!border-white/5;
+    @apply !bg-slate-900 dark:!bg-slate-950 !border-r !border-slate-800 dark:!border-white/10;
 }
 
-.fi-sidebar-nav-label,
-.fi-sidebar-nav-link {
-    @apply !text-slate-600 dark:!text-slate-400;
-}
-
-.fi-sidebar-nav-link:hover,
-.fi-sidebar-nav-link.fi-active {
-    @apply !bg-slate-50 dark:!bg-slate-900 !text-indigo-600 dark:!text-white;
-}
-
-.fi-sidebar-header {
-    @apply !bg-white dark:!bg-black !border-b !border-slate-200 dark:!border-white/5;
-}
-
+/* Main Area: Zinc 50 */
 .fi-main {
-    @apply !bg-slate-50 dark:!bg-slate-900;
+    @apply !bg-zinc-50 dark:!bg-slate-900;
+}
+
+/* Sidebar Nav Polish */
+.fi-sidebar-group-label {
+    @apply !text-slate-500 uppercase tracking-widest text-[10px] font-bold;
+}
+
+.fi-sidebar-item-button {
+    @apply !text-slate-400 hover:!bg-white/5 hover:!text-white;
+}
+
+.fi-sidebar-item-button.fi-active {
+    @apply !bg-white/10 !text-white !font-semibold;
 }
 
 /* Tasteful Card Styling */
