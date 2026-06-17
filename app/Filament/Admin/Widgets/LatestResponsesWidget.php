@@ -20,7 +20,7 @@ class LatestResponsesWidget extends BaseWidget
 
     protected int|string|array $columnSpan = ['md' => 12];
 
-    protected static ?string $heading = 'Latest Responses';
+    protected ?string $heading = 'Latest Responses';
 
     public function table(Table $table): Table
     {

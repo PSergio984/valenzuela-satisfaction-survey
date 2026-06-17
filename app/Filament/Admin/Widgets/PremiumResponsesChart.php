@@ -29,7 +29,7 @@ class PremiumResponsesChart extends ApexChartWidget
      *
      * @var string|null
      */
-    protected static ?string $heading = 'Response Trends';
+    protected ?string $heading = 'Response Trends';
 
     /**
      * Sort

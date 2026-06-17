@@ -18,6 +18,8 @@ class SurveyStatsWidget extends BaseWidget
 
     protected string $view = 'filament.admin.widgets.survey-stats-widget';
 
+    protected ?string $heading = 'Overview Stats';
+
     protected static ?int $sort = 1;
 
     protected int|string|array $columnSpan = ['md' => 12];
