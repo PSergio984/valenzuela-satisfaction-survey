@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->font('Hanken Grotesk', url: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@900&display=swap')
             ->renderHook(
                 'panels::head.done',
-                fn () => new \Illuminate\Support\HtmlString('<style>:root { --font-mono: "Noto Sans Mono", monospace; }</style>'),
+                fn () => new HtmlString('<style>:root { --font-mono: "Noto Sans Mono", monospace; }</style>'),
             )
             ->maxContentWidth(Width::Full)
             ->sidebarWidth('14rem')
