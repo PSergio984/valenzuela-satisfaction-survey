@@ -16,7 +16,7 @@
         'Noto Color Emoji';
     
     --font-heading: 'Hanken Grotesk', var(--font-sans);
-    --font-mono: 'Black Mono', 'Noto Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-mono: 'Noto Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
