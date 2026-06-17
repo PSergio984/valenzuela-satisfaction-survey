@@ -30,10 +30,9 @@ Scale: 8-point (multiples of 4px)
 
 | Token | Size | Weight | Usage |
 |-------|------|--------|-------|
-| `text-xs` | 12px | 400 | Meta data, labels |
-| `text-sm` | 14px | 400 | Standard body text |
-| `text-base`| 16px | 600 | Small headings, UI labels |
-| `text-lg` | 20px | 600 | Component headings |
+| `text-sm` | 14px | 400 | Standard body text, meta data |
+| `text-base`| 16px | 400 | UI labels, secondary text |
+| `text-lg` | 20px | 700 | Component headings |
 | `text-2xl`| 28px | 700 | Page titles |
 
 ### Color Palette (60/30/10)
@@ -48,6 +47,7 @@ Scale: 8-point (multiples of 4px)
 | Sidebar Border | `#1e293b` (Slate 800) | `#0f172a` (Slate 900) | Phase 3 Spec |
 | Primary Action | `#000000` (Black) | `#ffffff` (White) | D-13 |
 | Surface/Card | `#ffffff` (White) | `#0f172a` (Slate 900) | Standard |
+| Destructive | `#dc2626` (Red 600) | `#ef4444` (Red 500) | Recommendation |
 
 ## 2. Component Inventory
 
