@@ -39,7 +39,7 @@ class PremiumResponsesChart extends ApexChartWidget
     /**
      * Column Span
      */
-    protected int | string | array $columnSpan = ['md' => 2];
+    protected int | string | array $columnSpan = 8;
 
     /**
      * Chart options (series, labels, types, size, animations...)

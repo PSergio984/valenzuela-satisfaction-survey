@@ -16,6 +16,12 @@ class Dashboard extends BaseDashboard
 {
     use HasFiltersForm;
 
+    public function getColumns(): int | string | array
+    {
+        return 12;
+    }
+
+
     public function getWidgets(): array
     {
         return [];
@@ -78,9 +84,7 @@ class Dashboard extends BaseDashboard
         return $schema
             ->components([
                 $this->getFiltersFormContentComponent(),
-                Grid::make([
-                    'md' => 3,
-                ])
+                Grid::make(12)
                 ->schema([
                     ...$this->getWidgetsSchemaComponents([
                         \App\Filament\Admin\Widgets\SurveyStatsWidget::class,
