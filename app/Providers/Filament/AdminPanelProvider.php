@@ -34,15 +34,13 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Admin\Pages\Auth\Login::class)
-            ->brandName('')
             ->colors([
-                'primary' => Color::Indigo,
+                'primary' => '#000000',
                 'gray' => Color::Slate,
             ])
-            ->font('DM Sans', url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap')
+            ->font('Hanken Grotesk', url: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap')
             ->maxContentWidth(Width::Full)
             ->sidebarWidth('14rem')
-            ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
             ->pages([

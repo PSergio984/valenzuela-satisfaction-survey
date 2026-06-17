@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@900&display=swap');
 
 @import 'tailwindcss';
 
@@ -11,11 +11,12 @@
 
 @theme {
     --font-sans:
-        'Source Sans 3', ui-sans-serif, system-ui, sans-serif,
+        'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
     
-    --font-heading: 'Lexend', var(--font-sans);
+    --font-heading: 'Hanken Grotesk', var(--font-sans);
+    --font-mono: 'Black Mono', 'Noto Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -92,28 +93,28 @@
     --card-foreground: #020617;
     --popover: #ffffff;
     --popover-foreground: #020617;
-    --primary: #0f172a; /* Deep Navy */
-    --primary-foreground: #f8fafc;
+    --primary: #000000;
+    --primary-foreground: #ffffff;
     --secondary: #f1f5f9;
-    --secondary-foreground: #0f172a;
+    --secondary-foreground: #000000;
     --muted: #f1f5f9;
     --muted-foreground: #64748b;
     --accent: #f1f5f9;
-    --accent-foreground: #0f172a;
+    --accent-foreground: #000000;
     --destructive: #ef4444;
     --destructive-foreground: #f8fafc;
     --border: #e2e8f0;
     --input: #e2e8f0;
-    --ring: #0f172a;
+    --ring: #000000;
     --radius: 0.5rem;
     --sidebar: #f8fafc;
-    --sidebar-foreground: #0f172a;
-    --sidebar-primary: #0f172a;
+    --sidebar-foreground: #000000;
+    --sidebar-primary: #000000;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #f1f5f9;
-    --sidebar-accent-foreground: #0f172a;
+    --sidebar-accent-foreground: #000000;
     --sidebar-border: #e2e8f0;
-    --sidebar-ring: #0f172a;
+    --sidebar-ring: #000000;
 }
 
 .dark {
