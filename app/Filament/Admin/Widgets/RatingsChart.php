@@ -16,7 +16,7 @@ class RatingsChart extends ChartWidget
 
     protected static ?int $sort = 3;
 
-    protected int | string | array $columnSpan = ['md' => 1];
+    protected int | string | array $columnSpan = ['md' => 4];
 
     protected ?string $heading = 'Rating Distribution';
 

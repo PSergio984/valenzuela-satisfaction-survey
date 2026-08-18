@@ -29,7 +29,7 @@ class PremiumResponsesChart extends ApexChartWidget
      *
      * @var string|null
      */
-    protected static ?string $heading = 'Response Trends';
+    protected ?string $heading = 'Response Trends';
 
     /**
      * Sort
@@ -39,7 +39,7 @@ class PremiumResponsesChart extends ApexChartWidget
     /**
      * Column Span
      */
-    protected int | string | array $columnSpan = ['md' => 2];
+    protected int | string | array $columnSpan = ['md' => 8];
 
     /**
      * Chart options (series, labels, types, size, animations...)

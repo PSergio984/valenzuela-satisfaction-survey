@@ -1,4 +1,5 @@
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
+import LiquidProgressBar from '@/components/LiquidProgressBar';
 import { SurveyShowSkeleton } from '@/components/survey-skeleton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -6,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type Question, type Survey } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowLeft,
     CheckCircle2,
@@ -39,6 +40,9 @@ export default function SurveyShow({ survey }: Props) {
     });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const hasRespondentInfo = survey.collect_respondent_info;
+    const totalSteps = (hasRespondentInfo ? 1 : 0) + (survey.questions?.length || 0);
 
     useEffect(() => {
         setData('started_at', new Date().toISOString());
@@ -46,36 +50,16 @@ export default function SurveyShow({ survey }: Props) {
         const start = () => setIsLoading(true);
         const end = () => setIsLoading(false);
 
-        router.on('start', start);
-        router.on('finish', end);
+        const unbindStart = router.on('start', start);
+        const unbindFinish = router.on('finish', end);
 
         return () => {
-            router.off('start', start);
-            router.off('finish', end);
+            unbindStart();
+            unbindFinish();
         };
-    }, []);
+    }, [setData]);
 
-    const [progress, setProgress] = useState(0);
-
-    useEffect(() => {
-        if (!survey.questions) return;
-
-        const requiredQuestions = survey.questions.filter((q) => q.is_required);
-        if (requiredQuestions.length === 0) {
-            setProgress(100);
-            return;
-        }
-
-        const answeredRequired = requiredQuestions.filter((q) => {
-            const answer = data.answers[q.id];
-            if (Array.isArray(answer)) return answer.length > 0;
-            return answer !== undefined && answer !== '';
-        });
-
-        setProgress(
-            Math.round((answeredRequired.length / requiredQuestions.length) * 100),
-        );
-    }, [data.answers, survey.questions]);
+    const progress = Math.round(((currentQuestionIndex + 1) / totalSteps) * 100);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -87,6 +71,20 @@ export default function SurveyShow({ survey }: Props) {
             ...data.answers,
             [questionId]: value,
         });
+    };
+
+    const handleNext = () => {
+        if (currentQuestionIndex < totalSteps - 1) {
+            setCurrentQuestionIndex((prev) => prev + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const handlePrevious = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex((prev) => prev - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     };
 
     const handleCheckboxChange = (
@@ -117,9 +115,10 @@ export default function SurveyShow({ survey }: Props) {
         return (
             <motion.div
                 key={question.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
                 className="group space-y-6 rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:border-primary/20 hover:shadow-xl hover:shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-primary/30 dark:hover:shadow-none"
             >
                 <div className="flex items-start justify-between gap-4">
@@ -317,12 +316,7 @@ export default function SurveyShow({ survey }: Props) {
                                 {progress}% Complete
                             </span>
                         </div>
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-                            <div
-                                className="h-full bg-primary transition-all duration-500 ease-out"
-                                style={{ width: `${progress}%` }}
-                            />
-                        </div>
+                        <LiquidProgressBar progress={progress} />
                     </div>
                 </div>
 
@@ -375,119 +369,153 @@ export default function SurveyShow({ survey }: Props) {
                                 </div>
 
                                 <form onSubmit={handleSubmit} className="space-y-12">
-                                    {/* Optional Respondent Info */}
-                                    {survey.collect_respondent_info && (
-                                        <div className="rounded-3xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
-                                            <div className="mb-8 flex items-center gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                                                    <Lock className="h-4 w-4 text-primary" />
+                                    <AnimatePresence mode="wait">
+                                        {/* Optional Respondent Info Step */}
+                                        {hasRespondentInfo && currentQuestionIndex === 0 ? (
+                                            <motion.div
+                                                key="respondent-info"
+                                                initial={{ opacity: 0, y: 30 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -30 }}
+                                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                                className="rounded-3xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900"
+                                            >
+                                                <div className="mb-8 flex items-center gap-3">
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                                                        <Lock className="h-4 w-4 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <h2 className="font-heading text-xl font-bold">
+                                                            Your Identity
+                                                        </h2>
+                                                        <p className="text-sm font-medium text-slate-500">
+                                                            Optional: Helps us provide a personalized
+                                                            response.
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h2 className="font-heading text-xl font-bold">
-                                                        Your Identity
-                                                    </h2>
-                                                    <p className="text-sm font-medium text-slate-500">
-                                                        Optional: Helps us provide a personalized
-                                                        response.
-                                                    </p>
-                                                </div>
-                                            </div>
 
-                                            <div className="space-y-6">
-                                                <div className="grid gap-6 sm:grid-cols-2">
-                                                    <div className="space-y-2">
-                                                        <Label
-                                                            htmlFor="respondent_name"
-                                                            className="text-xs font-bold uppercase tracking-wider text-slate-500"
-                                                        >
-                                                            Full Name
-                                                        </Label>
-                                                        <Input
-                                                            id="respondent_name"
-                                                            value={data.respondent_name}
-                                                            onChange={(e) =>
-                                                                setData(
-                                                                    'respondent_name',
-                                                                    e.target.value,
-                                                                )
-                                                            }
-                                                            placeholder="John Doe"
-                                                            className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
-                                                        />
+                                                <div className="space-y-6">
+                                                    <div className="grid gap-6 sm:grid-cols-2">
+                                                        <div className="space-y-2">
+                                                            <Label
+                                                                htmlFor="respondent_name"
+                                                                className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                                                            >
+                                                                Full Name
+                                                            </Label>
+                                                            <Input
+                                                                id="respondent_name"
+                                                                value={data.respondent_name}
+                                                                onChange={(e) =>
+                                                                    setData(
+                                                                        'respondent_name',
+                                                                        e.target.value,
+                                                                    )
+                                                                }
+                                                                placeholder="John Doe"
+                                                                className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <Label
+                                                                htmlFor="respondent_email"
+                                                                className="text-xs font-bold uppercase tracking-wider text-slate-500"
+                                                            >
+                                                                Email Address
+                                                            </Label>
+                                                            <Input
+                                                                id="respondent_email"
+                                                                type="email"
+                                                                value={data.respondent_email}
+                                                                onChange={(e) =>
+                                                                    setData(
+                                                                        'respondent_email',
+                                                                        e.target.value,
+                                                                    )
+                                                                }
+                                                                placeholder="john@example.com"
+                                                                className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
+                                                            />
+                                                        </div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label
-                                                            htmlFor="respondent_email"
+                                                            htmlFor="respondent_phone"
                                                             className="text-xs font-bold uppercase tracking-wider text-slate-500"
                                                         >
-                                                            Email Address
+                                                            Phone Number
                                                         </Label>
                                                         <Input
-                                                            id="respondent_email"
-                                                            type="email"
-                                                            value={data.respondent_email}
+                                                            id="respondent_phone"
+                                                            type="tel"
+                                                            value={data.respondent_phone}
                                                             onChange={(e) =>
                                                                 setData(
-                                                                    'respondent_email',
+                                                                    'respondent_phone',
                                                                     e.target.value,
                                                                 )
                                                             }
-                                                            placeholder="john@example.com"
+                                                            placeholder="+1 (555) 000-0000"
                                                             className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <Label
-                                                        htmlFor="respondent_phone"
-                                                        className="text-xs font-bold uppercase tracking-wider text-slate-500"
-                                                    >
-                                                        Phone Number
-                                                    </Label>
-                                                    <Input
-                                                        id="respondent_phone"
-                                                        type="tel"
-                                                        value={data.respondent_phone}
-                                                        onChange={(e) =>
-                                                            setData(
-                                                                'respondent_phone',
-                                                                e.target.value,
-                                                            )
-                                                        }
-                                                        placeholder="+1 (555) 000-0000"
-                                                        className="h-12 border-slate-200 bg-slate-50/50 focus:bg-white dark:border-slate-700 dark:bg-slate-800/50"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Questions */}
-                                    <div className="space-y-8">
-                                        {survey.questions?.map((question) =>
-                                            renderQuestion(question),
+                                            </motion.div>
+                                        ) : (
+                                            /* Current Question Step */
+                                            survey.questions && 
+                                                renderQuestion(survey.questions[hasRespondentInfo ? currentQuestionIndex - 1 : currentQuestionIndex])
                                         )}
-                                    </div>
+                                    </AnimatePresence>
 
-                                    {/* Submit Button */}
-                                    <div className="pt-12 text-center">
-                                        <Button
-                                            type="submit"
-                                            className="h-16 w-full max-w-md rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
-                                            disabled={processing}
-                                        >
-                                            {processing ? (
-                                                <div className="flex items-center gap-3">
-                                                    <Loader2 className="h-6 w-6 animate-spin" />
-                                                    Encrypting & Submitting...
-                                                </div>
-                                            ) : (
-                                                'Complete Your Feedback'
+                                    {/* Navigation Buttons */}
+                                    <div className="flex flex-col items-center gap-6 pt-8">
+                                        <div className="flex w-full max-w-md items-center gap-4">
+                                            {currentQuestionIndex > 0 && (
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={handlePrevious}
+                                                    className="h-14 flex-1 rounded-2xl border-slate-200 text-lg font-bold transition-all hover:bg-slate-50 active:scale-95"
+                                                >
+                                                    Previous
+                                                </Button>
                                             )}
-                                        </Button>
-                                        <div className="mt-8 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                                            
+                                            {currentQuestionIndex < totalSteps - 1 ? (
+                                                <Button
+                                                    type="button"
+                                                    onClick={handleNext}
+                                                    className="h-14 flex-[2] rounded-2xl bg-primary text-lg font-bold text-primary-foreground shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+                                                >
+                                                    Next Question
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    type="submit"
+                                                    disabled={processing}
+                                                    className="h-14 flex-[2] rounded-2xl bg-primary text-lg font-bold text-primary-foreground shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
+                                                >
+                                                    {processing ? (
+                                                        <div className="flex items-center gap-3">
+                                                            <Loader2 className="h-5 w-5 animate-spin" />
+                                                            Submitting...
+                                                        </div>
+                                                    ) : (
+                                                        'Complete Feedback'
+                                                    )}
+                                                </Button>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
                                             <Lock className="h-3 w-3" />
-                                            Secure Submission Portal
+                                            {currentQuestionIndex === totalSteps - 1 
+                                                ? "Secure Submission Portal" 
+                                                : hasRespondentInfo && currentQuestionIndex === 0
+                                                    ? "Personal Information"
+                                                    : `Question ${hasRespondentInfo ? currentQuestionIndex : currentQuestionIndex + 1} of ${survey.questions?.length}`}
                                         </div>
                                     </div>
                                 </form>

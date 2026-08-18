@@ -21,6 +21,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use pxlrbt\FilamentSpotlight\SpotlightPlugin;
@@ -34,12 +35,15 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Admin\Pages\Auth\Login::class)
-            ->brandName('')
             ->colors([
-                'primary' => Color::Indigo,
+                'primary' => '#000000',
                 'gray' => Color::Slate,
             ])
-            ->font('DM Sans', url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap')
+            ->font('Hanken Grotesk', url: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@900&display=swap')
+            ->renderHook(
+                'panels::head.done',
+                fn () => new HtmlString('<style>:root { --font-mono: "Noto Sans Mono", monospace; }</style>'),
+            )
             ->maxContentWidth(Width::Full)
             ->sidebarWidth('14rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
